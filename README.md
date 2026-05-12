@@ -22,6 +22,212 @@ npm start
 
 **Access**: Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## ⚙️ Environment Setup
+
+Before running the application, you must configure environment variables. Copy the example file and fill in your actual values:
+
+```bash
+# Copy the example environment file
+cp env-clerk-example.txt .env
+```
+
+### Required Environment Variables
+
+#### MongoDB Configuration
+```env
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+```
+- **Purpose**: Database connection for storing users, courses, purchases, and admin data
+- **Local Development**: Use `mongodb://localhost:27017/sssam-academy`
+- **Production**: Use MongoDB Atlas connection string: `mongodb+srv://<username>:<password>@cluster.mongodb.net/sssam-academy`
+- **How to Get**: 
+  - Local: Install MongoDB Community Server from [mongodb.com](https://www.mongodb.com/try/download/community)
+  - Production: Create free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+
+#### Clerk Authentication (Student Auth)
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+CLERK_WEBHOOK_SECRET=whsec_...  # Optional
+```
+- **Purpose**: Student authentication, user management, and session handling
+- **NEXT_PUBLIC_ prefix**: Required for client-side access (browser can read this)
+- **Secret Key**: Server-side only (never exposed to browser)
+- **How to Get**: 
+  1. Create account at [Clerk Dashboard](https://dashboard.clerk.com/)
+  2. Create a new application
+  3. Navigate to API Keys section
+  4. Copy Publishable Key and Secret Key
+- **Webhook Secret**: Optional, for webhook verification (get from Webhooks section in Clerk Dashboard)
+
+#### Razorpay Payment Integration
+```env
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+RAZORPAY_WEBHOOK_SECRET=...  # Optional
+```
+- **Purpose**: Payment processing for course purchases
+- **Test Keys**: Use for development (start with `rzp_test_`)
+- **Live Keys**: Use for production (start with `rzp_live_`)
+- **How to Get**:
+  1. Create account at [Razorpay Dashboard](https://dashboard.razorpay.com/)
+  2. Navigate to Settings → API Keys
+  3. Generate test keys for development
+  4. Generate live keys for production
+- **Webhook Secret**: Optional, for webhook verification (get from Settings → Webhooks)
+
+#### Admin Panel Authentication
+```env
+ADMIN_EMAIL=admin@sssam-academy.com
+ADMIN_PASSWORD=your_secure_admin_password_here
+```
+- **Purpose**: Separate authentication for admin panel access
+- **Security**: Use strong, unique credentials for production
+- **Separate from Clerk**: Admin auth is independent of student authentication
+- **Best Practices**: 
+  - Use a strong password (min 12 characters, mix of letters, numbers, symbols)
+  - Don't reuse passwords from other services
+  - Change password regularly in production
+
+#### Application Configuration
+```env
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+- **NODE_ENV**: Set to `development` for local, `production` for deployment
+- **NEXT_PUBLIC_APP_URL**: Base URL for email links, redirects, and callbacks
+  - Local: `http://localhost:3000`
+  - Production: `https://your-domain.com`
+
+### Complete .env Example
+
+```env
+# ============================================
+# SSSAM Academy - Environment Variables
+# ============================================
+
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+
+# Clerk Authentication (Student Auth)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+CLERK_WEBHOOK_SECRET=whsec_...
+
+# Razorpay Payment Integration
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+RAZORPAY_WEBHOOK_SECRET=...
+
+# Admin Panel Authentication
+ADMIN_EMAIL=admin@sssam-academy.com
+ADMIN_PASSWORD=your_secure_admin_password_here
+
+# Application Configuration
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### Local Development Setup
+
+1. **Install MongoDB** (if not already installed):
+   ```bash
+   # Download from https://www.mongodb.com/try/download/community
+   # Start MongoDB service
+   # On Windows: Run MongoDB as a service
+   # On Mac: brew services start mongodb-community
+   # On Linux: sudo systemctl start mongod
+   ```
+
+2. **Create Clerk Account**:
+   - Go to [Clerk Dashboard](https://dashboard.clerk.com/)
+   - Sign up and create a new application
+   - Copy API keys to your `.env` file
+
+3. **Create Razorpay Account**:
+   - Go to [Razorpay Dashboard](https://dashboard.razorpay.com/)
+   - Sign up and generate test API keys
+   - Copy keys to your `.env` file
+
+4. **Set Admin Credentials**:
+   - Choose a secure email and password for admin access
+   - Add to your `.env` file
+
+5. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+6. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+### Production Deployment Setup
+
+1. **MongoDB Atlas** (Recommended for production):
+   - Create free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+   - Whitelist your deployment IP addresses
+   - Get connection string and update `MONGODB_URI`
+
+2. **Production API Keys**:
+   - **Clerk**: Use production keys (start with `pk_live_` and `sk_live_`)
+   - **Razorpay**: Use live keys (start with `rzp_live_`)
+   - Never use test keys in production
+
+3. **Environment Variables in Deployment**:
+   - **Vercel**: Add in Project Settings → Environment Variables
+   - **Netlify**: Add in Site Settings → Environment Variables
+   - **Docker**: Pass via `-e` flags or env file
+   - **Other**: Use your platform's environment variable management
+
+4. **Security Checklist**:
+   - [ ] Use production API keys (not test keys)
+   - [ ] Set `NODE_ENV=production`
+   - [ ] Use strong admin password
+   - [ ] Enable HTTPS (SSL certificate)
+   - [ ] Configure webhooks (Clerk & Razorpay)
+   - [ ] Set up proper CORS origins
+   - [ ] Enable rate limiting
+   - [ ] Set up monitoring and logging
+
+5. **Domain Configuration**:
+   - Update `NEXT_PUBLIC_APP_URL` to your production domain
+   - Add domain to Clerk allowed origins
+   - Add domain to Razorpay allowed origins
+   - Configure DNS records
+
+### Environment Variable Security
+
+- **NEVER commit `.env` to version control** (it's in `.gitignore`)
+- **Use different values** for development and production
+- **Rotate secrets regularly** in production
+- **Use secret management services** for production (AWS Secrets Manager, HashiCorp Vault, etc.)
+- **Limit access** to environment variables to only necessary team members
+- **Audit environment variable usage** regularly
+
+### Troubleshooting
+
+**MongoDB Connection Issues**:
+- Ensure MongoDB is running: `mongosh --eval "db.adminCommand('ping')"`
+- Check connection string format
+- Verify IP whitelist in MongoDB Atlas
+
+**Clerk Authentication Issues**:
+- Verify API keys are correct
+- Check allowed origins in Clerk Dashboard
+- Ensure Clerk middleware is properly configured
+
+**Razorpay Payment Issues**:
+- Verify test keys are working in development
+- Check webhook configuration if using webhooks
+- Ensure currency is set to INR
+
+**Admin Panel Issues**:
+- Verify `ADMIN_EMAIL` and `ADMIN_PASSWORD` are set
+- Clear browser cookies if session issues occur
+- Check MongoDB connection for admin data storage
+
 ## 🇮🇳 India-Focused Features
 
 - 💰 **INR Currency Only** - All pricing in Indian Rupees with proper formatting
