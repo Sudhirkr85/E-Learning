@@ -898,7 +898,232 @@ node test-coupon-flow.js
 - [ ] Create email templates
 - [ ] Send confirmations & notifications
 
-## 🐛 Troubleshooting
+## � Admin Panel Setup
+
+The SSSAM Academy includes a secure admin panel for managing courses, coupons, and lesson links.
+
+### Environment Variables for Admin
+
+Add these to your `.env` file:
+
+```env
+# Admin Authentication (Required for admin panel)
+ADMIN_EMAIL=admin@sssam-academy.com
+ADMIN_PASSWORD=your_secure_admin_password
+
+# MongoDB (Required for admin data storage)
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+
+# Clerk Authentication (For student authentication)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Razorpay (For payments)
+RAZORPAY_KEY_ID=rzp_test_SoOs5kviZKeLm2
+RAZORPAY_KEY_SECRET=F13wGfRUeVW4AgN5Y2wgqhjF
+RAZORPAY_WEBHOOK_ID=
+```
+
+### Admin Features
+
+#### Course Management
+- ✅ **Add/Edit/Delete Courses**: Full CRUD operations
+- ✅ **Pricing Control**: Update course prices and original prices
+- ✅ **Status Management**: Published, Draft, Coming Soon
+- ✅ **Featured Course Toggle**: Mark courses as featured
+- ✅ **Batch Information**: Update next batch dates and info
+- ✅ **Course Metadata**: Instructors, duration, lessons count, level, tags
+
+#### Coupon Management
+- ✅ **Create Coupons**: Percentage or fixed amount discounts
+- ✅ **Usage Limits**: Set maximum usage count
+- ✅ **Validity Period**: Set start and end dates
+- ✅ **Course-Specific**: Apply to specific courses or all courses
+- ✅ **Minimum Amount**: Set minimum order amount
+- ✅ **Active/Inactive**: Toggle coupon status
+
+#### Lesson Links Management
+- ✅ **YouTube Videos**: Add and manage YouTube lesson links
+- ✅ **Google Meet Links**: Manage live session links
+- ✅ **Custom Links**: Support for other video platforms
+- ✅ **Course Association**: Link lessons to specific courses
+- ✅ **Status Control**: Activate/deactivate lesson links
+
+### Admin Access
+
+#### Login
+1. Navigate to `/admin/login`
+2. Enter admin email and password from environment variables
+3. Secure session-based authentication (24-hour expiry)
+
+#### Admin Routes
+- `/admin/dashboard` - Overview with statistics
+- `/admin/courses` - Course management
+- `/admin/coupons` - Coupon management  
+- `/admin/lessons` - Lesson link management
+
+#### Security Features
+- 🔒 **Separate Authentication**: Admin auth is separate from student auth
+- 🔒 **Server-Side Validation**: All credential checks on server
+- 🔒 **Secure Sessions**: HTTP-only cookies with proper expiry
+- 🔒 **Route Protection**: All admin routes protected server-side
+- 🔒 **No Hardcoded Credentials**: Admin details only in environment variables
+
+### Database Collections
+
+The admin panel uses these MongoDB collections:
+
+#### `courses` Collection
+```typescript
+{
+  id: string,
+  title: string,
+  slug: string,
+  description: string,
+  shortDescription: string,
+  thumbnail: string,
+  instructor: string,
+  instructorImage: string,
+  price: number,
+  originalPrice?: number,
+  rating: number,
+  reviews: number,
+  students: number,
+  duration: string,
+  lessons: number,
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Beginner to Advanced',
+  category: string,
+  featured: boolean,
+  status: 'published' | 'coming-soon' | 'draft',
+  tags: string[],
+  batchInfo?: string,
+  nextBatch?: string,
+  sections: CourseSection[],
+  curriculum: Lesson[],
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+#### `coupons` Collection
+```typescript
+{
+  id: string,
+  code: string,
+  description?: string,
+  discountType: 'percentage' | 'fixed',
+  discountValue: number,
+  minAmount?: number,
+  maxDiscount?: number,
+  usageLimit?: number,
+  usedCount: number,
+  applicableCourses?: string[],
+  validFrom: string,
+  validUntil: string,
+  isActive: boolean,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+#### `lessons` Collection
+```typescript
+{
+  id: string,
+  courseId: string,
+  lessonId?: string,
+  title: string,
+  type: 'youtube' | 'google_meet' | 'other',
+  url: string,
+  description?: string,
+  isActive: boolean,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+### API Endpoints
+
+#### Admin Authentication
+- `POST /api/admin/login` - Admin login
+- `POST /api/admin/logout` - Admin logout  
+- `GET /api/admin/verify` - Verify admin session
+
+#### Course Management
+- `GET /api/admin/courses` - List all courses
+- `POST /api/admin/courses` - Create new course
+- `GET /api/admin/courses/[courseId]` - Get course details
+- `PUT /api/admin/courses/[courseId]` - Update course
+- `DELETE /api/admin/courses/[courseId]` - Delete course
+
+#### Coupon Management
+- `GET /api/admin/coupons` - List all coupons
+- `POST /api/admin/coupons` - Create new coupon
+- `GET /api/admin/coupons/[couponId]` - Get coupon details
+- `PUT /api/admin/coupons/[couponId]` - Update coupon
+- `DELETE /api/admin/coupons/[couponId]` - Delete coupon
+
+#### Lesson Links Management
+- `GET /api/admin/lessons` - List all lesson links
+- `POST /api/admin/lessons` - Create new lesson link
+- `GET /api/admin/lessons/[lessonId]` - Get lesson link details
+- `PUT /api/admin/lessons/[lessonId]` - Update lesson link
+- `DELETE /api/admin/lessons/[lessonId]` - Delete lesson link
+
+### Quick Setup Guide
+
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Setup MongoDB**:
+   ```bash
+   # Install and start MongoDB
+   mongosh --eval "db.adminCommand('ping')"
+   ```
+
+3. **Configure Environment**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your credentials
+   ```
+
+4. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Access Admin Panel**:
+   - Open `http://localhost:3000/admin/login`
+   - Login with your admin credentials
+
+### Security Best Practices
+
+- 🔐 **Strong Admin Password**: Use a complex password
+- 🔐 **Environment Security**: Never commit `.env` to version control
+- 🔐 **Regular Password Changes**: Update admin credentials periodically
+- 🔐 **HTTPS in Production**: Always use SSL in production
+- 🔐 **Limited Access**: Restrict admin access to authorized personnel
+
+### Troubleshooting
+
+**Admin login not working?**
+- Check `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env`
+- Ensure MongoDB is running
+- Clear browser cookies and try again
+
+**Admin routes redirecting to login?**
+- Session may have expired (24-hour timeout)
+- Check browser cookie settings
+- Verify admin authentication is working
+
+**Database connection issues?**
+- Verify `MONGODB_URI` is correct
+- Ensure MongoDB service is running
+- Check network connectivity
+
+## �🐛 Troubleshooting
 
 **Port 3000 already in use?**
 ```bash

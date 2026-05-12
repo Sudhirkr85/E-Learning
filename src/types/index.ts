@@ -148,3 +148,46 @@ export interface ContactInquiry {
   status: 'new' | 'read' | 'responded';
   createdAt: string;
 }
+
+// Admin Related Types
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin';
+  createdAt: string;
+  lastLogin?: string;
+}
+
+// Coupon Related Types
+export interface Coupon {
+  id: string;
+  code: string;
+  description?: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minAmount?: number;
+  maxDiscount?: number;
+  usageLimit?: number;
+  usedCount: number;
+  applicableCourses?: string[]; // Course IDs, empty means all courses
+  validFrom: string;
+  validUntil: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Lesson Management Types
+export interface LessonLink {
+  id: string;
+  courseId: string;
+  lessonId?: string;
+  title: string;
+  type: 'youtube' | 'google_meet' | 'other';
+  url: string;
+  description?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
