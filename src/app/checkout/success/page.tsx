@@ -1,13 +1,49 @@
+'use client';
+
+import { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Divider, Card } from '@/components/ui';
 import { ROUTES } from '@/constants';
 
-export const metadata = {
-  title: 'Payment Successful - SSSAM Academy',
-  description: 'Your course enrollment is confirmed',
-};
+function PaymentSuccessContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [purchaseData, setPurchaseData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function PaymentSuccessPage() {
+  useEffect(() => {
+    // Get payment data from URL params or localStorage
+    const paymentId = searchParams.get('payment_id');
+    const orderId = searchParams.get('order_id');
+    
+    // For now, we'll use mock data since we don't have a way to pass data
+    // In a real app, you'd fetch this from an API or use query params
+    setPurchaseData({
+      orderId: orderId || `ORD-${Date.now()}`,
+      paymentId: paymentId || `PAY-${Date.now()}`,
+      amount: 5899,
+      courseTitle: 'Master Full Stack Web Development',
+      studentEmail: 'student@example.com',
+    });
+    setIsLoading(false);
+  }, [searchParams]);
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center">
+          <Container>
+            <div className="max-w-md mx-auto text-center">
+              <Text>Loading payment details...</Text>
+            </div>
+          </Container>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -34,26 +70,33 @@ export default function PaymentSuccessPage() {
                   <Text size="sm" color="muted">
                     Order ID
                   </Text>
-                  <Text className="font-mono font-semibold">ORD-2024-123456</Text>
+                  <Text className="font-mono font-semibold">{purchaseData?.orderId}</Text>
+                </div>
+                <Divider className="my-3" />
+                <div className="mb-3">
+                  <Text size="sm" color="muted">
+                    Payment ID
+                  </Text>
+                  <Text className="font-mono font-semibold text-sm">{purchaseData?.paymentId}</Text>
                 </div>
                 <Divider className="my-3" />
                 <div className="mb-3">
                   <Text size="sm" color="muted">
                     Amount Paid
                   </Text>
-                  <Text className="text-2xl font-bold text-green-600">₹5,899</Text>
+                  <Text className="text-2xl font-bold text-green-600">₹{purchaseData?.amount?.toLocaleString()}</Text>
                 </div>
                 <Divider className="my-3" />
                 <div>
                   <Text size="sm" color="muted">
                     Course
                   </Text>
-                  <Text className="font-semibold">Master Full Stack Web Development</Text>
+                  <Text className="font-semibold">{purchaseData?.courseTitle}</Text>
                 </div>
               </div>
 
               <Text color="secondary" className="mb-6">
-                A confirmation email has been sent to your registered email address. You can now access the course content from your dashboard.
+                A confirmation email has been sent to {purchaseData?.studentEmail}. You can now access the course content from your dashboard.
               </Text>
 
               <div className="space-y-3">
@@ -71,5 +114,25 @@ export default function PaymentSuccessPage() {
 
       <Footer />
     </>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center">
+          <Container>
+            <div className="max-w-md mx-auto text-center">
+              <Text>Loading...</Text>
+            </div>
+          </Container>
+        </div>
+        <Footer />
+      </>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

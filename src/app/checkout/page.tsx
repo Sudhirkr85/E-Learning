@@ -1,16 +1,159 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Card, Button, Input, Divider } from '@/components/ui';
 import { ROUTES } from '@/constants';
-
-export const metadata = {
-  title: 'Checkout - SSSAM Academy',
-  description: 'Complete your course purchase',
-};
+import { getFeaturedCourse } from '@/data/courses';
 
 export default function CheckoutPage() {
-  const coursePrice = 4999;
-  const taxAmount = Math.round(coursePrice * 0.18);
-  const totalAmount = coursePrice + taxAmount;
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    zipCode: '',
+    country: '',
+  });
+
+  const course = getFeaturedCourse();
+  const coursePrice = course?.price || 4999;
+  const discountedPrice = coursePrice - discount;
+  const taxAmount = Math.round(discountedPrice * 0.18);
+  const totalAmount = discountedPrice + taxAmount;
+
+  useEffect(() => {
+    // Load Razorpay script
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    // Simple coupon validation (in production, this would be an API call)
+    if (couponCode.toUpperCase() === 'TEST10') {
+      setDiscount(Math.round(coursePrice * 0.1));
+      setCouponError('');
+    } else {
+      setCouponError('Invalid coupon code');
+      setDiscount(0);
+    }
+  };
+
+  const handlePayment = async () => {
+    // Validate form
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'zipCode', 'country'];
+    const missingField = requiredFields.find(field => !formData[field as keyof typeof formData].trim());
+    
+    if (missingField) {
+      alert(`Please fill in all required fields`);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Create Razorpay order
+      const response = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentId: 'temp_student_id', // In production, this would come from auth
+          studentEmail: formData.email,
+          studentName: `${formData.firstName} ${formData.lastName}`,
+          studentPhone: formData.phone,
+          courseId: course?.id,
+          couponCode: couponCode || undefined,
+          amount: discountedPrice,
+        }),
+      });
+
+      const orderData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(orderData.error || 'Failed to create order');
+      }
+
+      // Open Razorpay checkout
+      const options = {
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'SSSAM Academy',
+        description: course?.title,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          // Verify payment
+          const verifyResponse = await fetch('/api/razorpay/verify-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (verifyResponse.ok && verifyData.success) {
+            // Redirect to success page
+            router.push('/checkout/success');
+          } else {
+            alert('Payment verification failed. Please contact support.');
+            router.push('/checkout');
+          }
+        },
+        prefill: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: '#3B82F6',
+        },
+        modal: {
+          ondismiss: function () {
+            setIsLoading(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -32,24 +175,74 @@ export default function CheckoutPage() {
                 Billing Information
               </Heading>
 
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="First Name" placeholder="John" required />
-                  <Input label="Last Name" placeholder="Doe" required />
+                  <Input 
+                    label="First Name" 
+                    placeholder="John" 
+                    required 
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  />
+                  <Input 
+                    label="Last Name" 
+                    placeholder="Doe" 
+                    required 
+                    value={formData.lastName}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  />
                 </div>
 
-                <Input label="Email Address" type="email" placeholder="john@example.com" required />
+                <Input 
+                  label="Email Address" 
+                  type="email" 
+                  placeholder="john@example.com" 
+                  required 
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                />
 
-                <Input label="Phone Number" type="tel" placeholder="+1 (555) 123-4567" required />
+                <Input 
+                  label="Phone Number" 
+                  type="tel" 
+                  placeholder="+1 (555) 123-4567" 
+                  required 
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                />
 
-                <Input label="Address" placeholder="123 Main St" required />
+                <Input 
+                  label="Address" 
+                  placeholder="123 Main St" 
+                  required 
+                  value={formData.address}
+                  onChange={(e) => handleInputChange('address', e.target.value)}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="City" placeholder="New York" required />
-                  <Input label="ZIP Code" placeholder="10001" required />
+                  <Input 
+                    label="City" 
+                    placeholder="New York" 
+                    required 
+                    value={formData.city}
+                    onChange={(e) => handleInputChange('city', e.target.value)}
+                  />
+                  <Input 
+                    label="ZIP Code" 
+                    placeholder="10001" 
+                    required 
+                    value={formData.zipCode}
+                    onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                  />
                 </div>
 
-                <Input label="Country" placeholder="United States" required />
+                <Input 
+                  label="Country" 
+                  placeholder="United States" 
+                  required 
+                  value={formData.country}
+                  onChange={(e) => handleInputChange('country', e.target.value)}
+                />
               </form>
             </Card>
 
@@ -90,8 +283,14 @@ export default function CheckoutPage() {
                 </label>
               </div>
 
-              <Button variant="primary" size="lg" className="w-full">
-                Proceed to Payment
+              <Button 
+                variant="primary" 
+                size="lg" 
+                className="w-full"
+                onClick={handlePayment}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Processing...' : 'Proceed to Payment'}
               </Button>
             </Card>
           </div>
@@ -108,10 +307,10 @@ export default function CheckoutPage() {
                   <div className="w-16 h-16 bg-gray-200 rounded flex-shrink-0" />
                   <div>
                     <Text className="font-semibold line-clamp-2">
-                      Master Full Stack Web Development
+                      {course?.title || 'Master Full Stack Web Development'}
                     </Text>
                     <Text size="sm" color="muted">
-                      by Alex Johnson
+                      by {course?.instructor || 'Alex Johnson'}
                     </Text>
                   </div>
                 </div>
@@ -124,6 +323,12 @@ export default function CheckoutPage() {
                   <Text color="muted">Subtotal</Text>
                   <Text className="font-semibold">₹{coursePrice.toLocaleString()}</Text>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between">
+                    <Text color="muted">Discount</Text>
+                    <Text className="font-semibold text-green-600">-₹{discount.toLocaleString()}</Text>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <Text color="muted">Tax (18% GST)</Text>
                   <Text className="font-semibold">₹{taxAmount.toLocaleString()}</Text>
@@ -139,10 +344,30 @@ export default function CheckoutPage() {
                 </Text>
               </div>
 
-              <Input placeholder="Coupon Code" className="mb-3" />
-              <Button variant="outline" size="md" className="w-full">
-                Apply Coupon
-              </Button>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="Coupon Code" 
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="mb-0"
+                  />
+                  <Button 
+                    variant="outline" 
+                    size="md" 
+                    onClick={applyCoupon}
+                    disabled={!couponCode.trim()}
+                  >
+                    Apply
+                  </Button>
+                </div>
+                {couponError && (
+                  <Text size="sm" color="muted" className="text-red-600">{couponError}</Text>
+                )}
+                {discount > 0 && (
+                  <Text size="sm" color="muted" className="text-green-600">Coupon applied successfully!</Text>
+                )}
+              </div>
 
               {/* Security Info */}
               <div className="mt-6 p-3 bg-green-50 rounded-lg">

@@ -1,6 +1,10 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Container, Heading, Text, Card, Button, Divider } from '@/components/ui';
 import { getCourseById } from '@/data/courses';
-import { notFound } from 'next/navigation';
+import { checkCourseAccess } from '@/lib/course-access';
 
 interface LessonPageProps {
   params: {
@@ -8,18 +12,70 @@ interface LessonPageProps {
   };
 }
 
-export async function generateMetadata({ params }: LessonPageProps) {
-  const course = getCourseById(params.id);
-  return {
-    title: `${course?.title || 'Lesson'} - SSSAM Academy`,
-  };
-}
-
 export default function LessonPage({ params }: LessonPageProps) {
+  const router = useRouter();
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const course = getCourseById(params.id);
+
+  useEffect(() => {
+    verifyAccess();
+  }, [params.id]);
+
+  const verifyAccess = async () => {
+    try {
+      // In a real app, studentId would come from authentication
+      const studentId = 'temp_student_id';
+      const access = await checkCourseAccess(params.id, studentId);
+      setHasAccess(access);
+    } catch (error) {
+      console.error('Error verifying access:', error);
+      setHasAccess(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!course) {
-    notFound();
+    return (
+      <Container className="py-8">
+        <div className="text-center">
+          <Heading level={2}>Course Not Found</Heading>
+          <Text color="muted" className="mb-4">
+            The course you're looking for doesn't exist.
+          </Text>
+          <Button onClick={() => router.push('/dashboard/courses')}>
+            Back to My Courses
+          </Button>
+        </div>
+      </Container>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Container className="py-8">
+        <div className="text-center">
+          <Text>Verifying access...</Text>
+        </div>
+      </Container>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Container className="py-8">
+        <div className="text-center">
+          <Heading level={2}>Access Restricted</Heading>
+          <Text color="muted" className="mb-4">
+            You need to purchase this course to access the content.
+          </Text>
+          <Button onClick={() => router.push('/checkout')}>
+            Purchase Course
+          </Button>
+        </div>
+      </Container>
+    );
   }
 
   const currentLesson = course.curriculum[0];
