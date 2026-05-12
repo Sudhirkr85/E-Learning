@@ -34,15 +34,15 @@ export function Header() {
 
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100' 
-        : 'bg-white shadow-sm'
+      isScrolled
+        ? 'bg-slate-900/85 backdrop-blur-sm shadow-md border-b border-slate-800/30'
+        : 'bg-transparent'
     }`}>
       <Container className="py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-white">
           {/* Logo */}
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 group">
-            <div className="relative w-10 h-10 transform group-hover:scale-110 transition-transform duration-200">
+          <Link href={ROUTES.HOME} className="flex items-center gap-3 group">
+            <div className="relative w-10 h-10 transform group-hover:scale-105 transition-transform duration-200">
               <Image
                 src="/images/logo/logo.webp"
                 alt="SSSAM Academy Logo"
@@ -51,28 +51,22 @@ export function Header() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-gray-900 hidden sm:inline group-hover:text-blue-600 transition-colors">
+            <span className="text-lg font-semibold hidden sm:inline group-hover:text-emerald-300 transition-colors">
               SSSAM Academy
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            <Link 
-              href={ROUTES.HOME} 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-            >
+            <Link href={ROUTES.HOME} className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline">
               Home
             </Link>
-            <Link 
-              href={ROUTES.COURSES} 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-            >
+            <Link href={ROUTES.COURSES} className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline">
               Courses
             </Link>
-            <a 
-              href="#trainers" 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            <a
+              href="#trainers"
+              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#trainers');
@@ -80,9 +74,9 @@ export function Header() {
             >
               Trainers
             </a>
-            <a 
-              href="#faq" 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            <a
+              href="#faq"
+              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#faq');
@@ -90,9 +84,9 @@ export function Header() {
             >
               FAQ
             </a>
-            <a 
-              href="#contact" 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            <a
+              href="#contact"
+              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#contact');
@@ -108,7 +102,7 @@ export function Header() {
               <div className="flex items-center gap-3">
                 <Link 
                   href={ROUTES.DASHBOARD}
-                  className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                  className="text-white/90 hover:text-emerald-200 transition-colors font-medium"
                 >
                   Dashboard
                 </Link>
@@ -163,16 +157,19 @@ export function Header() {
                 <Button 
                   variant="ghost" 
                   href={ROUTES.LOGIN}
-                  className="text-gray-700 hover:text-blue-600 font-medium"
+                  className="text-white/90 hover:text-emerald-200 font-medium"
                 >
                   Login
                 </Button>
                 <Button 
                   variant="primary" 
                   href={ROUTES.REGISTER}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                  className="rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg glow transform hover:-translate-y-0.5 transition-all duration-200 px-4 py-2 flex items-center gap-2"
                 >
-                  Get Started
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                  Start Learning
                 </Button>
               </>
             )}
@@ -180,7 +177,7 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-white/6 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -207,7 +204,7 @@ export function Header() {
           <nav className="pt-4 pb-6 space-y-4">
             <Link 
               href={ROUTES.HOME} 
-              className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
+              className="block text-white/90 hover:text-emerald-200 transition-colors font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
@@ -290,7 +287,7 @@ export function Header() {
                     variant="ghost" 
                     href={ROUTES.LOGIN} 
                     size="lg" 
-                    className="w-full justify-center text-gray-700 hover:text-blue-600 font-medium"
+                    className="w-full justify-center text-white/90 hover:text-emerald-200 font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
@@ -299,7 +296,7 @@ export function Header() {
                     variant="primary" 
                     href={ROUTES.REGISTER} 
                     size="lg"
-                    className="w-full justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg"
+                    className="w-full justify-center rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Get Started

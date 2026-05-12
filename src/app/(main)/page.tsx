@@ -1,7 +1,6 @@
 import { Header, Footer } from '@/components/layout';
-import { HeroSection, CoursesGrid, TrainersSection, FAQSection, ContactSection, TestimonialsSection } from '@/components/sections';
-import { getFeaturedCourse, getComingSoonCourses } from '@/lib/courses';
-import { trainers } from '@/data/trainers';
+import { CoursesGrid, FAQSection, ContactSection, TestimonialsSection } from '@/components/sections';
+import { getPublishedCourses } from '@/lib/courses';
 import { faqs } from '@/data/faq';
 import { TESTIMONIALS } from '@/constants';
 
@@ -11,28 +10,21 @@ export const metadata = {
 };
 
 export default async function Home() {
-  // Fetch courses dynamically with fallback
-  const { course: featuredCourse } = await getFeaturedCourse();
-  const { courses: comingSoonCourses } = await getComingSoonCourses();
+  // Fetch all courses dynamically with fallback
+  const { courses: allCourses } = await getPublishedCourses();
 
   return (
     <>
       <Header />
 
-      {/* Hero Section */}
-      {featuredCourse && <HeroSection course={featuredCourse} />}
-
-      {/* Featured Courses Grid */}
-      {comingSoonCourses.length > 0 && (
+      {/* All Courses Grid */}
+      {allCourses.length > 0 && (
         <CoursesGrid
-          courses={comingSoonCourses}
-          title="Explore Our Courses"
+          courses={allCourses}
+          title="Professional Courses"
           description="Choose from our carefully curated selection of professional courses"
         />
       )}
-
-      {/* Trainers Section */}
-      <TrainersSection trainers={trainers} />
 
       {/* Testimonials Section */}
       <TestimonialsSection testimonials={TESTIMONIALS} />

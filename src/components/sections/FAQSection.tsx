@@ -22,13 +22,13 @@ export function FAQSection({ faqs }: FAQSectionProps) {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               <span className="text-orange-600">❓</span>
-              Got Questions?
+              Common Questions Answered
             </div>
             <Heading level={2} className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Frequently Asked Questions
+              FAQs About SSSAM Academy Courses
             </Heading>
             <Text size="lg" color="muted" className="max-w-3xl mx-auto text-lg leading-relaxed">
-              Find answers to common questions about our courses, enrollment process, and learning experience. Can't find what you're looking for? Feel free to contact us.
+              Learn about our training programs, enrollment process, payment options, placement support, and online learning experience. Get answers to help you choose the right course for your career goals.
             </Text>
           </div>
 

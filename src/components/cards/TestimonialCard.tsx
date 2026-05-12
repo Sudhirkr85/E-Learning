@@ -39,18 +39,10 @@ export function TestimonialCard({ name, title, content, image, rating }: Testimo
 
       {/* Author */}
       <div className="flex items-center gap-4 relative z-10">
-        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 overflow-hidden border-2 border-white shadow-md">
-          {image ? (
-            <img 
-              src={image} 
-              alt={name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
-              {name.charAt(0).toUpperCase()}
-            </div>
-          )}
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center border-2 border-white shadow-md">
+          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+          </svg>
         </div>
         <div>
           <Text className="font-bold text-gray-900 text-base">

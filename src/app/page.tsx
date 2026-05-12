@@ -1,11 +1,9 @@
 import { Header, Footer } from '@/components/layout';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { CoursesGrid } from '@/components/sections/CoursesGrid';
-import { TrainersSection } from '@/components/sections/TrainersSection';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FAQSection } from '@/components/sections/FAQSection';
 import { getFeaturedCourse, getPublishedCourses } from '@/lib/courses';
-import { trainers } from '@/data/trainers';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
 
@@ -28,9 +26,6 @@ export default async function Home() {
           title="Explore Our Courses"
           description="Choose from our wide range of courses designed to help you master in-demand skills and advance your career."
         />
-        
-        {/* Trainers Section */}
-        <TrainersSection trainers={trainers} />
         
         {/* Testimonials Section */}
         <TestimonialsSection testimonials={testimonials} />

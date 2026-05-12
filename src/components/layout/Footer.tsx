@@ -23,7 +23,7 @@ export function Footer() {
               <span className="text-2xl font-bold text-white">{SITE_CONFIG.name}</span>
             </div>
             <Text size="sm" color="muted" className="text-gray-300 mb-6 leading-relaxed max-w-md">
-              {SITE_CONFIG.description}
+              SSSAM Academy is India's trusted platform for professional IT training. We offer job-focused courses in AI, Full Stack Development, Data Science, Cybersecurity, and Digital Marketing with 95% placement success rate. Join 15,000+ graduates from top IT companies.
             </Text>
             
             {/* Newsletter */}
@@ -169,13 +169,26 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <Text size="sm" color="muted" className="text-gray-400">
-            &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved.
+            &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved. | Trusted online training platform in India
           </Text>
           
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-            <span>📧 {SITE_CONFIG.email}</span>
-            <span>📞 {SITE_CONFIG.phone}</span>
-            <span>📍 Bengaluru, India</span>
+          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-300">
+            <div className="flex items-center gap-1">
+              <span>📧</span>
+              <a href={`mailto:${SITE_CONFIG.email}`} className="hover:text-blue-400 transition-colors">
+                {SITE_CONFIG.email}
+              </a>
+            </div>
+            <div className="flex items-center gap-1">
+              <span>📞</span>
+              <a href={`tel:${SITE_CONFIG.phone}`} className="hover:text-blue-400 transition-colors">
+                {SITE_CONFIG.phone}
+              </a>
+            </div>
+            <div className="flex items-center gap-1">
+              <span>📍</span>
+              <span>Bengaluru, India</span>
+            </div>
           </div>
         </div>
       </Container>
