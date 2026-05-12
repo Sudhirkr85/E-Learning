@@ -42,25 +42,34 @@ export function CourseCard({ course }: CourseCardProps) {
             )}
           </div>
 
+          {/* Batch Info Badge */}
+          {course.batchInfo && (
+            <div className="absolute bottom-3 left-3">
+              <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-xs px-2 py-1 shadow-lg">
+                📅 {course.batchInfo}
+              </Badge>
+            </div>
+          )}
+
           {/* Price Badge */}
           {discountPercentage > 0 && (
             <div className="absolute top-3 right-3 bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm shadow-lg">
               -{discountPercentage}%
             </div>
           )}
-
-          {/* Coming Soon Overlay */}
-          {course.status === 'coming-soon' && (
-            <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center backdrop-blur-sm">
-              <Badge variant="warning" className="text-lg px-4 py-2">
-                Coming Soon
-              </Badge>
-            </div>
-          )}
         </div>
 
         {/* Content */}
         <div className="p-5 flex flex-col h-full">
+          {/* Next Batch Info */}
+          {course.nextBatch && (
+            <div className="mb-3">
+              <Badge variant="info" className="text-xs bg-green-100 text-green-800 font-medium">
+                Next Batch: {course.nextBatch}
+              </Badge>
+            </div>
+          )}
+
           {/* Level Badge */}
           <div className="mb-3">
             <Badge variant="info" className="text-xs bg-blue-100 text-blue-800 font-medium">
@@ -128,14 +137,14 @@ export function CourseCard({ course }: CourseCardProps) {
             </div>
           </div>
 
-          {/* Price Section */}
+          {/* Price Section - India Specific */}
           <div className="border-t pt-4 mt-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-blue-600">₹{course.price.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-blue-600">₹{course.price.toLocaleString('en-IN')}</span>
                 {course.originalPrice && (
                   <span className="text-sm text-gray-500 line-through">
-                    ₹{course.originalPrice.toLocaleString()}
+                    ₹{course.originalPrice.toLocaleString('en-IN')}
                   </span>
                 )}
               </div>
@@ -144,6 +153,10 @@ export function CourseCard({ course }: CourseCardProps) {
                   Enroll Now →
                 </div>
               )}
+            </div>
+            {/* Payment Methods */}
+            <div className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+              <span>UPI • Cards • Net Banking</span>
             </div>
           </div>
         </div>

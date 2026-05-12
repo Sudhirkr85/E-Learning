@@ -1,8 +1,8 @@
-# SSSAM Academy - LMS/Course Selling Platform
+# SSSAM Academy - India's Premier IT Training Platform
 
-A modern, fullstack Learning Management System (LMS) and course selling platform built with **Next.js 16** (App Router), **TypeScript**, and **Tailwind CSS**.
+A modern, India-focused Learning Management System (LMS) and course selling platform built with **Next.js 16** (App Router), **TypeScript**, and **Tailwind CSS**. Located in Gurugram, we provide job-oriented IT training for Indian students with placement support.
 
-🚀 **Status**: Production-ready | ✅ All builds successful | 📱 Fully responsive | 🔒 Type-safe
+🚀 **Status**: Production-ready | ✅ India-focused content | 📱 Fully responsive | 🔒 Type-safe | 💳 UPI/Razorpay ready
 
 ## 🎯 Quick Start
 
@@ -22,6 +22,16 @@ npm start
 
 **Access**: Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## 🇮🇳 India-Focused Features
+
+- 💰 **INR Currency Only** - All pricing in Indian Rupees with proper formatting
+- 📱 **UPI Payments** - Support for UPI, Cards, Net Banking, and EMI options
+- 🗣️ **Bilingual Support** - Hindi + English instruction and support
+- 🏢 **Placement Assistance** - Dedicated support for Indian IT companies
+- 📍 **Local Presence** - Physical center in Gurugram, Old DLF Sector 14
+- 🎓 **Summer Training** - Special programs for college students
+- 💼 **Job-Oriented** - Curriculum designed for Indian job market
+
 ## ✨ Features
 
 - ✅ **11 Pages** with 9 dynamic + static routes
@@ -29,14 +39,33 @@ npm start
 - ✅ **100% TypeScript** - Full type safety
 - ✅ **Fully Responsive** - Mobile-first design with Tailwind CSS
 - ✅ **Clean Architecture** - Component-driven, modular structure
-- ✅ **Mock Data Ready** - 5 courses, 5 trainers, 8 FAQs, 3 testimonials
+- ✅ **India-Focused Content** - Real course data with INR pricing
 - ✅ **Clerk Authentication** - Complete auth system with sign up, sign in, sign out
 - ✅ **MongoDB User Sync** - Automatic user data synchronization
 - ✅ **Route Protection** - Middleware-based access control
-- ✅ **Razorpay Payment** - Complete payment flow with verification
+- ✅ **Razorpay Payment** - Complete payment flow with UPI support
 - ✅ **Course Access Control** - Purchase-based content protection
 - ✅ **SEO Optimized** - Metadata on all pages
 - ✅ **Performance Optimized** - Next.js Image component, code splitting
+- ✅ **Summer Training Programs** - Special courses for Indian students
+- ✅ **Placement Support** - Job assistance and career guidance
+
+## � Course Catalog
+
+### Featured Courses
+1. **AI Powered Full Stack Web Development Summer Training 2026** - ₹9 launch offer
+2. **Data Science with Python & Machine Learning** - ₹12,999
+3. **Digital Marketing & SEO Mastery** - ₹9,999
+4. **AWS Cloud Computing & DevOps** - ₹15,999
+5. **Cyber Security & Ethical Hacking** - ₹18,999
+
+### Course Features
+- 🎯 **Job-Oriented Curriculum** - Designed for Indian IT industry
+- 🏢 **Placement Support** - Resume building, mock interviews, job connections
+- 📅 **Flexible Batches** - Weekend, evening, and summer training options
+- 🗣️ **Bilingual Instruction** - Hindi + English support
+- 💳 **Easy Payment Options** - UPI, EMI, cards, net banking
+- 📜 **Industry Certification** - Recognized by Indian employers
 
 ## 📁 Project Structure
 
@@ -56,10 +85,10 @@ src/
 │   ├── cards/            # Card components (CourseCard, TrainerCard, etc.)
 │   ├── layout/           # Layout components (Header, Footer, Sidebar)
 │   └── sections/         # Section components (Hero, FAQ, Trainers, etc.)
-├── data/                  # Placeholder data and mock data
-│   ├── courses.ts        # Course data
-│   ├── trainers.ts       # Trainer/instructor data
-│   └── faq.ts            # FAQ data
+├── data/                  # India-focused course data
+│   ├── courses.ts        # Real SSSAM Academy courses
+│   ├── testimonials.ts   # Student success stories
+│   └── faq.ts            # India-specific FAQs
 ├── types/                # TypeScript type definitions
 ├── constants/            # App constants and configuration
 ├── utils/                # Utility functions and helpers

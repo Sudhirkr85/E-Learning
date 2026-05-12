@@ -15,13 +15,15 @@ export interface Course {
   students: number;
   duration: string;
   lessons: number;
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Beginner to Advanced';
   category: string;
   featured: boolean;
   status: 'published' | 'coming-soon' | 'draft';
   sections: CourseSection[];
   curriculum: Lesson[];
   tags: string[];
+  batchInfo?: string;
+  nextBatch?: string;
   createdAt: string;
   updatedAt: string;
 }
