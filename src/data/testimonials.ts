@@ -13,7 +13,7 @@ export const testimonials: Testimonial[] = [
     name: 'Rahul Sharma',
     title: 'Full Stack Developer',
     content: 'The AI Full Stack course at SSSAM Academy completely transformed my career. The instructors are amazing and the curriculum is up-to-date with industry standards. I landed my dream job within 2 months of completion!',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul',
+    image: '/images/testimonials/student-1.webp',
     rating: 5,
   },
   {
@@ -21,7 +21,7 @@ export const testimonials: Testimonial[] = [
     name: 'Priya Patel',
     title: 'UI/UX Designer',
     content: 'I was skeptical about online courses, but SSSAM Academy exceeded all my expectations. The practical projects and mentorship helped me build a strong portfolio. Highly recommend!',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya',
+    image: '/images/testimonials/student-2.webp',
     rating: 5,
   },
   {
@@ -29,7 +29,7 @@ export const testimonials: Testimonial[] = [
     name: 'Amit Kumar',
     title: 'Data Scientist',
     content: 'The Data Science course provided me with the exact skills needed for the industry. The ₹9 offer was incredible value for money. Thank you SSSAM Academy for making quality education affordable!',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Amit',
+    image: '/images/testimonials/student-1.webp',
     rating: 5,
   },
   {
@@ -37,7 +37,7 @@ export const testimonials: Testimonial[] = [
     name: 'Sneha Reddy',
     title: 'Mobile Developer',
     content: 'The Flutter course was comprehensive and well-structured. The instructors were always available to help and the community support was fantastic. I now work as a mobile developer!',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha',
+    image: '/images/testimonials/student-2.webp',
     rating: 5,
   },
   {
@@ -45,7 +45,7 @@ export const testimonials: Testimonial[] = [
     name: 'Vikram Singh',
     title: 'React Developer',
     content: 'SSSAM Academy\'s React course helped me transition from a junior to senior developer role. The advanced patterns and best practices taught here are invaluable.',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram',
+    image: '/images/testimonials/student-1.webp',
     rating: 5,
   },
   {
@@ -53,7 +53,7 @@ export const testimonials: Testimonial[] = [
     name: 'Anjali Nair',
     title: 'Frontend Developer',
     content: 'The ₹9 introductory offer was too good to pass up! The course quality is exceptional and I learned more in 3 months than I did in a year of self-study.',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anjali',
+    image: '/images/testimonials/student-2.webp',
     rating: 5,
   },
 ];

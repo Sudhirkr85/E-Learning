@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { Container, Button } from '@/components/ui';
 import { ROUTES } from '@/constants';
@@ -38,8 +39,13 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href={ROUTES.HOME} className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
-              <span className="text-white font-bold text-xl">SA</span>
+            <div className="relative w-10 h-10 transform group-hover:scale-110 transition-transform duration-200">
+              <Image
+                src="/images/logo/logo.webp"
+                alt="SSSAM Academy Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-gray-900 hidden sm:inline group-hover:text-blue-600 transition-colors">
               SSSAM Academy

@@ -6,7 +6,7 @@ export const trainers: Trainer[] = [
     name: 'Alex Johnson',
     title: 'Full Stack Developer',
     expertise: 'Web Development, JavaScript, React, Node.js',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+    image: '/images/trainers/trainer-1.webp',
     bio: 'With 10+ years of experience in web development, Alex has trained over 15,000 students.',
     socials: {
       linkedin: 'https://linkedin.com/in/alexjohnson',
@@ -18,7 +18,7 @@ export const trainers: Trainer[] = [
     name: 'Sarah Tech',
     title: 'React Specialist',
     expertise: 'React, TypeScript, Frontend Architecture',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+    image: '/images/trainers/trainer-2.webp',
     bio: 'Sarah is passionate about building scalable React applications and mentoring developers.',
     socials: {
       linkedin: 'https://linkedin.com/in/sarahtech',
@@ -29,7 +29,7 @@ export const trainers: Trainer[] = [
     name: 'Dr. James Wilson',
     title: 'Data Science Expert',
     expertise: 'Python, Data Science, Machine Learning, Statistics',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James',
+    image: '/images/trainers/trainer-3.webp',
     bio: 'PhD in Data Science with experience at leading tech companies.',
     socials: {
       linkedin: 'https://linkedin.com/in/jameswilson',
@@ -40,7 +40,7 @@ export const trainers: Trainer[] = [
     name: 'Emily Designer',
     title: 'UX/UI Designer',
     expertise: 'UI Design, UX Research, Figma, Design Systems',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emily',
+    image: '/images/trainers/trainer-1.webp',
     bio: 'Award-winning designer who loves creating beautiful and user-friendly interfaces.',
     socials: {
       linkedin: 'https://linkedin.com/in/emilydesigner',
@@ -52,7 +52,7 @@ export const trainers: Trainer[] = [
     name: 'Mike Flutter',
     title: 'Mobile Developer',
     expertise: 'Flutter, Dart, Mobile Development, Firebase',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
+    image: '/images/trainers/trainer-2.webp',
     bio: 'Building beautiful cross-platform mobile apps with Flutter for 5+ years.',
     socials: {
       linkedin: 'https://linkedin.com/in/mikeflutter',
