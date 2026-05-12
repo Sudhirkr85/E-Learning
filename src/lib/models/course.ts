@@ -152,11 +152,11 @@ export class CourseModel {
         { returnDocument: 'after' }
       );
 
-      if (!result.value) return null;
+      if (!result) return null;
 
       return {
-        ...result.value,
-        id: result.value._id?.toString() || '',
+        ...result,
+        id: result._id?.toString() || '',
       };
     } catch (error) {
       return null;

@@ -8,13 +8,13 @@ import { getCourseBySlug } from '@/lib/courses';
 import { ROUTES } from '@/constants';
 
 interface CourseDetailsPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
-
 export async function generateMetadata({ params }: CourseDetailsPageProps) {
-  const { course } = await getCourseBySlug(params.slug);
+  const { slug } = await params;
+  const { course } = await getCourseBySlug(slug);
 
   if (!course) {
     return { title: 'Course Not Found' };
@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: CourseDetailsPageProps) {
 }
 
 export default async function CourseDetailsPage({ params }: CourseDetailsPageProps) {
-  const { course } = await getCourseBySlug(params.slug);
+  const { slug } = await params;
+  const { course } = await getCourseBySlug(slug);
 
   if (!course) {
     notFound();
@@ -126,6 +127,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 src={course.instructorImage}
                 alt={course.instructor}
                 fill
+                sizes="160px"
                 className="object-cover"
               />
             </div>

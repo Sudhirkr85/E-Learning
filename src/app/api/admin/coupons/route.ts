@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 import { Coupon } from '@/types';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 export async function GET() {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const db = await getDatabase();
     const coupons = await db.collection('coupons').find({}).sort({ createdAt: -1 }).toArray();
     
@@ -25,6 +34,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const db = await getDatabase();
     

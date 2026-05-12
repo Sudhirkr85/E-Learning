@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CourseModel } from '@/lib/models/course';
 import { Course } from '@/types';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 /**
  * GET /api/admin/courses
@@ -8,6 +9,14 @@ import { Course } from '@/types';
  */
 export async function GET() {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const courses = await CourseModel.findAll();
 
     return NextResponse.json({
@@ -35,6 +44,14 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     // Validate required fields

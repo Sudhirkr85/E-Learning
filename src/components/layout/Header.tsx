@@ -47,6 +47,7 @@ export function Header() {
                 src="/images/logo/logo.webp"
                 alt="SSSAM Academy Logo"
                 fill
+                sizes="40px"
                 className="object-contain"
               />
             </div>

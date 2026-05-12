@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PurchaseModel } from '@/lib/models/purchase';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ courseId: string }> }) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const studentId = searchParams.get('studentId');
     const { courseId } = await params;

@@ -91,9 +91,10 @@ export function CourseCard({ course }: CourseCardProps) {
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 relative overflow-hidden border-2 border-gray-300">
               <Image
-                src={course.instructorImage}
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(course.instructor)}`}
                 alt={course.instructor}
                 fill
+                sizes="40px"
                 className="rounded-full object-cover"
               />
             </div>

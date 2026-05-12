@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Container, Heading, Text, Card, Button, Divider } from '@/components/ui';
 import { getCourseById } from '@/data/courses';
@@ -9,9 +9,9 @@ import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
 
 interface LessonPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function LessonPage({ params }: LessonPageProps) {
@@ -19,7 +19,8 @@ export default function LessonPage({ params }: LessonPageProps) {
   const router = useRouter();
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const course = getCourseById(params.id);
+  const { id } = use(params);
+  const course = getCourseById(id);
 
   useUserSync();
 
@@ -27,7 +28,7 @@ export default function LessonPage({ params }: LessonPageProps) {
     if (user?.id) {
       verifyAccess();
     }
-  }, [params.id, user?.id]);
+  }, [id, user?.id]);
 
   const verifyAccess = async () => {
     try {
@@ -37,7 +38,7 @@ export default function LessonPage({ params }: LessonPageProps) {
         setHasAccess(false);
         return;
       }
-      const access = await checkCourseAccess(params.id, studentId);
+      const access = await checkCourseAccess(id, studentId);
       setHasAccess(access);
     } catch (error) {
       console.error('Error verifying access:', error);

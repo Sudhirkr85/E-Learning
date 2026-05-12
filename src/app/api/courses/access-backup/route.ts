@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PurchaseModel } from '@/lib/models/purchase';
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ courseId: string }> }) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const studentId = searchParams.get('studentId');
-    const { courseId } = await params;
+    const courseId = searchParams.get('courseId');
 
-    if (!studentId) {
+    if (!studentId || !courseId) {
       return NextResponse.json(
-        { error: 'Student ID is required' },
+        { error: 'Student ID and Course ID are required' },
         { status: 400 }
       );
     }

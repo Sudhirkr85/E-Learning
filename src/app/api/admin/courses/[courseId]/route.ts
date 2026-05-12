@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CourseModel } from '@/lib/models/course';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 interface CourseIdParams {
-  params: {
+  params: Promise<{
     courseId: string;
-  };
+  }>;
 }
 
 /**
@@ -13,7 +14,15 @@ interface CourseIdParams {
  */
 export async function GET(request: Request, { params }: CourseIdParams) {
   try {
-    const { courseId } = params;
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { courseId } = await params;
 
     const course = await CourseModel.findById(courseId);
 
@@ -53,7 +62,15 @@ export async function GET(request: Request, { params }: CourseIdParams) {
  */
 export async function PUT(request: NextRequest, { params }: CourseIdParams) {
   try {
-    const { courseId } = params;
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { courseId } = await params;
     const body = await request.json();
 
     // Find existing course
@@ -123,7 +140,15 @@ export async function PUT(request: NextRequest, { params }: CourseIdParams) {
  */
 export async function DELETE(request: Request, { params }: CourseIdParams) {
   try {
-    const { courseId } = params;
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { courseId } = await params;
 
     // Check if course exists
     const course = await CourseModel.findById(courseId);

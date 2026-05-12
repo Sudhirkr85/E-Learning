@@ -4,9 +4,9 @@ import { getCourseBySlug } from '@/data/courses';
 import { Course } from '@/types';
 
 interface CourseParams {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 /**
@@ -15,7 +15,7 @@ interface CourseParams {
  */
 export async function GET(request: Request, { params }: CourseParams) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     // Try to fetch from MongoDB
     const dbCourse = await CourseModel.findBySlug(slug);
@@ -53,7 +53,8 @@ export async function GET(request: Request, { params }: CourseParams) {
     console.error('Error fetching course by slug:', error);
 
     // If MongoDB fails, fallback to static data
-    const staticCourse = getCourseBySlug(params.slug);
+    const resolvedParams = await params;
+    const staticCourse = getCourseBySlug(resolvedParams.slug);
 
     if (!staticCourse) {
       return NextResponse.json(

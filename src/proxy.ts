@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // Define public routes for students
 const isStudentPublicRoute = createRouteMatcher([
@@ -8,27 +9,51 @@ const isStudentPublicRoute = createRouteMatcher([
   '/register',
   '/courses',
   '/courses/(.*)',
-  '/api/(?!admin)(.*)',
+  '/api/courses(.*)',
+  '/api/razorpay(.*)',
+  '/api/student(.*)',
+  '/api/user(.*)',
 ]);
 
-// Define admin routes
+// Define admin routes that don't need auth
+const isAdminPublicRoute = createRouteMatcher([
+  '/admin/login',
+  '/api/admin/login',
+]);
+
+// Define all admin routes
 const isAdminRoute = createRouteMatcher([
   '/admin(.*)',
   '/api/admin(.*)',
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
+const ADMIN_SESSION_COOKIE = 'admin_session';
+
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId } = await auth();
   const pathname = req.nextUrl.pathname;
 
   // Handle admin routes separately
   if (isAdminRoute(req)) {
-    // For admin login page, allow access
-    if (pathname === '/admin/login') {
+    // For admin login page and API, allow access
+    if (isAdminPublicRoute(req)) {
       return NextResponse.next();
     }
 
-    // For other admin routes, check admin session (handled by server components)
+    // For other admin routes, check admin session cookie
+    const adminSessionCookie = req.cookies.get(ADMIN_SESSION_COOKIE);
+    
+    if (!adminSessionCookie) {
+      // Redirect to admin login if not authenticated
+      if (pathname.startsWith('/api/admin/')) {
+        return NextResponse.json(
+          { success: false, error: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+      return NextResponse.redirect(new URL('/admin/login', req.url));
+    }
+
     return NextResponse.next();
   }
 

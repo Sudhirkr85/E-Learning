@@ -1,13 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { couponId: string } }
+  { params }: { params: Promise<{ couponId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { couponId } = await params;
     const db = await getDatabase();
-    const coupon = await db.collection('coupons').findOne({ id: params.couponId });
+    const coupon = await db.collection('coupons').findOne({ id: couponId });
     
     if (!coupon) {
       return NextResponse.json(
@@ -34,9 +44,18 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { couponId: string } }
+  { params }: { params: Promise<{ couponId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { couponId } = await params;
     const body = await request.json();
     const db = await getDatabase();
     
@@ -44,7 +63,7 @@ export async function PUT(
     if (body.code) {
       const existingCoupon = await db.collection('coupons').findOne({ 
         code: body.code.toUpperCase(),
-        id: { $ne: params.couponId }
+        id: { $ne: couponId }
       });
       
       if (existingCoupon) {
@@ -62,7 +81,7 @@ export async function PUT(
     };
     
     const result = await db.collection('coupons').updateOne(
-      { id: params.couponId },
+      { id: couponId },
       { $set: updatedCoupon }
     );
     
@@ -88,11 +107,20 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { couponId: string } }
+  { params }: { params: Promise<{ couponId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { couponId } = await params;
     const db = await getDatabase();
-    const result = await db.collection('coupons').deleteOne({ id: params.couponId });
+    const result = await db.collection('coupons').deleteOne({ id: couponId });
     
     if (result.deletedCount === 0) {
       return NextResponse.json(

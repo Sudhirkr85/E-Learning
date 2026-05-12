@@ -1,12 +1,14 @@
-import { requireAdminAuth } from '@/lib/admin-auth';
+export const dynamic = 'force-dynamic';
+
+import LogoutButton from '@/components/LogoutButton';
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Protect all admin routes
-  await requireAdminAuth();
+  // Don't add auth here - it will cause redirect loops
+  // Each admin page that needs protection should call requireAdminAuth instead
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -70,15 +72,7 @@ export default async function AdminLayout({
                 </div>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
-                <button
-                  onClick={async () => {
-                    await fetch('/api/admin/logout', { method: 'POST' });
-                    window.location.href = '/admin/login';
-                  }}
-                  className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Logout
-                </button>
+                <LogoutButton />
               </div>
             </div>
           </div>

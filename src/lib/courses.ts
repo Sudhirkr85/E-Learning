@@ -1,7 +1,15 @@
 import { Course } from '@/types';
 
 // Base URL for API calls
-const API_BASE = '/api';
+const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    // Client-side: use relative URLs
+    return '/api';
+  } else {
+    // Server-side: use absolute URL with localhost
+    return 'http://localhost:3000/api';
+  }
+};
 
 /**
  * Fetch all courses from API with automatic fallback to static data
@@ -13,7 +21,7 @@ export async function getAllCourses(): Promise<{ courses: Course[]; fallback: bo
   const staticCourses = await import('@/data/courses').then(m => m.courses);
 
   try {
-    const response = await fetch(`${API_BASE}/courses`, {
+    const response = await fetch(`${getApiBaseUrl()}/courses`, {
       cache: 'no-store', // Ensure fresh data for admin sync
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +66,7 @@ export async function getFeaturedCourse(): Promise<{ course: Course | null; fall
   );
 
   try {
-    const response = await fetch(`${API_BASE}/courses/featured`, {
+    const response = await fetch(`${getApiBaseUrl()}/courses/featured`, {
       cache: 'no-store', // Ensure fresh data
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +111,7 @@ export async function getCourseBySlug(slug: string): Promise<{ course: Course | 
   );
 
   try {
-    const response = await fetch(`${API_BASE}/courses/${slug}`, {
+    const response = await fetch(`${getApiBaseUrl()}/courses/${slug}`, {
       cache: 'no-store', // Ensure fresh data
       headers: {
         'Content-Type': 'application/json',

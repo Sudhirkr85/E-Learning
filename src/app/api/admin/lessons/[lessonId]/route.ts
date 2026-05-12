@@ -1,13 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { lessonId } = await params;
     const db = await getDatabase();
-    const lesson = await db.collection('lessons').findOne({ id: params.lessonId });
+    const lesson = await db.collection('lessons').findOne({ id: lessonId });
     
     if (!lesson) {
       return NextResponse.json(
@@ -34,9 +44,18 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { lessonId } = await params;
     const body = await request.json();
     const db = await getDatabase();
     
@@ -46,7 +65,7 @@ export async function PUT(
     };
     
     const result = await db.collection('lessons').updateOne(
-      { id: params.lessonId },
+      { id: lessonId },
       { $set: updatedLesson }
     );
     
@@ -72,11 +91,20 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { lessonId: string } }
+  { params }: { params: Promise<{ lessonId: string }> }
 ) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { lessonId } = await params;
     const db = await getDatabase();
-    const result = await db.collection('lessons').deleteOne({ id: params.lessonId });
+    const result = await db.collection('lessons').deleteOne({ id: lessonId });
     
     if (result.deletedCount === 0) {
       return NextResponse.json(
