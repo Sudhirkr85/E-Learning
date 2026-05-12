@@ -1,0 +1,15 @@
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+
+# Razorpay Test Keys (Get these from Razorpay Dashboard)
+RAZORPAY_KEY_ID=rzp_test_SoOs5kviZKeLm2
+RAZORPAY_KEY_SECRET=F13wGfRUeVW4AgN5Y2wgqhjF
+RAZORPAY_WEBHOOK_ID=
+
+# Clerk Authentication (Get these from Clerk Dashboard)
+# Go to https://dashboard.clerk.com -> Your Application -> API Keys
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Clerk Webhook Secret (Optional, for webhooks)
+CLERK_WEBHOOK_SECRET=whsec_...

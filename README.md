@@ -30,9 +30,11 @@ npm start
 - ✅ **Fully Responsive** - Mobile-first design with Tailwind CSS
 - ✅ **Clean Architecture** - Component-driven, modular structure
 - ✅ **Mock Data Ready** - 5 courses, 5 trainers, 8 FAQs, 3 testimonials
-- ✅ **Authentication Ready** - Prepared for Clerk integration
-- ✅ **Payment Ready** - Checkout flow structured for Razorpay
-- ✅ **Database Ready** - Types defined for MongoDB integration
+- ✅ **Clerk Authentication** - Complete auth system with sign up, sign in, sign out
+- ✅ **MongoDB User Sync** - Automatic user data synchronization
+- ✅ **Route Protection** - Middleware-based access control
+- ✅ **Razorpay Payment** - Complete payment flow with verification
+- ✅ **Course Access Control** - Purchase-based content protection
 - ✅ **SEO Optimized** - Metadata on all pages
 - ✅ **Performance Optimized** - Next.js Image component, code splitting
 
@@ -502,25 +504,365 @@ npm start
 # Runs on port 3000
 ```
 
-## 🔌 Integration Roadmap
+## 🔐 Clerk Authentication Integration (Implemented)
 
-### Phase 1: Authentication
-- [ ] Install & setup Clerk
-- [ ] Add Clerk provider to layout
-- [ ] Protect dashboard routes
-- [ ] OAuth integration
+### Environment Setup
 
-### Phase 2: Payments  
-- [ ] Install Razorpay SDK
-- [ ] Create payment API route
-- [ ] Setup payment webhook
-- [ ] Store payment records
+Create a `.env` file with the following variables:
 
-### Phase 3: Database
-- [ ] Setup MongoDB cluster
-- [ ] Connect via Mongoose
-- [ ] Replace mock data
-- [ ] Create admin functions
+```env
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+
+# Clerk Authentication (Get these from Clerk Dashboard)
+# Go to https://dashboard.clerk.com -> Your Application -> API Keys
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Razorpay Test Keys (Get these from Razorpay Dashboard)
+RAZORPAY_KEY_ID=rzp_test_SoOs5kviZKeLm2
+RAZORPAY_KEY_SECRET=F13wGfRUeVW4AgN5Y2wgqhjF
+RAZORPAY_WEBHOOK_ID=
+```
+
+### Prerequisites
+
+1. **MongoDB**: Install and run MongoDB locally
+   ```bash
+   # Download and install MongoDB Community Server
+   # Start MongoDB service
+   mongosh --eval "db.adminCommand('ping')"
+   ```
+
+2. **Clerk Account**: 
+   - Create account at [Clerk Dashboard](https://dashboard.clerk.com/)
+   - Create a new application or use existing one
+   - Get API keys from Dashboard → Your Application → API Keys
+   - Replace the keys in `.env` file
+
+### Authentication Flow Architecture
+
+```
+Login/Register Page → Clerk Authentication → User Sync with MongoDB → Protected Routes → Dashboard Access
+```
+
+### Authentication Features
+
+- ✅ **Sign Up**: Email/password and social login (Google, GitHub)
+- ✅ **Sign In**: Email/password and social login
+- ✅ **Sign Out**: Secure logout with session cleanup
+- ✅ **User Sync**: Automatic MongoDB user record creation/updates
+- ✅ **Route Protection**: Middleware-based access control
+- ✅ **User Context**: React hooks for user state management
+
+### Protected Routes
+
+The following routes require authentication:
+- `/dashboard` - Main dashboard
+- `/dashboard/courses` - My courses
+- `/dashboard/lessons/[id]` - Lesson pages
+- `/checkout` - Checkout page
+- `/checkout/success` - Payment success page
+
+### User Data Schema
+
+**Users Collection in MongoDB:**
+```typescript
+{
+  clerkId: string,           // Clerk user ID
+  name: string,              // User's full name
+  email: string,             // User's email
+  role: 'student',           // User role (fixed to student for now)
+  avatar?: string,           // Profile picture URL
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/user/sync` | POST | Syncs Clerk user with MongoDB |
+| `/api/student/purchases` | GET | Fetches user's purchased courses |
+| `/api/courses/[courseId]/access` | GET | Checks course access permissions |
+
+### Authentication Components
+
+#### Login Page (`/login`)
+- Clerk `SignIn` component
+- Redirects to dashboard after successful login
+- Social login options (Google, GitHub)
+
+#### Register Page (`/register`)
+- Clerk `SignUp` component
+- Redirects to dashboard after successful registration
+- Email verification handled by Clerk
+
+#### Header Navigation
+- Shows user avatar and name when authenticated
+- Dropdown menu with dashboard, courses, and sign out options
+- Shows login/register buttons when not authenticated
+
+#### Middleware Protection
+```typescript
+// src/middleware.ts
+- Protects dashboard and checkout routes
+- Redirects unauthenticated users to login
+- Redirects authenticated users away from auth pages
+```
+
+### Usage Examples
+
+#### Using User Context in Components
+```typescript
+import { useUser } from '@clerk/nextjs';
+import { useUserSync } from '@/hooks/use-user-sync';
+
+function MyComponent() {
+  const { user } = useUser();
+  useUserSync(); // Syncs user with MongoDB
+  
+  return <div>Welcome, {user?.firstName}!</div>;
+}
+```
+
+#### Checking Authentication Status
+```typescript
+import { useUser } from '@clerk/nextjs';
+
+function ProtectedComponent() {
+  const { isSignedIn, user } = useUser();
+  
+  if (!isSignedIn) {
+    return <div>Please sign in to continue</div>;
+  }
+  
+  return <div>Welcome back, {user?.firstName}!</div>;
+}
+```
+
+### Testing Authentication
+
+1. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+2. **Test sign up flow**:
+   - Visit `/register`
+   - Create a new account
+   - Verify user is redirected to dashboard
+
+3. **Test sign in flow**:
+   - Visit `/login`
+   - Sign in with created account
+   - Verify user is redirected to dashboard
+
+4. **Test route protection**:
+   - Try accessing `/dashboard` while logged out
+   - Verify redirect to `/login`
+   - Try accessing `/login` while logged in
+   - Verify redirect to `/dashboard`
+
+### Social Login Setup
+
+To enable social login providers:
+
+1. **Google OAuth**:
+   - Go to Clerk Dashboard → User & Authentication → Social Connections
+   - Enable Google OAuth
+   - Add your Google OAuth credentials
+
+2. **GitHub OAuth**:
+   - Go to Clerk Dashboard → User & Authentication → Social Connections
+   - Enable GitHub OAuth
+   - Add your GitHub OAuth app credentials
+
+### Production Deployment
+
+1. **Environment Variables**: Set production Clerk keys
+2. **Allowed Origins**: Add your domain to Clerk's allowed origins
+3. **Webhooks**: Configure Clerk webhooks for user events (optional)
+4. **Session Management**: Configure session settings for production
+
+## 💳 Razorpay Payment Integration (Implemented)
+
+### Environment Setup
+
+Create a `.env` file with the following variables:
+
+```env
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/sssam-academy
+
+# Razorpay Test Keys (Get these from Razorpay Dashboard)
+RAZORPAY_KEY_ID=rzp_test_SoOs5kviZKeLm2
+RAZORPAY_KEY_SECRET=F13wGfRUeVW4AgN5Y2wgqhjF
+RAZORPAY_WEBHOOK_ID=
+```
+
+### Prerequisites
+
+1. **MongoDB**: Install and run MongoDB locally
+   ```bash
+   # Download and install MongoDB Community Server
+   # Start MongoDB service
+   mongosh --eval "db.adminCommand('ping')"
+   ```
+
+2. **Razorpay Account**: 
+   - Create account at [Razorpay Dashboard](https://dashboard.razorpay.com/)
+   - Get test keys from Settings → API Keys
+   - Replace the test keys in `.env` file
+
+### Payment Flow Architecture
+
+```
+Checkout Page → Create Order API → Razorpay Popup → Payment Verification → Database Update → Course Unlock
+```
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/razorpay/create-order` | POST | Creates Razorpay order and saves purchase record |
+| `/api/razorpay/verify-payment` | POST | Verifies payment signature and updates status |
+| `/api/student/purchases` | GET | Fetches student's purchased courses |
+| `/api/courses/[courseId]/access` | GET | Checks if student has course access |
+
+### Testing the Payment Flow
+
+#### 1. Automated Testing
+Run the comprehensive test scripts:
+
+```bash
+# Test complete payment flow
+node test-payment-flow.js
+
+# Test coupon discount flow  
+node test-coupon-flow.js
+```
+
+#### 2. Manual Testing Steps
+
+1. **Navigate to Checkout**: Visit `http://localhost:3000/checkout`
+2. **Fill Form**: Complete billing information
+3. **Apply Coupon** (Optional): Use `TEST10` for 10% discount
+4. **Click Payment**: Triggers Razorpay popup
+5. **Test Payment**: Use Razorpay test cards:
+   - Card: 4111 1111 1111 1111
+   - Any future expiry date
+   - Any random CVV
+   - Any random name
+
+### Coupon System
+
+**Test Coupons:**
+- `TEST10` - 10% discount
+- Any other code - Invalid (no discount)
+
+### Payment Status Flow
+
+1. **Pending**: Order created, awaiting payment
+2. **Completed**: Payment verified, course unlocked
+3. **Failed**: Payment verification failed
+4. **Refunded**: Manual refund process
+
+### Database Schema
+
+**Purchases Collection:**
+```typescript
+{
+  orderId: string,
+  paymentId?: string,
+  studentId: string,
+  studentEmail: string,
+  studentName: string,
+  studentPhone: string,
+  courseId: string,
+  courseTitle: string,
+  amount: number,
+  currency: string,
+  status: 'pending' | 'completed' | 'failed' | 'refunded',
+  paymentMethod: 'razorpay',
+  couponCode?: string,
+  discountAmount?: number,
+  originalAmount: number,
+  taxAmount: number,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Access Control System
+
+**Course Access Logic:**
+1. Student tries to access lesson page
+2. System checks purchase record in MongoDB
+3. Returns `hasAccess: true/false` based on payment status
+4. Shows lesson content or purchase prompt
+
+### Error Handling
+
+- **MongoDB Not Connected**: Graceful fallback with empty responses
+- **Invalid Razorpay Keys**: Clear error messages
+- **Payment Verification Failed**: Redirects to failure page
+- **Duplicate Purchase**: Prevents multiple orders for same course
+
+### Security Features
+
+- **Signature Verification**: HMAC-SHA256 validation
+- **Order ID Tracking**: Prevents duplicate payments
+- **Amount Validation**: Server-side amount verification
+- **Webhook Ready**: Placeholder for webhook implementation
+
+### Testing Checklist
+
+- [ ] Environment variables configured
+- [ ] MongoDB running locally
+- [ ] Test Razorpay keys working
+- [ ] Order creation successful
+- [ ] Payment popup opens
+- [ ] Signature verification works
+- [ ] Database records created
+- [ ] Course access granted after payment
+- [ ] Coupon discounts applied correctly
+- [ ] Success/failure pages load
+- [ ] Dashboard shows purchased courses
+- [ ] Lesson pages enforce access control
+
+### Production Deployment
+
+1. **Environment Variables**: Set production Razorpay keys
+2. **MongoDB Atlas**: Use cloud database
+3. **Webhooks**: Configure Razorpay webhooks
+4. **HTTPS**: Enable SSL certificate
+5. **Domain**: Update allowed origins in Razorpay
+
+## �🔌 Integration Roadmap
+
+### Phase 1: Authentication ✅ COMPLETED
+- [x] Install & setup Clerk
+- [x] Add Clerk provider to layout
+- [x] Protect dashboard routes
+- [x] OAuth integration
+- [x] User sync with MongoDB
+- [x] Sign in/out functionality
+- [x] Route protection middleware
+
+### Phase 2: Payments ✅ COMPLETED
+- [x] Install Razorpay SDK
+- [x] Create payment API route
+- [x] Setup payment verification
+- [x] Store payment records
+- [x] Implement access control
+
+### Phase 3: Database ✅ COMPLETED
+- [x] Setup MongoDB connection
+- [x] Create purchase model
+- [x] Implement CRUD operations
+- [x] Add access control logic
 
 ### Phase 4: Email
 - [ ] Setup SendGrid/Nodemailer

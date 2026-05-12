@@ -1,6 +1,7 @@
 import { Header, Footer } from '@/components/layout';
-import { Container, Heading, Text, Input, Button, Divider } from '@/components/ui';
+import { Container, Heading, Text, Divider } from '@/components/ui';
 import { ROUTES } from '@/constants';
+import { SignIn } from '@clerk/nextjs';
 
 export const metadata = {
   title: 'Login - SSSAM Academy',
@@ -24,51 +25,13 @@ export default function LoginPage() {
               </Text>
             </div>
 
-            <form className="space-y-4">
-              <Input
-                label="Email Address"
-                type="email"
-                placeholder="your@email.com"
-                required
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                required
-              />
-
-              <Button type="submit" variant="primary" size="lg" className="w-full">
-                Sign In
-              </Button>
-            </form>
-
-            <div className="my-6 flex items-center gap-3">
-              <Divider className="flex-1" />
-              <Text size="sm" color="muted">
-                or
-              </Text>
-              <Divider className="flex-1" />
-            </div>
-
-            {/* Social Login */}
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full"
-              >
-                🔵 Continue with Google
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full"
-              >
-                🔗 Continue with GitHub
-              </Button>
-            </div>
+            <SignIn 
+              path="/login"
+              routing="path"
+              signUpUrl="/register"
+              forceRedirectUrl="/dashboard"
+              fallbackRedirectUrl="/dashboard"
+            />
 
             <div className="mt-6 text-center">
               <Text size="sm" color="muted">
@@ -77,12 +40,6 @@ export default function LoginPage() {
                   Sign up
                 </a>
               </Text>
-            </div>
-
-            <div className="mt-4 text-center">
-              <a href="#" className="text-sm text-blue-600 hover:text-blue-700">
-                Forgot password?
-              </a>
             </div>
           </div>
         </Container>

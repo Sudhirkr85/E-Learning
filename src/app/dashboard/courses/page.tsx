@@ -5,19 +5,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Container, Heading, Text, Card, Button } from '@/components/ui';
 import { courses } from '@/data/courses';
+import { useUser } from '@clerk/nextjs';
+import { useUserSync } from '@/hooks/use-user-sync';
 
 export default function MyCoursesPage() {
+  const { user } = useUser();
   const [purchasedCourses, setPurchasedCourses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  useUserSync();
+
   useEffect(() => {
-    fetchPurchasedCourses();
-  }, []);
+    if (user?.id) {
+      fetchPurchasedCourses();
+    }
+  }, [user?.id]);
 
   const fetchPurchasedCourses = async () => {
     try {
-      // In a real app, studentId would come from authentication
-      const studentId = 'temp_student_id';
+      // Use the authenticated user's ID
+      const studentId = user?.id;
       const response = await fetch(`/api/student/purchases?studentId=${studentId}`);
       
       if (response.ok) {

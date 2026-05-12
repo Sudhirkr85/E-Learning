@@ -6,8 +6,11 @@ import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Card, Button, Input, Divider } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import { getFeaturedCourse } from '@/data/courses';
+import { useUser } from '@clerk/nextjs';
+import { useUserSync } from '@/hooks/use-user-sync';
 
 export default function CheckoutPage() {
+  const { user } = useUser();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [couponCode, setCouponCode] = useState('');
@@ -23,6 +26,21 @@ export default function CheckoutPage() {
     zipCode: '',
     country: '',
   });
+
+  useUserSync();
+
+  // Pre-fill form with user data when available
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.primaryEmailAddress?.emailAddress || '',
+        phone: user.primaryPhoneNumber?.phoneNumber || '',
+      }));
+    }
+  }, [user]);
 
   const course = getFeaturedCourse();
   const coursePrice = course?.price || 4999;
@@ -82,7 +100,7 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          studentId: 'temp_student_id', // In production, this would come from auth
+          studentId: user?.id || 'temp_student_id',
           studentEmail: formData.email,
           studentName: `${formData.firstName} ${formData.lastName}`,
           studentPhone: formData.phone,

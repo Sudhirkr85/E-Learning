@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Container, Heading, Text, Card, Button, Divider } from '@/components/ui';
 import { getCourseById } from '@/data/courses';
 import { checkCourseAccess } from '@/lib/course-access';
+import { useUser } from '@clerk/nextjs';
+import { useUserSync } from '@/hooks/use-user-sync';
 
 interface LessonPageProps {
   params: {
@@ -13,19 +15,28 @@ interface LessonPageProps {
 }
 
 export default function LessonPage({ params }: LessonPageProps) {
+  const { user } = useUser();
   const router = useRouter();
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const course = getCourseById(params.id);
 
+  useUserSync();
+
   useEffect(() => {
-    verifyAccess();
-  }, [params.id]);
+    if (user?.id) {
+      verifyAccess();
+    }
+  }, [params.id, user?.id]);
 
   const verifyAccess = async () => {
     try {
-      // In a real app, studentId would come from authentication
-      const studentId = 'temp_student_id';
+      // Use the authenticated user's ID
+      const studentId = user?.id;
+      if (!studentId) {
+        setHasAccess(false);
+        return;
+      }
       const access = await checkCourseAccess(params.id, studentId);
       setHasAccess(access);
     } catch (error) {

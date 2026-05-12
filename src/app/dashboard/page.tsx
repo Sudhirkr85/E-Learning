@@ -1,13 +1,20 @@
+'use client';
+
 import { Container, Heading, Text, Card } from '@/components/ui';
+import { useUser } from '@clerk/nextjs';
+import { useUserSync } from '@/hooks/use-user-sync';
 
 export default function DashboardPage() {
+  const { user } = useUser();
+  useUserSync();
+
   return (
     <Container className="py-8">
       <Heading level={1} className="mb-2">
         Dashboard
       </Heading>
       <Text color="muted" className="mb-8">
-        Welcome back! Here's your learning overview.
+        Welcome back, {user?.firstName || 'Student'}! Here's your learning overview.
       </Text>
 
       {/* Stats Grid */}
