@@ -1,57 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/mongodb';
+import { CourseModel } from '@/lib/models/course';
 import { Course } from '@/types';
 
+/**
+ * GET /api/admin/courses
+ * Fetch all courses for admin panel
+ */
 export async function GET() {
   try {
-    const db = await getDatabase();
-    const courses = await db.collection('courses').find({}).sort({ updatedAt: -1 }).toArray();
-    
+    const courses = await CourseModel.findAll();
+
     return NextResponse.json({
       success: true,
-      courses: courses.map(course => ({
-        ...course,
-        _id: undefined
-      }))
+      courses,
+      message: 'Courses fetched successfully',
     });
   } catch (error) {
     console.error('Error fetching courses:', error);
+
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch courses' },
+      {
+        success: false,
+        error: 'Failed to fetch courses',
+        message: 'An error occurred while fetching courses',
+      },
       { status: 500 }
     );
   }
 }
 
+/**
+ * POST /api/admin/courses
+ * Create a new course
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const db = await getDatabase();
-    
-    const newCourse: Omit<Course, 'id' | 'createdAt' | 'updatedAt'> = {
-      ...body,
-      id: new Date().getTime().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
 
-    const result = await db.collection('courses').insertOne(newCourse);
-    
-    if (result.acknowledged) {
-      return NextResponse.json({
-        success: true,
-        course: newCourse
-      });
-    } else {
+    // Validate required fields
+    if (!body.title || !body.slug || !body.description) {
       return NextResponse.json(
-        { success: false, error: 'Failed to create course' },
-        { status: 500 }
+        {
+          success: false,
+          error: 'Missing required fields',
+          message: 'title, slug, and description are required',
+        },
+        { status: 400 }
       );
     }
+
+    // Check for duplicate slug
+    const existingCourse = await CourseModel.findBySlug(body.slug);
+    if (existingCourse) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Slug already exists',
+          message: 'A course with this slug already exists',
+        },
+        { status: 409 }
+      );
+    }
+
+    // Create course
+    const newCourse = await CourseModel.create({
+      ...body,
+      status: body.status || 'draft',
+      featured: body.featured || false,
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        course: newCourse,
+        message: 'Course created successfully',
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error creating course:', error);
+
     return NextResponse.json(
-      { success: false, error: 'Failed to create course' },
+      {
+        success: false,
+        error: 'Failed to create course',
+        message: 'An error occurred while creating the course',
+      },
       { status: 500 }
     );
   }

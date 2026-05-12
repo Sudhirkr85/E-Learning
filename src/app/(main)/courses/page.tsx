@@ -1,7 +1,7 @@
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button } from '@/components/ui';
 import { CoursesGrid } from '@/components/sections';
-import { courses } from '@/data/courses';
+import { getPublishedCourses, getComingSoonCourses } from '@/lib/courses';
 import { ROUTES } from '@/constants';
 
 export const metadata = {
@@ -9,9 +9,10 @@ export const metadata = {
   description: 'Browse all our courses in web development, data science, mobile development, and more.',
 };
 
-export default function CoursesPage() {
-  const publishedCourses = courses.filter(c => c.status === 'published');
-  const comingSoonCourses = courses.filter(c => c.status === 'coming-soon');
+export default async function CoursesPage() {
+  // Fetch courses dynamically with fallback
+  const { courses: publishedCourses } = await getPublishedCourses();
+  const { courses: comingSoonCourses } = await getComingSoonCourses();
 
   return (
     <>

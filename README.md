@@ -49,6 +49,91 @@ npm start
 - ✅ **Performance Optimized** - Next.js Image component, code splitting
 - ✅ **Summer Training Programs** - Special courses for Indian students
 - ✅ **Placement Support** - Job assistance and career guidance
+- ✅ **Dynamic Course Management** - Admin-driven content with MongoDB
+- ✅ **Automatic Fallback** - Static data fallback when DB unavailable
+
+## 📚 Dynamic Course Architecture
+
+### Overview
+Courses are now managed dynamically through MongoDB while maintaining a static fallback mechanism. This enables the admin panel to manage course content (pricing, batches, descriptions, etc.) and have changes immediately reflected on the website without code deployment.
+
+### Course Data Flow
+
+```
+Admin Panel (CRUD Operations)
+    ↓
+MongoDB Collection (courses)
+    ↓
+API Endpoints (/api/courses/*)
+    ↓
+Frontend Pages (auto-fetch with fallback)
+    ↓
+Static Data (courses.ts) [Fallback Only]
+```
+
+### How It Works
+
+**Frontend Pages** use the `lib/courses.ts` helper functions to fetch course data:
+- `getPublishedCourses()` - Fetch all published courses
+- `getComingSoonCourses()` - Fetch upcoming courses  
+- `getFeaturedCourse()` - Fetch the featured course
+- `getCourseBySlug(slug)` - Fetch a specific course
+
+**Automatic Fallback Logic:**
+1. Page requests courses from `/api/courses/*` endpoint
+2. API tries to fetch from MongoDB collection
+3. If MongoDB has courses, return them (dynamic data)
+4. If MongoDB is empty or fails, fallback to static `src/data/courses.ts`
+5. No errors shown to users - seamless experience
+
+### API Endpoints
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/courses` | GET | Fetch all courses |
+| `/api/courses/featured` | GET | Fetch featured course |
+| `/api/courses/[slug]` | GET | Fetch course by slug |
+| `/api/admin/courses` | GET, POST | List/create courses |
+| `/api/admin/courses/[id]` | GET, PUT, DELETE | Manage specific course |
+
+### Admin-Driven Content Flow
+
+1. **Admin adds/edits course** in admin panel
+2. **Data saved to MongoDB**
+3. **API endpoints return updated data**
+4. **Frontend automatically fetches fresh data** (no-store cache policy)
+5. **Website displays updated course instantly**
+
+**No Manual Steps:**
+- ✅ No code changes needed
+- ✅ No redeployment required
+- ✅ No cache invalidation needed
+- ✅ Changes live in real-time
+
+### Fallback Support
+
+**When is static data used?**
+- MongoDB collection is empty (first deployment)
+- MongoDB service unavailable/errors
+- Network request fails
+- API endpoint returns error status
+
+**Static Data Location:** `src/data/courses.ts`
+- 5 sample courses included
+- Helper functions: `getFeaturedCourse()`, `getCourseBySlug(slug)`, etc.
+- Works offline for local development
+
+### Performance
+
+**Server-Side Rendering:**
+- Pages fetch courses server-side (faster, SEO-friendly)
+- Cache policy: `cache: 'no-store'` for fresh data
+- Admin updates visible instantly (no stale data)
+
+**No Performance Hit:**
+- Fallback to static data is instant
+- API responses can be CDN cached
+- Next.js Image component optimization built-in
 
 ## � Course Catalog
 

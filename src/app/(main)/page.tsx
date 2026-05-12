@@ -1,6 +1,6 @@
 import { Header, Footer } from '@/components/layout';
 import { HeroSection, CoursesGrid, TrainersSection, FAQSection, ContactSection, TestimonialsSection } from '@/components/sections';
-import { getFeaturedCourse, getComingSoonCourses } from '@/data/courses';
+import { getFeaturedCourse, getComingSoonCourses } from '@/lib/courses';
 import { trainers } from '@/data/trainers';
 import { faqs } from '@/data/faq';
 import { TESTIMONIALS } from '@/constants';
@@ -10,9 +10,10 @@ export const metadata = {
   description: 'Master in-demand skills with expert instructors. Join thousands of students learning web development, data science, and more.',
 };
 
-export default function Home() {
-  const featuredCourse = getFeaturedCourse();
-  const comingSoonCourses = getComingSoonCourses();
+export default async function Home() {
+  // Fetch courses dynamically with fallback
+  const { course: featuredCourse } = await getFeaturedCourse();
+  const { courses: comingSoonCourses } = await getComingSoonCourses();
 
   return (
     <>

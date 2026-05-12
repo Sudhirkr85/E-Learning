@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Card, Button, Input, Divider } from '@/components/ui';
 import { ROUTES } from '@/constants';
-import { getFeaturedCourse } from '@/data/courses';
+import { Course } from '@/types';
 import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
 
 export default function CheckoutPage() {
   const { user } = useUser();
   const router = useRouter();
+  const [course, setCourse] = useState<Course | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -29,6 +30,25 @@ export default function CheckoutPage() {
 
   useUserSync();
 
+  // Fetch featured course on mount
+  useEffect(() => {
+    const fetchFeaturedCourse = async () => {
+      try {
+        const response = await fetch('/api/courses/featured', {
+          cache: 'no-store',
+        });
+        const data = await response.json();
+        if (data.success && data.course) {
+          setCourse(data.course);
+        }
+      } catch (error) {
+        console.error('Failed to fetch featured course:', error);
+      }
+    };
+    
+    fetchFeaturedCourse();
+  }, []);
+
   // Pre-fill form with user data when available
   useEffect(() => {
     if (user) {
@@ -42,7 +62,6 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
-  const course = getFeaturedCourse();
   const coursePrice = course?.price || 4999;
   const discountedPrice = coursePrice - discount;
   const taxAmount = Math.round(discountedPrice * 0.18);

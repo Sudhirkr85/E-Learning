@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Badge, Rating, Divider } from '@/components/ui';
 import { CurriculumPreview } from '@/components/sections';
-import { getCourseBySlug } from '@/data/courses';
+import { getCourseBySlug } from '@/lib/courses';
 import { ROUTES } from '@/constants';
 
 interface CourseDetailsPageProps {
@@ -14,7 +14,7 @@ interface CourseDetailsPageProps {
 }
 
 export async function generateMetadata({ params }: CourseDetailsPageProps) {
-  const course = getCourseBySlug(params.slug);
+  const { course } = await getCourseBySlug(params.slug);
 
   if (!course) {
     return { title: 'Course Not Found' };
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: CourseDetailsPageProps) {
   };
 }
 
-export default function CourseDetailsPage({ params }: CourseDetailsPageProps) {
-  const course = getCourseBySlug(params.slug);
+export default async function CourseDetailsPage({ params }: CourseDetailsPageProps) {
+  const { course } = await getCourseBySlug(params.slug);
 
   if (!course) {
     notFound();

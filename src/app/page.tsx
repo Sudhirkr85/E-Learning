@@ -4,13 +4,15 @@ import { CoursesGrid } from '@/components/sections/CoursesGrid';
 import { TrainersSection } from '@/components/sections/TrainersSection';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FAQSection } from '@/components/sections/FAQSection';
-import { courses, getFeaturedCourse } from '@/data/courses';
+import { getFeaturedCourse, getPublishedCourses } from '@/lib/courses';
 import { trainers } from '@/data/trainers';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
 
-export default function Home() {
-  const featuredCourse = getFeaturedCourse();
+export default async function Home() {
+  // Fetch featured course and all published courses from MongoDB with fallback
+  const { course: featuredCourse } = await getFeaturedCourse();
+  const { courses: allCourses } = await getPublishedCourses();
   
   return (
     <div className="min-h-screen bg-white">
@@ -22,7 +24,7 @@ export default function Home() {
         
         {/* Courses Grid */}
         <CoursesGrid 
-          courses={courses}
+          courses={allCourses}
           title="Explore Our Courses"
           description="Choose from our wide range of courses designed to help you master in-demand skills and advance your career."
         />
