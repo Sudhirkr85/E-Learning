@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-
+import {
+  Container,
+  Text,
+  Heading,
+  Card,
+  Button,
+  Input,
+} from '@/components/ui';
 interface ClassSession {
   _id: string;
   courseId: string;
@@ -190,7 +197,7 @@ export default function ManageSessionsPage() {
         {/* Contact Information Section */}
         <Card className="p-6 mb-8">
           <h3 className="text-xl font-bold text-white mb-6">Support Contact Information</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
               <label className="block text-sm font-medium text-slate-200 mb-2">
