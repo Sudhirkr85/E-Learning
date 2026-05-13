@@ -1,38 +1,47 @@
 'use client';
 
-import { Suspense } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { Footer, Header } from '@/components/layout';
 import { Button, Card, Container, Divider, Heading, Text } from '@/components/ui';
-import { CheckoutContent } from './checkout-content';
+import { ROUTES } from '@/constants';
+import { useUserSync } from '@/hooks/use-user-sync';
+import { Course } from '@/types';
 
-function CheckoutFallback() {
-  return (
-    <>
-      <Header />
-      <div className="relative overflow-hidden bg-slate-950 py-12 md:py-16 flex items-center">
-        <Container className="relative z-10">
-          <div className="mx-auto max-w-5xl">
-            <Heading level={1} className="mb-3 text-white">
-              Checkout
-            </Heading>
-            <Text className="mb-8 text-slate-300">
-              Loading checkout...
-            </Text>
-          </div>
-        </Container>
-      </div>
-      <Footer />
-    </>
-  );
-}
+type RazorpayHandlerResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
 
-export default function CheckoutPage() {
-  return (
-    <Suspense fallback={<CheckoutFallback />}>
-      <CheckoutContent />
-    </Suspense>
-  );
-}
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description?: string;
+  order_id: string;
+  prefill?: {
+    name?: string;
+    email?: string;
+    contact?: string;
+  };
+  theme?: {
+    color?: string;
+  };
+  modal?: {
+    ondismiss?: () => void;
+  };
+  handler: (response: RazorpayHandlerResponse) => void;
+};
+
+type RazorpayWindow = Window & {
+  Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+};
+
+export function CheckoutContent() {
+  const { user, isLoaded } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
   const courseParam = searchParams.get('course');
@@ -49,7 +58,7 @@ export default function CheckoutPage() {
     const fetchCourse = async () => {
       try {
         const endpoint = courseParam ? `/api/courses/${courseParam}` : '/api/courses/featured';
-        const response = await fetch(endpoint, { cache: 'no-store' });
+        const response = await fetch(endpoint);
         const data = await response.json();
 
         if (!active) {
@@ -253,7 +262,7 @@ export default function CheckoutPage() {
                 <Card className="lg:col-span-2 border border-slate-800 bg-slate-900/80 p-6 md:p-8">
                   <div className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
                     Selected Course
-                    </div>
+                  </div>
 
                   <Heading level={3} className="mb-3 text-white">
                     {course?.title || 'Loading course details'}

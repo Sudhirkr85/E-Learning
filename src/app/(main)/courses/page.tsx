@@ -9,6 +9,9 @@ export const metadata = {
   description: 'Browse all our courses in web development, data science, mobile development, and more.',
 };
 
+// Mark this page as dynamic because getPublishedCourses and getComingSoonCourses use cache: 'no-store'
+export const dynamic = 'force-dynamic';
+
 export default async function CoursesPage() {
   // Fetch courses dynamically with fallback
   const { courses: publishedCourses } = await getPublishedCourses();

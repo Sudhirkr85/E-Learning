@@ -7,6 +7,9 @@ import { getFeaturedCourse, getPublishedCourses } from '@/lib/courses';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
 
+// Mark this page as dynamic because getFeaturedCourse and getPublishedCourses use cache: 'no-store'
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Fetch featured course and all published courses from MongoDB with fallback
   const { course: featuredCourse } = await getFeaturedCourse();
