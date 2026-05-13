@@ -21,10 +21,10 @@ export function TestimonialsSection({ testimonials }: TestimonialsProps) {
     <section className="py-20 md:py-28 bg-gradient-to-b from-white via-blue-50 to-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.02%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-      
+
       {/* Decorative blobs */}
       <div className="absolute top-40 right-20 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      
+
       <Container className="relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -35,8 +35,8 @@ export function TestimonialsSection({ testimonials }: TestimonialsProps) {
           <Heading level={2} className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             See How Our Graduates Achieved Their Goals
           </Heading>
-          <Text size="lg" color="muted" className="max-w-3xl mx-auto text-lg leading-relaxed">
-            Join 15,000+ Indian students who have successfully launched their tech careers with SSSAM Academy. Discover real success stories, placements, and salary increments from our alumni across leading IT companies.
+          <Text className="max-w-3xl mx-auto text-lg leading-8 text-slate-600 font-medium">
+            Join 10,000+ students who have successfully launched their tech careers with SSSAM Academy. Discover real success stories, placements, and salary increments from our alumni across leading IT companies.
           </Text>
         </div>
 

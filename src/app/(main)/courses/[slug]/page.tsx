@@ -39,8 +39,16 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Header />
 
       {/* Hero */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 py-12 md:py-20">
-        <Container>
+      <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 py-12 md:py-20 overflow-hidden">
+        {/* Spider-web background */}
+        <div className="absolute inset-0 opacity-40" style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.06) 25%, rgba(6, 182, 212, 0.06) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.06) 75%, rgba(6, 182, 212, 0.06) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.06) 25%, rgba(139, 92, 246, 0.06) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.06) 75%, rgba(139, 92, 246, 0.06) 76%, transparent 77%, transparent)
+          `,
+          backgroundSize: '50px 50px',
+        }} />
+        <Container className="relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Content */}
             <div>
@@ -115,8 +123,16 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       </div>
 
       {/* Instructor */}
-      <section className="py-12 md:py-20 bg-slate-950">
-        <Container>
+      <section className="relative py-12 md:py-20 bg-slate-950 overflow-hidden">
+        {/* Spider-web background */}
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.05) 25%, rgba(6, 182, 212, 0.05) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.05) 75%, rgba(6, 182, 212, 0.05) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.05) 25%, rgba(139, 92, 246, 0.05) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.05) 75%, rgba(139, 92, 246, 0.05) 76%, transparent 77%, transparent)
+          `,
+          backgroundSize: '50px 50px',
+        }} />
+        <Container className="relative z-10">
           <Heading level={2} className="mb-8 text-white">
             Your Instructor
           </Heading>
@@ -155,8 +171,16 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Divider />
 
       {/* Learning Outcomes */}
-      <section className="py-12 md:py-20 bg-slate-900">
-        <Container>
+      <section className="relative py-12 md:py-20 bg-slate-900 overflow-hidden">
+        {/* Spider-web background */}
+        <div className="absolute inset-0 opacity-35" style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.055) 25%, rgba(6, 182, 212, 0.055) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.055) 75%, rgba(6, 182, 212, 0.055) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.055) 25%, rgba(139, 92, 246, 0.055) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.055) 75%, rgba(139, 92, 246, 0.055) 76%, transparent 77%, transparent)
+          `,
+          backgroundSize: '50px 50px',
+        }} />
+        <Container className="relative z-10">
           <Heading level={2} className="mb-8 text-white">
             What You'll Learn
           </Heading>
@@ -182,13 +206,23 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Divider />
 
       {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-        <Container>
+      <section className="relative py-12 md:py-20 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 overflow-hidden">
+        {/* Spider-web background */}
+        <div className="absolute inset-0 opacity-40" style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.06) 25%, rgba(6, 182, 212, 0.06) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.06) 75%, rgba(6, 182, 212, 0.06) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.06) 25%, rgba(139, 92, 246, 0.06) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.06) 75%, rgba(139, 92, 246, 0.06) 76%, transparent 77%, transparent)
+          `,
+          backgroundSize: '50px 50px',
+        }} />
+        {/* Gradient overlay for premium look */}
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 pointer-events-none" />
+        <Container className="relative z-10">
           <div className="text-center">
             <Heading level={2} className="text-white mb-4">
               Ready to Get Started?
             </Heading>
-            <Text size="lg" className="text-blue-50 mb-8">
+            <Text size="lg" className="text-slate-300 mb-8">
               Join thousands of students learning this course
             </Text>
             <Button
