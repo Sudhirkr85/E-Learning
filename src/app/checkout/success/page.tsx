@@ -1,30 +1,35 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Divider, Card } from '@/components/ui';
 import { ROUTES } from '@/constants';
 
 function PaymentSuccessContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [purchaseData, setPurchaseData] = useState<any>(null);
+  const [purchaseData, setPurchaseData] = useState({
+    orderId: '',
+    paymentId: '',
+    amount: 0,
+    courseTitle: '',
+    studentEmail: '',
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get payment data from URL params or localStorage
-    const paymentId = searchParams.get('payment_id');
-    const orderId = searchParams.get('order_id');
-    
-    // For now, we'll use mock data since we don't have a way to pass data
-    // In a real app, you'd fetch this from an API or use query params
+    const paymentId = searchParams.get('payment_id') || searchParams.get('paymentId') || '';
+    const orderId = searchParams.get('order_id') || searchParams.get('orderId') || '';
+    const amount = Number(searchParams.get('amount') || '0');
+    const courseTitle = searchParams.get('course_title') || searchParams.get('courseTitle') || '';
+    const studentEmail = searchParams.get('student_email') || searchParams.get('studentEmail') || '';
+
     setPurchaseData({
-      orderId: orderId || `ORD-${Date.now()}`,
-      paymentId: paymentId || `PAY-${Date.now()}`,
-      amount: 5899,
-      courseTitle: 'Master Full Stack Web Development',
-      studentEmail: 'student@example.com',
+      orderId,
+      paymentId,
+      amount,
+      courseTitle,
+      studentEmail,
     });
     setIsLoading(false);
   }, [searchParams]);
@@ -96,7 +101,9 @@ function PaymentSuccessContent() {
               </div>
 
               <Text color="secondary" className="mb-6">
-                A confirmation email has been sent to {purchaseData?.studentEmail}. You can now access the course content from your dashboard.
+                {purchaseData.studentEmail
+                  ? `A confirmation email has been sent to ${purchaseData.studentEmail}. You can now access the course content from your dashboard.`
+                  : 'You can now access the course content from your dashboard.'}
               </Text>
 
               <div className="space-y-3">

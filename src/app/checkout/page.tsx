@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Footer, Header } from '@/components/layout';
 import { Button, Card, Container, Divider, Heading, Text } from '@/components/ui';
+import { ROUTES } from '@/constants';
 import { useUserSync } from '@/hooks/use-user-sync';
 import { Course } from '@/types';
 
@@ -147,7 +148,14 @@ export default function CheckoutPage() {
       const orderData = await response.json();
 
       if (!response.ok) {
-        throw new Error(orderData.error || 'Failed to create order');
+        const errorMessage = orderData.error || 'Failed to create order';
+
+        if (errorMessage.toLowerCase().includes('already purchased')) {
+          router.push(ROUTES.MY_COURSES);
+          return;
+        }
+
+        throw new Error(errorMessage);
       }
 
       const options: RazorpayOptions = {
@@ -187,7 +195,16 @@ export default function CheckoutPage() {
             const verifyData = await verifyResponse.json();
 
             if (verifyResponse.ok && verifyData.success) {
-              router.push('/checkout/success');
+              const purchase = verifyData.purchase ?? {};
+              const successParams = new URLSearchParams({
+                order_id: String(purchase.orderId ?? response.razorpay_order_id ?? ''),
+                payment_id: String(purchase.paymentId ?? response.razorpay_payment_id ?? ''),
+                amount: String(purchase.amount ?? orderData.amount / 100),
+                course_title: String(purchase.courseTitle ?? course.title),
+                student_email: String(purchase.studentEmail ?? customerEmail),
+              });
+
+              router.push(`/checkout/success?${successParams.toString()}`);
               return;
             }
 
