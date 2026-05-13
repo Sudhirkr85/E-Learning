@@ -60,7 +60,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   // Handle student authentication
   // Handle authenticated user accessing auth pages
   if (userId && (pathname === '/login' || pathname === '/register')) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   // Handle unauthenticated user accessing protected student routes

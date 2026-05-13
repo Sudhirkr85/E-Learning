@@ -29,8 +29,8 @@ export default function LoginPage() {
               path="/login"
               routing="path"
               signUpUrl="/register"
-              forceRedirectUrl="/dashboard"
-              fallbackRedirectUrl="/dashboard"
+              forceRedirectUrl="/"
+              fallbackRedirectUrl="/"
             />
 
             <div className="mt-6 text-center">

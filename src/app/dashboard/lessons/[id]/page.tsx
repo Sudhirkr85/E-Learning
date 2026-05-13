@@ -82,7 +82,7 @@ export default function LessonPage({ params }: LessonPageProps) {
           <Text color="muted" className="mb-4">
             You need to purchase this course to access the content.
           </Text>
-          <Button onClick={() => router.push('/checkout')}>
+          <Button onClick={() => router.push(`/checkout?course=${course.slug}`)}>
             Purchase Course
           </Button>
         </div>

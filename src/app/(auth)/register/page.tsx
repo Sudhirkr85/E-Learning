@@ -29,8 +29,8 @@ export default function RegisterPage() {
               path="/register"
               routing="path"
               signInUrl="/login"
-              forceRedirectUrl="/dashboard"
-              fallbackRedirectUrl="/dashboard"
+              forceRedirectUrl="/"
+              fallbackRedirectUrl="/"
             />
 
             <div className="mt-6 text-center">

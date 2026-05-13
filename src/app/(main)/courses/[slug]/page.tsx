@@ -41,10 +41,10 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       {/* Hero */}
       <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 py-12 md:py-20 overflow-hidden">
         {/* Spider-web background */}
-        <div className="absolute inset-0 opacity-40" style={{
+        <div className="absolute inset-0 opacity-50" style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.06) 25%, rgba(6, 182, 212, 0.06) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.06) 75%, rgba(6, 182, 212, 0.06) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.06) 25%, rgba(139, 92, 246, 0.06) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.06) 75%, rgba(139, 92, 246, 0.06) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.08) 25%, rgba(6, 182, 212, 0.08) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.08) 75%, rgba(6, 182, 212, 0.08) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.08) 25%, rgba(139, 92, 246, 0.08) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.08) 75%, rgba(139, 92, 246, 0.08) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px',
         }} />
@@ -70,7 +70,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 <Button
                   variant="primary"
                   size="lg"
-                  href={ROUTES.CHECKOUT}
+                  href={`${ROUTES.CHECKOUT}?course=${course.slug}`}
                   disabled={course.status === 'coming-soon'}
                 >
                   {course.status === 'coming-soon' ? 'Coming Soon' : 'Enroll Now'}
@@ -125,10 +125,10 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       {/* Instructor */}
       <section className="relative py-12 md:py-20 bg-slate-950 overflow-hidden">
         {/* Spider-web background */}
-        <div className="absolute inset-0 opacity-30" style={{
+        <div className="absolute inset-0 opacity-40" style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.05) 25%, rgba(6, 182, 212, 0.05) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.05) 75%, rgba(6, 182, 212, 0.05) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.05) 25%, rgba(139, 92, 246, 0.05) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.05) 75%, rgba(139, 92, 246, 0.05) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.07) 25%, rgba(6, 182, 212, 0.07) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.07) 75%, rgba(6, 182, 212, 0.07) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.07) 25%, rgba(139, 92, 246, 0.07) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.07) 75%, rgba(139, 92, 246, 0.07) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px',
         }} />
@@ -173,10 +173,10 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       {/* Learning Outcomes */}
       <section className="relative py-12 md:py-20 bg-slate-900 overflow-hidden">
         {/* Spider-web background */}
-        <div className="absolute inset-0 opacity-35" style={{
+        <div className="absolute inset-0 opacity-45" style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.055) 25%, rgba(6, 182, 212, 0.055) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.055) 75%, rgba(6, 182, 212, 0.055) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.055) 25%, rgba(139, 92, 246, 0.055) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.055) 75%, rgba(139, 92, 246, 0.055) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.075) 25%, rgba(6, 182, 212, 0.075) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.075) 75%, rgba(6, 182, 212, 0.075) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.075) 25%, rgba(139, 92, 246, 0.075) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.075) 75%, rgba(139, 92, 246, 0.075) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px',
         }} />
@@ -208,10 +208,10 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       {/* CTA Section */}
       <section className="relative py-12 md:py-20 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 overflow-hidden">
         {/* Spider-web background */}
-        <div className="absolute inset-0 opacity-40" style={{
+        <div className="absolute inset-0 opacity-50" style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.06) 25%, rgba(6, 182, 212, 0.06) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.06) 75%, rgba(6, 182, 212, 0.06) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.06) 25%, rgba(139, 92, 246, 0.06) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.06) 75%, rgba(139, 92, 246, 0.06) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.08) 25%, rgba(6, 182, 212, 0.08) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.08) 75%, rgba(6, 182, 212, 0.08) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.08) 25%, rgba(139, 92, 246, 0.08) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.08) 75%, rgba(139, 92, 246, 0.08) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px',
         }} />
@@ -228,7 +228,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
             <Button
               variant="primary"
               size="lg"
-              href={ROUTES.CHECKOUT}
+              href={`${ROUTES.CHECKOUT}?course=${course.slug}`}
               disabled={course.status === 'coming-soon'}
             >
               {course.status === 'coming-soon' ? 'Coming Soon' : `Enroll for ₹${course.price.toLocaleString()}`}

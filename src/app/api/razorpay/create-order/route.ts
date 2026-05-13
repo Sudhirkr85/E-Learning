@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { currentUser } from '@clerk/nextjs/server';
 import razorpay from '@/lib/razorpay';
 import { PurchaseModel } from '@/lib/models/purchase';
-import { getFeaturedCourse } from '@/data/courses';
+import { getCourseById, getCourseBySlug } from '@/data/courses';
+import { CourseModel } from '@/lib/models/course';
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await currentUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     // Check if Razorpay is configured
     if (!razorpay) {
       return NextResponse.json(
@@ -14,32 +25,34 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { 
-      studentId, 
-      studentEmail, 
-      studentName, 
-      studentPhone, 
-      courseId, 
+    const {
+      courseId,
       couponCode,
-      amount 
     } = body;
 
     // Validate required fields
-    if (!studentId || !studentEmail || !studentName || !studentPhone || !courseId || !amount) {
+    if (!courseId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Get course details
-    const course = getFeaturedCourse();
-    if (!course || course.id !== courseId) {
+    const dbCourse = await CourseModel.findById(courseId);
+    const fallbackCourse = dbCourse || getCourseById(courseId) || getCourseBySlug(courseId);
+
+    if (!fallbackCourse) {
       return NextResponse.json(
         { error: 'Invalid course' },
         { status: 400 }
       );
     }
+
+    const studentId = user.id;
+    const studentEmail = user.primaryEmailAddress?.emailAddress || '';
+    const studentName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.fullName || 'Student';
+    const studentPhone = user.primaryPhoneNumber?.phoneNumber || user.phoneNumbers?.[0]?.phoneNumber || '';
+    const amount = fallbackCourse.price;
 
     // Check if student already purchased this course
     const hasPurchased = await PurchaseModel.hasStudentPurchasedCourse(studentId, courseId);
@@ -91,7 +104,7 @@ export async function POST(request: NextRequest) {
       studentName,
       studentPhone,
       courseId,
-      courseTitle: course.title,
+      courseTitle: fallbackCourse.title,
       amount: totalAmount,
       currency: 'INR',
       status: 'pending',

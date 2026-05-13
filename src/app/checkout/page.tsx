@@ -1,127 +1,146 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Header, Footer } from '@/components/layout';
-import { Container, Heading, Text, Card, Button, Input, Divider } from '@/components/ui';
-import { ROUTES } from '@/constants';
-import { Course } from '@/types';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
+import { Footer, Header } from '@/components/layout';
+import { Button, Card, Container, Divider, Heading, Text } from '@/components/ui';
 import { useUserSync } from '@/hooks/use-user-sync';
+import { Course } from '@/types';
+
+type RazorpayHandlerResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description?: string;
+  order_id: string;
+  prefill?: {
+    name?: string;
+    email?: string;
+    contact?: string;
+  };
+  theme?: {
+    color?: string;
+  };
+  modal?: {
+    ondismiss?: () => void;
+  };
+  handler: (response: RazorpayHandlerResponse) => void;
+};
+
+type RazorpayWindow = Window & {
+  Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+};
 
 export default function CheckoutPage() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const courseParam = searchParams.get('course');
   const [course, setCourse] = useState<Course | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [couponCode, setCouponCode] = useState('');
-  const [discount, setDiscount] = useState(0);
-  const [couponError, setCouponError] = useState('');
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-  });
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [error, setError] = useState('');
 
   useUserSync();
 
-  // Fetch featured course on mount
   useEffect(() => {
-    const fetchFeaturedCourse = async () => {
+    let active = true;
+
+    const fetchCourse = async () => {
       try {
-        const response = await fetch('/api/courses/featured', {
-          cache: 'no-store',
-        });
+        const endpoint = courseParam ? `/api/courses/${courseParam}` : '/api/courses/featured';
+        const response = await fetch(endpoint, { cache: 'no-store' });
         const data = await response.json();
+
+        if (!active) {
+          return;
+        }
+
         if (data.success && data.course) {
           setCourse(data.course);
+          return;
         }
-      } catch (error) {
-        console.error('Failed to fetch featured course:', error);
+
+        if (courseParam) {
+          setError('Selected course could not be loaded. Please return to the course page and try again.');
+        }
+      } catch (fetchError) {
+        if (active) {
+          setError('Unable to load the selected course. Please try again.');
+        }
+
+        console.error('Failed to fetch checkout course:', fetchError);
       }
     };
-    
-    fetchFeaturedCourse();
-  }, []);
 
-  // Pre-fill form with user data when available
-  useEffect(() => {
-    if (user) {
-      setFormData(prev => ({
-        ...prev,
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.primaryEmailAddress?.emailAddress || '',
-        phone: user.primaryPhoneNumber?.phoneNumber || '',
-      }));
-    }
-  }, [user]);
-
-  const coursePrice = course?.price || 4999;
-  const discountedPrice = coursePrice - discount;
-  const taxAmount = Math.round(discountedPrice * 0.18);
-  const totalAmount = discountedPrice + taxAmount;
-
-  useEffect(() => {
-    // Load Razorpay script
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
+    fetchCourse();
 
     return () => {
-      document.body.removeChild(script);
+      active = false;
     };
-  }, []);
+  }, [courseParam]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const applyCoupon = async () => {
-    if (!couponCode.trim()) {
-      setCouponError('Please enter a coupon code');
+  useEffect(() => {
+    const existingScript = document.getElementById('razorpay-checkout-js');
+    if (existingScript) {
+      setScriptLoaded(true);
       return;
     }
 
-    // Simple coupon validation (in production, this would be an API call)
-    if (couponCode.toUpperCase() === 'TEST10') {
-      setDiscount(Math.round(coursePrice * 0.1));
-      setCouponError('');
-    } else {
-      setCouponError('Invalid coupon code');
-      setDiscount(0);
-    }
-  };
+    const script = document.createElement('script');
+    script.id = 'razorpay-checkout-js';
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    script.onerror = () => setError('Failed to load payment gateway. Please refresh the page.');
+    document.body.appendChild(script);
+  }, []);
+
+  const customerName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Student';
+  const customerEmail = user?.primaryEmailAddress?.emailAddress || '';
+  const customerPhone = user?.primaryPhoneNumber?.phoneNumber || '';
+
+  const coursePrice = course?.price ?? 0;
+  const taxAmount = Math.round(coursePrice * 0.18);
+  const totalAmount = coursePrice + taxAmount;
 
   const handlePayment = async () => {
-    // Validate form
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
-    const missingField = requiredFields.find(field => !formData[field as keyof typeof formData].trim());
-    
-    if (missingField) {
-      alert(`Please fill in all required fields`);
+    if (!course) {
+      setError('Please wait for the course details to load.');
+      return;
+    }
+
+    if (!isLoaded || !user) {
+      setError('Please sign in before continuing to payment.');
+      return;
+    }
+
+    const razorpayWindow = window as RazorpayWindow;
+    if (!scriptLoaded || !razorpayWindow.Razorpay) {
+      setError('Payment gateway is still loading. Please try again in a moment.');
       return;
     }
 
     setIsLoading(true);
+    setError('');
 
     try {
-      // Create Razorpay order
       const response = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          studentId: user?.id || 'temp_student_id',
-          studentEmail: formData.email,
-          studentName: `${formData.firstName} ${formData.lastName}`,
-          studentPhone: formData.phone,
-          courseId: course?.id,
-          couponCode: couponCode || undefined,
-          amount: discountedPrice,
+          courseId: course.id,
         }),
       });
 
@@ -131,59 +150,63 @@ export default function CheckoutPage() {
         throw new Error(orderData.error || 'Failed to create order');
       }
 
-      // Open Razorpay checkout
-      const options = {
+      const options: RazorpayOptions = {
         key: orderData.key,
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'SSSAM Academy',
-        description: course?.title,
+        description: course.title,
         order_id: orderData.orderId,
-        handler: async function (response: any) {
-          // Verify payment
-          const verifyResponse = await fetch('/api/razorpay/verify-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            }),
-          });
-
-          const verifyData = await verifyResponse.json();
-
-          if (verifyResponse.ok && verifyData.success) {
-            // Redirect to success page
-            router.push('/checkout/success');
-          } else {
-            alert('Payment verification failed. Please contact support.');
-            router.push('/checkout');
-          }
-        },
         prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          contact: formData.phone,
+          name: customerName,
+          email: customerEmail,
+          contact: customerPhone,
         },
         theme: {
-          color: '#3B82F6',
+          color: '#22d3ee',
         },
         modal: {
-          ondismiss: function () {
+          ondismiss: () => {
             setIsLoading(false);
           },
         },
+        handler: async (response: RazorpayHandlerResponse) => {
+          try {
+            const verifyResponse = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyResponse.ok && verifyData.success) {
+              router.push('/checkout/success');
+              return;
+            }
+
+            throw new Error('Payment verification failed. Please contact support.');
+          } catch (verifyError) {
+            console.error('Payment verification error:', verifyError);
+            setError(verifyError instanceof Error ? verifyError.message : 'Payment verification failed.');
+            router.push('/payment-failed');
+          } finally {
+            setIsLoading(false);
+          }
+        },
       };
 
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert(error instanceof Error ? error.message : 'Payment failed. Please try again.');
-    } finally {
+      const razorpay = new razorpayWindow.Razorpay(options);
+      razorpay.open();
+    } catch (paymentError) {
+      console.error('Payment error:', paymentError);
+      setError(paymentError instanceof Error ? paymentError.message : 'Payment failed. Please try again.');
       setIsLoading(false);
     }
   };
@@ -192,196 +215,132 @@ export default function CheckoutPage() {
     <>
       <Header />
 
-      <Container className="py-12">
-        <Heading level={1} className="mb-2">
-          Checkout
-        </Heading>
-        <Text color="muted" className="mb-8">
-          Complete your purchase to enroll in the course
-        </Text>
+      <div className="relative overflow-hidden bg-slate-950 py-12 md:py-16">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+              backgroundImage: `
+                linear-gradient(0deg, transparent 24%, rgba(34, 211, 238, 0.08) 25%, rgba(34, 211, 238, 0.08) 26%, transparent 27%, transparent 74%, rgba(34, 211, 238, 0.08) 75%, rgba(34, 211, 238, 0.08) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(168, 85, 247, 0.08) 25%, rgba(168, 85, 247, 0.08) 26%, transparent 27%, transparent 74%, rgba(168, 85, 247, 0.08) 75%, rgba(168, 85, 247, 0.08) 76%, transparent 77%, transparent)
+              `,
+              backgroundSize: '50px 50px',
+            }}
+          />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Checkout Form */}
-          <div className="lg:col-span-2">
-            <Card className="p-6 bg-white mb-6">
-              <Heading level={3} className="mb-6">
-                Billing Information
+          <Container className="relative z-10">
+            <div className="mx-auto max-w-5xl">
+              <Heading level={1} className="mb-3 text-white">
+                Checkout
               </Heading>
+              <Text className="mb-8 text-slate-300">
+                Review your selected course and complete payment in one step.
+              </Text>
 
-              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
-                <div className="grid grid-cols-2 gap-4">
-                  <Input 
-                    label="First Name" 
-                    placeholder="Your first name" 
-                    required 
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  />
-                  <Input 
-                    label="Last Name" 
-                    placeholder="Your last name" 
-                    required 
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  />
+              {error ? (
+                <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                  {error}
                 </div>
+              ) : null}
 
-                <Input 
-                  label="Email Address" 
-                  type="email" 
-                  placeholder="your.email@example.com" 
-                  required 
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                />
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <Card className="overflow-hidden border border-slate-800 bg-slate-900/80 p-0 lg:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">
+                    <div className="relative min-h-56 md:min-h-full">
+                      {course?.thumbnail ? (
+                        <Image
+                          src={course.thumbnail}
+                          alt={course.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 220px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex min-h-56 h-full items-center justify-center bg-slate-800 text-slate-500">
+                          Loading course...
+                        </div>
+                      )}
+                    </div>
 
-                <Input 
-                  label="Phone Number (India)" 
-                  type="tel" 
-                  placeholder="+91 9XXX XXX XXX" 
-                  required 
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                />
-              </form>
-            </Card>
+                    <div className="p-6 md:p-8">
+                      <div className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
+                        Selected Course
+                      </div>
+                      <Heading level={3} className="mb-3 text-white">
+                        {course?.title || 'Loading course details'}
+                      </Heading>
+                      <Text className="mb-6 text-slate-300">
+                        {course?.shortDescription || course?.description || 'Loading the latest course information.'}
+                      </Text>
 
-            <Card className="p-6 bg-white">
-              <Heading level={3} className="mb-6">
-                Payment Method
-              </Heading>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                          <Text className="mb-1 text-slate-500">Instructor</Text>
+                          <Text className="font-semibold text-white">{course?.instructor || 'Loading...'}</Text>
+                        </div>
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                          <Text className="mb-1 text-slate-500">Duration</Text>
+                          <Text className="font-semibold text-white">{course?.duration || 'Loading...'}</Text>
+                        </div>
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                          <Text className="mb-1 text-slate-500">Lessons</Text>
+                          <Text className="font-semibold text-white">{course?.lessons ?? 'Loading...'}</Text>
+                        </div>
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                          <Text className="mb-1 text-slate-500">Category</Text>
+                          <Text className="font-semibold text-white">{course?.category || 'Loading...'}</Text>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
 
-              <div className="space-y-3 mb-6">
-                <label className="flex items-center gap-3 p-4 border-2 border-blue-200 bg-blue-50 rounded-lg cursor-pointer">
-                  <input type="radio" name="payment" defaultChecked className="w-4 h-4" />
-                  <div>
-                    <Text className="font-semibold">Credit/Debit Card</Text>
-                    <Text size="sm" color="muted">
-                      Secure payment with Razorpay
+                <Card className="sticky top-24 self-start border border-slate-800 bg-slate-900/80 p-6">
+                  <Heading level={3} className="mb-4 text-white">
+                    Order Summary
+                  </Heading>
+
+                  <div className="mb-5 rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                    <Text className="mb-1 text-slate-500">Signed in as</Text>
+                    <Text className="font-semibold text-white">{customerName}</Text>
+                    <Text size="sm" className="text-slate-400">
+                      {customerEmail || 'Email loading...'}
                     </Text>
                   </div>
-                </label>
 
-                <label className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
-                  <input type="radio" name="payment" className="w-4 h-4" />
-                  <div>
-                    <Text className="font-semibold">UPI</Text>
-                    <Text size="sm" color="muted">
-                      Google Pay, PhonePe, Paytm
-                    </Text>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <Text className="text-slate-400">Course fee</Text>
+                      <Text className="font-semibold text-white">₹{coursePrice.toLocaleString()}</Text>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <Text className="text-slate-400">GST (18%)</Text>
+                      <Text className="font-semibold text-white">₹{taxAmount.toLocaleString()}</Text>
+                    </div>
                   </div>
-                </label>
 
-                <label className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300">
-                  <input type="radio" name="payment" className="w-4 h-4" />
-                  <div>
-                    <Text className="font-semibold">Net Banking</Text>
-                    <Text size="sm" color="muted">
-                      All major Indian banks
-                    </Text>
+                  <Divider className="my-5 border-slate-800" />
+
+                  <div className="mb-6 flex items-end justify-between gap-4">
+                    <Text className="text-lg font-semibold text-white">Total</Text>
+                    <Text className="text-3xl font-bold text-cyan-300">₹{totalAmount.toLocaleString()}</Text>
                   </div>
-                </label>
-              </div>
 
-              <Button 
-                variant="primary" 
-                size="lg" 
-                className="w-full"
-                onClick={handlePayment}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Processing...' : 'Proceed to Payment'}
-              </Button>
-            </Card>
-          </div>
-
-          {/* Order Summary */}
-          <div>
-            <Card className="p-6 bg-white sticky top-24">
-              <Heading level={3} className="mb-6">
-                Order Summary
-              </Heading>
-
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <div className="flex gap-3 mb-3">
-                  <div className="w-16 h-16 bg-gray-200 rounded flex-shrink-0" />
-                  <div>
-                    <Text className="font-semibold line-clamp-2">
-                      {course?.title || 'Master Full Stack Web Development'}
-                    </Text>
-                    <Text size="sm" color="muted">
-                      by {course?.instructor || 'Alex Johnson'}
-                    </Text>
-                  </div>
-                </div>
-              </div>
-
-              <Divider className="mb-4" />
-
-              <div className="space-y-3 mb-4">
-                <div className="flex justify-between">
-                  <Text color="muted">Subtotal</Text>
-                  <Text className="font-semibold">₹{coursePrice.toLocaleString()}</Text>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between">
-                    <Text color="muted">Discount</Text>
-                    <Text className="font-semibold text-green-600">-₹{discount.toLocaleString()}</Text>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <Text color="muted">Tax (18% GST)</Text>
-                  <Text className="font-semibold">₹{taxAmount.toLocaleString()}</Text>
-                </div>
-              </div>
-
-              <Divider className="mb-4" />
-
-              <div className="flex justify-between mb-6">
-                <Text className="font-semibold text-lg">Total Amount</Text>
-                <Text className="font-bold text-2xl text-blue-600">
-                  ₹{totalAmount.toLocaleString()}
-                </Text>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="Coupon Code" 
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="mb-0"
-                  />
-                  <Button 
-                    variant="outline" 
-                    size="md" 
-                    onClick={applyCoupon}
-                    disabled={!couponCode.trim()}
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full"
+                    onClick={handlePayment}
+                    disabled={isLoading || !course || !isLoaded || !scriptLoaded}
                   >
-                    Apply
+                    {isLoading ? 'Processing...' : 'Proceed to Payment'}
                   </Button>
-                </div>
-                {couponError && (
-                  <Text size="sm" color="muted" className="text-red-600">{couponError}</Text>
-                )}
-                {discount > 0 && (
-                  <Text size="sm" color="muted" className="text-green-600">Coupon applied successfully!</Text>
-                )}
+                </Card>
               </div>
-
-              {/* Security Info */}
-              <div className="mt-6 p-3 bg-green-50 rounded-lg">
-                <Text size="sm" color="secondary" className="flex gap-2">
-                  <span>🔒</span>
-                  <span>Your payment is secure and encrypted</span>
-                </Text>
-              </div>
-            </Card>
-          </div>
+            </div>
+          </Container>
         </div>
-      </Container>
 
-      <Footer />
-    </>
-  );
-}
+        <Footer />
+      </>
+    );
+  }
