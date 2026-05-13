@@ -39,20 +39,20 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Header />
 
       {/* Hero */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-12 md:py-20">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 py-12 md:py-20">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Content */}
             <div>
-              <Badge variant="info" className="mb-4">
+              <Badge variant="info" className="mb-4 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50">
                 {course.level}
               </Badge>
 
-              <Heading level={1} className="mb-4">
+              <Heading level={1} className="mb-4 text-white">
                 {course.title}
               </Heading>
 
-              <Text size="lg" color="secondary" className="mb-6">
+              <Text size="lg" color="secondary" className="mb-6 text-slate-300">
                 {course.description}
               </Text>
 
@@ -73,36 +73,36 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
               </div>
 
               {/* Course Info */}
-              <div className="grid grid-cols-2 gap-4 bg-white rounded-lg p-4">
+              <div className="grid grid-cols-2 gap-4 bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                 <div>
-                  <Text size="sm" color="muted">
+                  <Text size="sm" color="muted" className="text-slate-500">
                     Duration
                   </Text>
-                  <Text className="font-semibold">{course.duration}</Text>
+                  <Text className="font-semibold text-white">{course.duration}</Text>
                 </div>
                 <div>
-                  <Text size="sm" color="muted">
+                  <Text size="sm" color="muted" className="text-slate-500">
                     Lessons
                   </Text>
-                  <Text className="font-semibold">{course.lessons}</Text>
+                  <Text className="font-semibold text-white">{course.lessons}</Text>
                 </div>
                 <div>
-                  <Text size="sm" color="muted">
+                  <Text size="sm" color="muted" className="text-slate-500">
                     Students
                   </Text>
-                  <Text className="font-semibold">{course.students.toLocaleString()}</Text>
+                  <Text className="font-semibold text-white">{course.students.toLocaleString()}</Text>
                 </div>
                 <div>
-                  <Text size="sm" color="muted">
+                  <Text size="sm" color="muted" className="text-slate-500">
                     Category
                   </Text>
-                  <Text className="font-semibold">{course.category}</Text>
+                  <Text className="font-semibold text-white">{course.category}</Text>
                 </div>
               </div>
             </div>
 
             {/* Image */}
-            <div className="relative h-64 md:h-96 rounded-lg overflow-hidden">
+            <div className="relative h-64 md:h-96 rounded-lg overflow-hidden border border-slate-700 shadow-lg">
               <Image
                 src={course.thumbnail}
                 alt={course.title}
@@ -115,14 +115,14 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       </div>
 
       {/* Instructor */}
-      <section className="py-12 md:py-20 bg-white">
+      <section className="py-12 md:py-20 bg-slate-950">
         <Container>
-          <Heading level={2} className="mb-8">
+          <Heading level={2} className="mb-8 text-white">
             Your Instructor
           </Heading>
 
           <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="relative w-40 h-40 rounded-lg overflow-hidden flex-shrink-0">
+            <div className="relative w-40 h-40 rounded-lg overflow-hidden flex-shrink-0 border border-slate-700">
               <Image
                 src={course.instructorImage}
                 alt={course.instructor}
@@ -133,13 +133,13 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
             </div>
 
             <div>
-              <Heading level={3} className="mb-2">
+              <Heading level={3} className="mb-2 text-white">
                 {course.instructor}
               </Heading>
-              <Text size="lg" color="secondary" className="mb-4">
+              <Text size="lg" color="secondary" className="mb-4 text-slate-300">
                 Expert instructor with years of industry experience
               </Text>
-              <Text color="secondary">
+              <Text color="secondary" className="text-slate-400">
                 Learn directly from a professional who has successfully implemented these skills in real-world projects. Get insights, tips, and best practices that will accelerate your learning journey.
               </Text>
             </div>
@@ -155,9 +155,9 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Divider />
 
       {/* Learning Outcomes */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-slate-900">
         <Container>
-          <Heading level={2} className="mb-8">
+          <Heading level={2} className="mb-8 text-white">
             What You'll Learn
           </Heading>
 
@@ -171,8 +171,8 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
               'Join a community of like-minded learners',
             ].map((item, index) => (
               <div key={index} className="flex gap-3">
-                <span className="text-2xl flex-shrink-0">✓</span>
-                <Text color="secondary">{item}</Text>
+                <span className="text-2xl flex-shrink-0 text-cyan-400">✓</span>
+                <Text color="secondary" className="text-slate-300">{item}</Text>
               </div>
             ))}
           </div>
