@@ -262,9 +262,7 @@ export function HeroSection({ course }: HeroProps) {
             <div className="absolute -top-6 -right-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-background px-5 py-3 rounded-xl font-bold shadow-xl animate-bounce">
               🌟 Summer Special
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-5 py-3 rounded-xl font-bold shadow-xl">
-              📍 Gurugram Based
-            </div>
+           
           </div>
         </div>
       </Container>
