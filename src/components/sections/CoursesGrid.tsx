@@ -31,7 +31,7 @@ export function CoursesGrid({
           <Heading level={2} className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Professional IT Courses Tailored for You
           </Heading>
-          <Text size="lg" color="muted" className="max-w-3xl mx-auto text-lg leading-relaxed">
+          <Text className="max-w-3xl mx-auto text-lg leading-relaxed text-slate-700 font-medium">
             Advanced training in AI Full Stack, Data Science, Cyber Security & Digital Marketing. Industry-focused with live training, lifetime recorded access, and job placement support.
           </Text>
         </div>
