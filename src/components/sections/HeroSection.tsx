@@ -124,12 +124,12 @@ export function HeroSection({ course }: HeroProps) {
         className="absolute inset-0 pointer-events-none"
         style={{ opacity: 0.6 }}
       />
-      
+
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-      
+
       <Container className="relative z-10 py-8 md:py-12 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Content */}
@@ -148,12 +148,12 @@ export function HeroSection({ course }: HeroProps) {
                   Web Development
                 </span>
               </Heading>
-              
+
               {/* Subheading */}
               <Text size="lg" className="text-foreground-secondary font-medium">
                 AI-Powered Training for Indian Tech Professionals
               </Text>
-              
+
               {/* Batch Info */}
               <div className="flex flex-wrap items-center gap-3 pt-1">
                 <Badge variant="info">
@@ -163,7 +163,7 @@ export function HeroSection({ course }: HeroProps) {
                   🎯 {course.level}
                 </Badge>
               </div>
-              
+
               {/* Price Highlight */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <div className="flex items-baseline gap-3">
@@ -186,9 +186,9 @@ export function HeroSection({ course }: HeroProps) {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Button 
-                variant="primary" 
-                href={`/courses/${course.slug}`} 
+              <Button
+                variant="primary"
+                href={`/courses/${course.slug}`}
                 size="lg"
                 className="group"
               >
@@ -197,9 +197,9 @@ export function HeroSection({ course }: HeroProps) {
                 </svg>
                 Start Learning Now
               </Button>
-              <Button 
-                variant="outline" 
-                href={ROUTES.COURSES} 
+              <Button
+                variant="outline"
+                href={ROUTES.COURSES}
                 size="lg"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,25 +247,35 @@ export function HeroSection({ course }: HeroProps) {
 
           {/* Featured Image Section */}
           <div className="hidden lg:block relative">
-            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-              <Image
-                src={course.thumbnail}
-                alt={course.title}
-                fill
-                className="object-cover object-center"
-                priority
-              />
+            <div className="relative h-[420px] rounded-2xl overflow-hidden shadow-2xl border border-cyan-500/20 bg-[#020617]">
+
+              {/* Glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 z-0" />
+
+              {/* Image */}
+              <div className="relative w-full h-full flex items-center justify-center p-2">
+                <Image
+                  src={course.thumbnail}
+                  alt={course.title}
+                  width={900}
+                  height={700}
+                  priority
+                  className="w-full h-full object-contain rounded-2xl z-10"
+                />
+              </div>
+
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-20 pointer-events-none" />
             </div>
+
             {/* Floating Badge */}
-            <div className="absolute -top-6 -right-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-background px-5 py-3 rounded-xl font-bold shadow-xl animate-bounce">
+            <div className="absolute -top-6 -right-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-background px-5 py-3 rounded-xl font-bold shadow-xl animate-bounce z-30">
               🌟 Summer Special
             </div>
-           
+
           </div>
         </div>
       </Container>
-    </section>
+    </section >
   );
 }
