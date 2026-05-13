@@ -95,7 +95,7 @@ export function FAQSection({ faqs }: FAQSectionProps) {
                   </svg>
                 </a>
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+91 9217031899"
                   className="inline-flex items-center gap-2 rounded-lg border-2 border-white px-8 py-3 font-semibold text-white transition-colors hover:bg-white hover:text-orange-600"
                 >
                   Call Us
