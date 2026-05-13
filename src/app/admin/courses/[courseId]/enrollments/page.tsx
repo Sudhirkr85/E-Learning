@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Container, Heading, Text, Card } from '@/components/ui';
 
 interface Enrollment {
   studentName: string;
@@ -51,129 +50,110 @@ export default function ViewEnrollmentsPage() {
 
   if (loading) {
     return (
-      <Container>
-        <div className="py-12">
-          <Text className="text-slate-300">Loading enrollments...</Text>
-        </div>
-      </Container>
+      <div className="py-12 container mx-auto px-4">
+        <div className="animate-pulse h-8 bg-[rgba(255,255,255,0.06)] rounded w-1/4 mb-6" />
+      </div>
     );
   }
 
   return (
-    <Container>
-      <div className="py-12">
-        <div className="mb-8">
-          <Heading className="mb-2">Course Enrollments</Heading>
-          {courseInfo && (
-            <p className="text-slate-300">
-              <span className="font-semibold">{courseInfo.title}</span> • 
-              <span className="ml-2 text-green-400">{courseInfo.students} students enrolled</span>
-            </p>
-          )}
+    <div className="py-8 container mx-auto px-4">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold mb-2">Enrollment Management</h1>
+        {courseInfo && (
+          <p className="text-sm text-[rgba(255,255,255,0.7)]">
+            <span className="font-semibold">{courseInfo.title}</span> • 
+            <span className="ml-2 text-[var(--accent-primary)]">{courseInfo.students} students enrolled</span>
+          </p>
+        )}
+      </div>
+
+      {/* Analytics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Enrolled</div>
+          <div className="text-3xl font-bold mt-2">{enrollments.length}</div>
         </div>
 
-        {/* Search Bar */}
-        <Card className="p-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search by name, email, or phone..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-          />
-        </Card>
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Revenue</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-emerald)]">₹{enrollments.reduce((sum, e) => sum + e.amount, 0).toLocaleString('en-IN')}</div>
+        </div>
 
-        {/* Enrollments Table */}
-        <Card className="p-0 overflow-hidden">
-          {filteredEnrollments.length === 0 ? (
-            <div className="p-12 text-center">
-              <Text className="text-slate-400">
-                {enrollments.length === 0 ? 'No students enrolled yet' : 'No students found matching your search'}
-              </Text>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-700 bg-slate-800">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Name</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Email</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Phone</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Amount</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Enrolled Date</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-200 uppercase">Order ID</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEnrollments.map((enrollment, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-slate-700 hover:bg-slate-800 transition"
-                    >
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-white">{enrollment.studentName}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href={`mailto:${enrollment.studentEmail}`}
-                          className="text-blue-400 hover:text-blue-300"
-                        >
-                          {enrollment.studentEmail}
-                        </a>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href={`tel:${enrollment.studentPhone}`}
-                          className="text-blue-400 hover:text-blue-300"
-                        >
-                          {enrollment.studentPhone}
-                        </a>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-semibold text-green-400">₹{enrollment.amount}</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-slate-300">
-                        {new Date(enrollment.enrolledAt).toLocaleDateString('en-IN', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <code className="bg-slate-700 px-2 py-1 rounded text-slate-200">{enrollment.orderId}</code>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </Card>
-
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          <Card className="p-6 text-center">
-            <Text className="text-slate-400 mb-2">Total Enrolled</Text>
-            <Heading className="text-3xl text-green-400">{enrollments.length}</Heading>
-          </Card>
-          <Card className="p-6 text-center">
-            <Text className="text-slate-400 mb-2">Total Revenue</Text>
-            <Heading className="text-3xl text-blue-400">
-              ₹{enrollments.reduce((sum, e) => sum + e.amount, 0).toLocaleString('en-IN')}
-            </Heading>
-          </Card>
-          <Card className="p-6 text-center">
-            <Text className="text-slate-400 mb-2">Average Price</Text>
-            <Heading className="text-3xl text-purple-400">
-              ₹{enrollments.length > 0 
-                ? Math.round(enrollments.reduce((sum, e) => sum + e.amount, 0) / enrollments.length)
-                : 0}
-            </Heading>
-          </Card>
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Average Price</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-primary)]">₹{enrollments.length > 0 ? Math.round(enrollments.reduce((sum, e) => sum + e.amount, 0) / enrollments.length) : 0}</div>
         </div>
       </div>
-    </Container>
+
+      {/* Search Bar */}
+      <div className="p-4 rounded-lg glass-strong mb-6">
+        <input
+          type="text"
+          placeholder="Search by name, email, or phone..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
+        />
+      </div>
+
+      {/* Enrollments Table */}
+      <div className="p-4 rounded-lg glass-strong overflow-hidden">
+        {filteredEnrollments.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-[rgba(255,255,255,0.6)]">
+              {enrollments.length === 0 ? 'No students enrolled yet' : 'No students found matching your search'}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Email</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Phone</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Amount</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Enrolled</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Order ID</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
+                {filteredEnrollments.map((enrollment, index) => (
+                  <tr key={index} className="hover:bg-[rgba(255,255,255,0.01)] transition">
+                    <td className="px-4 py-3">
+                      <span className="font-medium">{enrollment.studentName}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <a href={`mailto:${enrollment.studentEmail}`} className="text-[var(--accent-primary)] hover:underline text-sm">
+                        {enrollment.studentEmail}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      <a href={`tel:${enrollment.studentPhone}`} className="text-[var(--accent-primary)] hover:underline text-sm">
+                        {enrollment.studentPhone}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="font-semibold text-[var(--accent-emerald)]">₹{enrollment.amount}</span>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-[rgba(255,255,255,0.75)]">
+                      {new Date(enrollment.enrolledAt).toLocaleDateString('en-IN', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <code className="bg-[rgba(255,255,255,0.04)] px-2 py-1 rounded text-[rgba(255,255,255,0.8)]">{enrollment.orderId}</code>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

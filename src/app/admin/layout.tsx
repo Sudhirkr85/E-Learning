@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import LogoutButton from '@/components/LogoutButton';
+import { HeroMesh } from '@/components/ui';
 
 export default async function AdminLayout({
   children,
@@ -11,74 +12,76 @@ export default async function AdminLayout({
   // Each admin page that needs protection should call requireAdminAuth instead
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #070821 0%, #0b1530 60%)' }}>
       <div className="flex">
         {/* Sidebar */}
         <div className="hidden md:flex md:w-64 md:flex-col">
-          <div className="flex flex-col flex-grow pt-5 bg-white overflow-y-auto border-r border-gray-200">
-            <div className="flex items-center flex-shrink-0 px-4">
-              <h1 className="text-xl font-bold text-gray-900">SSSAM Admin</h1>
+          <aside className="flex flex-col flex-grow pt-6 pb-4 overflow-y-auto glass-strong border-r border-[rgba(255,255,255,0.03)]">
+            <div className="flex items-center flex-shrink-0 px-6 mb-6">
+              <div className="w-full flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-md bg-gradient-to-br from-[rgba(6,182,212,0.12)] to-[rgba(139,92,246,0.12)] flex items-center justify-center glow-primary">
+                    <svg className="w-6 h-6 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3" />
+                    </svg>
+                  </div>
+                  <h1 className="text-lg font-semibold tracking-wide">SSSAM Admin</h1>
+                </div>
+              </div>
             </div>
-            <div className="mt-8 flex-1 flex flex-col">
-              <nav className="flex-1 px-2 pb-4 space-y-1">
-                <a
-                  href="/admin/dashboard"
-                  className="bg-gray-100 text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                >
-                  Dashboard
-                </a>
-                <a
-                  href="/admin/courses"
-                  className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                >
-                  Courses
-                </a>
-                <a
-                  href="/admin/coupons"
-                  className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                >
-                  Coupons
-                </a>
-                <a
-                  href="/admin/lessons"
-                  className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                >
-                  Lesson Links
-                </a>
-              </nav>
-            </div>
-          </div>
+
+            <nav className="px-4 space-y-1">
+              <a href="/admin/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Dashboard</a>
+              <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Courses</a>
+              <a href="/admin/coupons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Coupons</a>
+              <a href="/admin/lessons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Lesson Links</a>
+              <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Enrollments</a>
+            </nav>
+          </aside>
         </div>
 
         {/* Main content */}
         <div className="flex flex-col flex-1">
           {/* Top bar */}
-          <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200">
-            <div className="flex-1 flex justify-between px-4 sm:px-6 lg:px-8">
-              <div className="flex-1 flex">
-                <div className="w-full flex md:ml-0">
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <div className="sticky top-0 z-20 flex-shrink-0">
+            <div className="relative">
+              <div className="h-20 glass flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-[rgba(255,255,255,0.04)]">
+                <div className="flex items-center gap-4">
+                  <button className="md:hidden p-2 rounded-md hover:bg-[rgba(255,255,255,0.02)]">{/* mobile menu placeholder */}
+                    <svg className="w-5 h-5 text-[var(--foreground)]" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+
+                  <div className="relative w-[360px] max-w-[60vw]">
+                    <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3">
+                      <svg className="h-5 w-5 text-[rgba(255,255,255,0.45)]" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                       </svg>
                     </div>
                     <input
-                      className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                      placeholder="Search..."
+                      className="block w-full pl-10 pr-3 py-2 rounded-md bg-[rgba(255,255,255,0.02)] placeholder-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.95)] border border-[rgba(255,255,255,0.03)] focus:outline-none"
+                      placeholder="Search admin..."
                       type="search"
                     />
                   </div>
                 </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="hidden sm:block text-sm text-[rgba(255,255,255,0.75)]">Signed in as Admin</div>
+                  <LogoutButton />
+                </div>
               </div>
-              <div className="ml-4 flex items-center md:ml-6">
-                <LogoutButton />
+
+              {/* subtle hero mesh overlay anchored to top */}
+              <div className="absolute inset-x-0 top-0 h-20 pointer-events-none">
+                <HeroMesh />
               </div>
             </div>
           </div>
 
           {/* Page content */}
-          <main className="flex-1">
+          <main className="flex-1 p-6">
             {children}
           </main>
         </div>

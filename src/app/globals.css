@@ -131,6 +131,27 @@ body {
   pointer-events: none;
 }
 
+/* Cursor reveal mask for hero mesh overlay */
+.cursor-reveal-container {
+  --mx: -9999px;
+  --my: -9999px;
+}
+
+.cursor-reveal-mesh {
+  background-position: center;
+  background-repeat: repeat;
+  opacity: 0.28;
+  mix-blend-mode: overlay;
+  transition: opacity 200ms ease, -webkit-mask-position 120ms linear;
+  /* Mask: transparent center reveals underlying content near cursor */
+  -webkit-mask-image: radial-gradient(circle 140px at var(--mx) var(--my), transparent 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.95) 100%);
+  mask-image: radial-gradient(circle 140px at var(--mx) var(--my), transparent 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.95) 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: var(--mx) var(--my);
+  mask-position: var(--mx) var(--my);
+}
+
 /* Premium Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

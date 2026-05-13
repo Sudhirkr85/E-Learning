@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Container, Heading, Text, Button, Card, Input } from '@/components/ui';
 
 interface ClassSession {
   _id: string;

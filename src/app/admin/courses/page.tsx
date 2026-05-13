@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Course } from '@/types';
-import { Container, Heading, Text, Button, Card } from '@/components/ui';
 
 export default function AdminCoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -29,64 +28,94 @@ export default function AdminCoursesPage() {
 
   if (loading) {
     return (
-      <Container>
-        <div className="py-12">
-          <Text className="text-slate-300">Loading courses...</Text>
-        </div>
-      </Container>
+      <div className="py-12 container mx-auto px-4">
+        <div className="animate-pulse h-8 bg-[rgba(255,255,255,0.06)] rounded w-1/4 mb-6" />
+      </div>
     );
   }
 
   return (
-    <Container>
-      <div className="py-12">
-        <Heading className="mb-8">Courses Management</Heading>
+    <div className="py-8 container mx-auto px-4">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold mb-2">Courses Management</h1>
+        <p className="text-sm text-[rgba(255,255,255,0.7)]">Manage all courses, sessions, and enrollments</p>
+      </div>
 
-        <div className="grid grid-cols-1 gap-4">
-          {courses.map((course) => (
-            <Card key={course.id} className="p-6">
-              <div className="flex items-start justify-between">
+      {/* Analytics Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Courses</div>
+          <div className="text-3xl font-bold mt-2">{courses.length}</div>
+        </div>
+
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Published</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-emerald)]">{courses.filter(c => c.status === 'published').length}</div>
+        </div>
+
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Students</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-primary)]">{courses.reduce((sum, c) => sum + (c.students || 0), 0)}</div>
+        </div>
+      </div>
+
+      {/* Courses List */}
+      <div className="space-y-4">
+        {courses.length === 0 ? (
+          <div className="p-12 rounded-lg glass-strong text-center">
+            <p className="text-[rgba(255,255,255,0.6)]">No courses found</p>
+          </div>
+        ) : (
+          courses.map((course) => (
+            <div key={course.id} className="p-6 rounded-lg glass-strong hover:border-[rgba(6,182,212,0.4)] transition">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                {/* Course Info */}
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
-                  <p className="text-sm text-slate-400 mb-4">{course.shortDescription}</p>
-                  <div className="flex gap-2 mb-4">
-                    <span className="text-xs bg-slate-700 px-3 py-1 rounded text-slate-200">
+                  <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+                  <p className="text-sm text-[rgba(255,255,255,0.6)] mb-4">{course.shortDescription}</p>
+
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-xs px-3 py-1 rounded-full bg-[rgba(6,182,212,0.12)] text-[var(--accent-primary)]">
                       {course.students || 0} students
                     </span>
-                    <span className={`text-xs px-3 py-1 rounded ${
-                      course.status === 'published' 
-                        ? 'bg-green-900 text-green-200' 
-                        : 'bg-yellow-900 text-yellow-200'
+                    <span className={`text-xs px-3 py-1 rounded-full ${
+                      course.status === 'published'
+                        ? 'bg-[rgba(16,185,129,0.12)] text-[var(--accent-emerald)]'
+                        : 'bg-[rgba(8,145,178,0.12)] text-[var(--accent-primary)]'
                     }`}>
-                      {course.status}
+                      {course.status === 'published' ? '✓ Published' : 'Draft'}
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                   <Link
                     href={`/admin/courses/${course.id}/sessions`}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm whitespace-nowrap transition"
+                    className="px-4 py-2 rounded bg-[var(--accent-primary)] text-black font-semibold hover:opacity-90 transition text-center text-sm"
                   >
-                    Manage Sessions
+                    Sessions
                   </Link>
                   <Link
                     href={`/admin/courses/${course.id}/enrollments`}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm whitespace-nowrap transition"
+                    className="px-4 py-2 rounded bg-[var(--accent-secondary)] text-black font-semibold hover:opacity-90 transition text-center text-sm"
                   >
-                    View Enrollments
+                    Enrollments
+                  </Link>
+                  <Link
+                    href={`/admin/courses/${course.id}`}
+                    className="px-4 py-2 rounded bg-[rgba(255,255,255,0.03)] text-white hover:bg-[rgba(255,255,255,0.05)] transition text-center text-sm"
+                  >
+                    Edit
                   </Link>
                 </div>
               </div>
-            </Card>
-          ))}
-        </div>
-
-        {courses.length === 0 && (
-          <Card className="p-12 text-center">
-            <Text className="text-slate-400">No courses found</Text>
-          </Card>
+            </div>
+          ))
         )}
       </div>
-    </Container>
+    </div>
   );
 }
+

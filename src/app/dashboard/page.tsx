@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, Heading, Text, Card } from '@/components/ui';
 import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
 
@@ -40,71 +39,71 @@ export default function DashboardPage() {
   };
 
   return (
-    <Container className="py-8">
-      <Heading level={1} className="mb-2 text-slate-50">
-        Dashboard
-      </Heading>
-      <Text className="mb-8 text-slate-300">
-        Welcome back, {user?.firstName || 'Student'}! Here's your learning overview.
-      </Text>
+    <div className="py-8 container mx-auto px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+        <p className="text-[rgba(255,255,255,0.7)]">
+          Welcome back, {user?.firstName || 'Student'}! Here's your learning overview.
+        </p>
+      </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <Card className="border border-slate-800 bg-slate-900/80 p-6">
-          <div className="text-3xl font-bold text-cyan-400 mb-2">{enrolledCount}</div>
-          <Text size="sm" className="text-slate-400">
-            Courses Enrolled
-          </Text>
-        </Card>
-        <Card className="border border-slate-800 bg-slate-900/80 p-6">
-          <div className="text-3xl font-bold text-slate-400 mb-2">—</div>
-          <Text size="sm" className="text-slate-400">
-            Average Progress
-          </Text>
-        </Card>
-        <Card className="border border-slate-800 bg-slate-900/80 p-6">
-          <div className="text-3xl font-bold text-slate-400 mb-2">—</div>
-          <Text size="sm" className="text-slate-400">
-            Hours Learned
-          </Text>
-        </Card>
-        <Card className="border border-slate-800 bg-slate-900/80 p-6">
-          <div className="text-3xl font-bold text-slate-400 mb-2">—</div>
-          <Text size="sm" className="text-slate-400">
-            Certificates Earned
-          </Text>
-        </Card>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="p-6 rounded-lg glass-strong">
+          <div className="text-4xl font-bold text-[var(--accent-primary)] mb-2">{enrolledCount}</div>
+          <p className="text-sm text-[rgba(255,255,255,0.65)]">Courses Enrolled</p>
+        </div>
+
+        <div className="p-6 rounded-lg glass-strong">
+          <div className="text-4xl font-bold text-[var(--accent-secondary)] mb-2">—</div>
+          <p className="text-sm text-[rgba(255,255,255,0.65)]">Average Progress</p>
+        </div>
+
+        <div className="p-6 rounded-lg glass-strong">
+          <div className="text-4xl font-bold text-[var(--accent-emerald)] mb-2">—</div>
+          <p className="text-sm text-[rgba(255,255,255,0.65)]">Hours Learned</p>
+        </div>
+
+        <div className="p-6 rounded-lg glass-strong">
+          <div className="text-4xl font-bold text-[var(--accent-tertiary)] mb-2">—</div>
+          <p className="text-sm text-[rgba(255,255,255,0.65)]">Certificates</p>
+        </div>
       </div>
 
       {/* Recent Activity */}
-      <Card className="border border-slate-800 bg-slate-900/80 p-6">
-        <Heading level={3} className="mb-4 text-slate-50">
-          Recent Activity
-        </Heading>
+      <div className="p-6 rounded-lg glass-strong">
+        <h2 className="text-xl font-semibold mb-4">Recent Enrollments</h2>
+        
         {isLoading ? (
-          <Text className="text-slate-400">Loading activity...</Text>
+          <div className="animate-pulse py-6 space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-4 bg-[rgba(255,255,255,0.06)] rounded w-full" />
+            ))}
+          </div>
         ) : recentActivity.length === 0 ? (
-          <Text className="text-slate-400">No recent activity. Enroll in a course to get started!</Text>
+          <div className="py-12 text-center">
+            <p className="text-[rgba(255,255,255,0.6)]">No recent activity. Enroll in a course to get started!</p>
+          </div>
         ) : (
           <div className="space-y-3">
             {recentActivity.map((purchase, i) => (
-              <div key={i} className="pb-3 border-b border-slate-800 last:border-b-0 last:pb-0">
+              <div key={i} className="pb-3 border-b border-[rgba(255,255,255,0.05)] last:border-b-0 last:pb-0">
                 <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <Text className="font-medium text-slate-100">{purchase.courseTitle}</Text>
-                    <Text size="sm" className="text-slate-400">
+                  <div className="flex-1">
+                    <p className="font-medium">{purchase.courseTitle}</p>
+                    <p className="text-sm text-[rgba(255,255,255,0.6)]">
                       Enrolled on {new Date(purchase.createdAt).toLocaleDateString()}
-                    </Text>
+                    </p>
                   </div>
-                  <Text size="sm" className="text-emerald-400 font-semibold">
+                  <p className="text-sm font-semibold text-[var(--accent-emerald)] whitespace-nowrap">
                     ₹{purchase.amount.toLocaleString()}
-                  </Text>
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </Card>
-    </Container>
+      </div>
+    </div>
   );
 }

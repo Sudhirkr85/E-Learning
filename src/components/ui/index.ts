@@ -8,3 +8,4 @@ export { TextArea } from './TextArea';
 export { Card } from './Card';
 export { Rating } from './Rating';
 export { Divider } from './Divider';
+export { default as HeroMesh } from './HeroMesh';

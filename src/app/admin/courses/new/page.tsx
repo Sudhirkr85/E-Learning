@@ -83,34 +83,31 @@ export default function NewCourse() {
   };
 
   return (
-    <div className="p-6">
+    <div className="py-8 container mx-auto px-4">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Create New Course</h1>
-        <p className="text-gray-600">Add a new course to your academy</p>
+        <h1 className="text-2xl font-semibold mb-2">Create New Course</h1>
+        <p className="text-sm text-[rgba(255,255,255,0.7)]">Add a new course to your academy</p>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">{error}</h3>
+        <div className="mb-6 p-4 rounded-lg bg-[rgba(236,72,153,0.1)] border border-[rgba(236,72,153,0.3)]">
+          <div className="flex gap-3">
+            <div className="text-[var(--accent-tertiary)] flex-shrink-0">⚠</div>
+            <div>
+              <h3 className="text-sm font-medium text-[rgba(236,72,153,0.9)]">{error}</h3>
             </div>
           </div>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h2>
+        {/* Basic Information */}
+        <div className="p-6 rounded-lg glass-strong">
+          <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="title" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Course Title *
               </label>
               <input
@@ -120,12 +117,12 @@ export default function NewCourse() {
                 required
                 value={formData.title}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="slug" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Course Slug *
               </label>
               <input
@@ -135,12 +132,12 @@ export default function NewCourse() {
                 required
                 value={formData.slug}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <div className="sm:col-span-2">
+              <label htmlFor="description" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Description *
               </label>
               <textarea
@@ -150,12 +147,12 @@ export default function NewCourse() {
                 rows={4}
                 value={formData.description}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="shortDescription" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="shortDescription" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Short Description *
               </label>
               <input
@@ -165,12 +162,12 @@ export default function NewCourse() {
                 required
                 value={formData.shortDescription}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="category" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Category *
               </label>
               <input
@@ -180,18 +177,19 @@ export default function NewCourse() {
                 required
                 value={formData.category}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Pricing & Status</h2>
+        {/* Pricing & Status */}
+        <div className="p-6 rounded-lg glass-strong">
+          <h2 className="text-lg font-semibold mb-4">Pricing & Status</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="price" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Price (₹) *
               </label>
               <input
@@ -202,12 +200,12 @@ export default function NewCourse() {
                 min="0"
                 value={formData.price}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="originalPrice" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Original Price (₹)
               </label>
               <input
@@ -217,12 +215,12 @@ export default function NewCourse() {
                 min="0"
                 value={formData.originalPrice}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="status" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Status *
               </label>
               <select
@@ -230,36 +228,37 @@ export default function NewCourse() {
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white focus:outline-none"
               >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="coming-soon">Coming Soon</option>
+                <option value="draft" className="bg-slate-900">Draft</option>
+                <option value="published" className="bg-slate-900">Published</option>
+                <option value="coming-soon" className="bg-slate-900">Coming Soon</option>
               </select>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center gap-3 py-2">
               <input
                 type="checkbox"
                 id="featured"
                 name="featured"
                 checked={formData.featured}
                 onChange={handleInputChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="w-4 h-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded cursor-pointer accent-[var(--accent-primary)]"
               />
-              <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
+              <label htmlFor="featured" className="text-sm font-medium text-[rgba(255,255,255,0.85)] cursor-pointer">
                 Featured Course
               </label>
             </div>
           </div>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Course Details</h2>
+        {/* Course Details */}
+        <div className="p-6 rounded-lg glass-strong">
+          <h2 className="text-lg font-semibold mb-4">Course Details</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="instructor" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="instructor" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Instructor *
               </label>
               <input
@@ -269,12 +268,12 @@ export default function NewCourse() {
                 required
                 value={formData.instructor}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="duration" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Duration *
               </label>
               <input
@@ -285,12 +284,12 @@ export default function NewCourse() {
                 placeholder="e.g., 12 weeks"
                 value={formData.duration}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="lessons" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="lessons" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Number of Lessons *
               </label>
               <input
@@ -301,12 +300,12 @@ export default function NewCourse() {
                 min="0"
                 value={formData.lessons}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="level" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="level" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Level *
               </label>
               <select
@@ -314,17 +313,17 @@ export default function NewCourse() {
                 name="level"
                 value={formData.level}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white focus:outline-none"
               >
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Beginner to Advanced">Beginner to Advanced</option>
+                <option value="Beginner" className="bg-slate-900">Beginner</option>
+                <option value="Intermediate" className="bg-slate-900">Intermediate</option>
+                <option value="Advanced" className="bg-slate-900">Advanced</option>
+                <option value="Beginner to Advanced" className="bg-slate-900">Beginner to Advanced</option>
               </select>
             </div>
 
             <div>
-              <label htmlFor="batchInfo" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="batchInfo" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Batch Information
               </label>
               <input
@@ -333,12 +332,12 @@ export default function NewCourse() {
                 name="batchInfo"
                 value={formData.batchInfo}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="nextBatch" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="nextBatch" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Next Batch Date
               </label>
               <input
@@ -347,12 +346,12 @@ export default function NewCourse() {
                 name="nextBatch"
                 value={formData.nextBatch}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+            <div className="sm:col-span-2">
+              <label htmlFor="tags" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Tags (comma-separated)
               </label>
               <input
@@ -362,18 +361,19 @@ export default function NewCourse() {
                 value={formData.tags?.join(', ')}
                 onChange={handleTagsChange}
                 placeholder="React.js, Node.js, MongoDB"
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Media</h2>
+        {/* Media */}
+        <div className="p-6 rounded-lg glass-strong">
+          <h2 className="text-lg font-semibold mb-4">Media</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="thumbnail" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Thumbnail URL
               </label>
               <input
@@ -382,12 +382,12 @@ export default function NewCourse() {
                 name="thumbnail"
                 value={formData.thumbnail}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="instructorImage" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="instructorImage" className="block text-sm font-medium text-[rgba(255,255,255,0.85)] mb-2">
                 Instructor Image URL
               </label>
               <input
@@ -396,23 +396,24 @@ export default function NewCourse() {
                 name="instructorImage"
                 value={formData.instructorImage}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.08)] rounded text-white placeholder-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end space-x-3">
+        {/* Form Actions */}
+        <div className="flex justify-end gap-3">
           <Link
             href="/admin/courses"
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors"
+            className="px-4 py-2 rounded bg-[rgba(255,255,255,0.03)] text-white hover:bg-[rgba(255,255,255,0.05)] transition"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded bg-[var(--accent-primary)] text-black font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating...' : 'Create Course'}
           </button>

@@ -100,147 +100,148 @@ export default function LessonsManagement() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
+      <div className="py-12 container mx-auto px-4">
+        <div className="animate-pulse h-8 bg-[rgba(255,255,255,0.06)] rounded w-1/4 mb-6" />
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8 flex justify-between items-center">
+    <div className="py-8 container mx-auto px-4">
+      <div className="mb-8 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Lesson Links Management</h1>
-          <p className="text-gray-600">Manage YouTube videos and Google Meet links for courses</p>
+          <h1 className="text-2xl font-semibold mb-2">Lesson Links Management</h1>
+          <p className="text-sm text-[rgba(255,255,255,0.7)]">Manage YouTube videos and Google Meet links for courses</p>
         </div>
         <Link
           href="/admin/lessons/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 rounded bg-[var(--accent-primary)] text-black font-semibold hover:opacity-90 transition whitespace-nowrap"
         >
-          Add New Link
+          + New Link
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">{error}</h3>
+        <div className="mb-6 p-4 rounded-lg bg-[rgba(236,72,153,0.1)] border border-[rgba(236,72,153,0.3)]">
+          <div className="flex gap-3">
+            <div className="text-[var(--accent-tertiary)] flex-shrink-0">⚠</div>
+            <div>
+              <h3 className="text-sm font-medium text-[rgba(236,72,153,0.9)]">{error}</h3>
             </div>
           </div>
         </div>
       )}
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Course ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                URL
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {lessons.length > 0 ? (
-              lessons.map((lesson) => (
-                <tr key={lesson.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{lesson.title}</div>
-                    {lesson.description && (
-                      <div className="text-sm text-gray-500">{lesson.description}</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <span className="mr-2">{getTypeIcon(lesson.type)}</span>
-                      <span className="text-sm text-gray-900">{getTypeLabel(lesson.type)}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{lesson.courseId}</div>
-                    {lesson.lessonId && (
-                      <div className="text-xs text-gray-500">Lesson: {lesson.lessonId}</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-blue-600 truncate max-w-xs">
+      {/* Analytics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Links</div>
+          <div className="text-3xl font-bold mt-2">{lessons.length}</div>
+        </div>
+
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">Active</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-emerald)]">{lessons.filter(l => l.isActive).length}</div>
+        </div>
+
+        <div className="p-4 rounded-lg glass-strong">
+          <div className="text-sm text-[rgba(255,255,255,0.65)]">YouTube / Meet</div>
+          <div className="text-3xl font-bold mt-2 text-[var(--accent-primary)]">{lessons.filter(l => ['youtube', 'google_meet'].includes(l.type)).length}</div>
+        </div>
+      </div>
+
+      {/* Lessons Table */}
+      <div className="p-6 rounded-lg glass-strong overflow-hidden">
+        {lessons.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Title</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Course</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">URL</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
+                {lessons.map((lesson) => (
+                  <tr key={lesson.id} className="hover:bg-[rgba(255,255,255,0.01)] transition">
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{lesson.title}</div>
+                      {lesson.description && (
+                        <div className="text-xs text-[rgba(255,255,255,0.6)] mt-1">{lesson.description}</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span>{getTypeIcon(lesson.type)}</span>
+                        <span>{getTypeLabel(lesson.type)}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <div>{lesson.courseId}</div>
+                      {lesson.lessonId && (
+                        <div className="text-xs text-[rgba(255,255,255,0.5)]">Lesson: {lesson.lessonId}</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
                       <a 
                         href={lesson.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="hover:underline"
+                        className="text-[var(--accent-primary)] hover:underline truncate block max-w-xs"
+                        title={lesson.url}
                       >
-                        {lesson.url}
+                        {new URL(lesson.url).hostname}
                       </a>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      lesson.isActive 
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {lesson.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => toggleLessonStatus(lesson)}
-                      className={`mr-3 ${lesson.isActive ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}`}
-                    >
-                      {lesson.isActive ? 'Deactivate' : 'Activate'}
-                    </button>
-                    <Link
-                      href={`/admin/lessons/${lesson.id}/edit`}
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(lesson.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  No lesson links found. <Link href="/admin/lessons/new" className="text-blue-600 hover:text-blue-900">Create your first lesson link</Link>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        lesson.isActive 
+                          ? 'bg-[rgba(16,185,129,0.12)] text-[var(--accent-emerald)]'
+                          : 'bg-[rgba(236,72,153,0.12)] text-[var(--accent-tertiary)]'
+                      }`}>
+                        {lesson.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => toggleLessonStatus(lesson)}
+                          className="text-xs text-[var(--accent-secondary)] hover:opacity-80 transition"
+                          title={lesson.isActive ? 'Deactivate' : 'Activate'}
+                        >
+                          {lesson.isActive ? '⊖' : '⊕'}
+                        </button>
+                        <Link
+                          href={`/admin/lessons/${lesson.id}/edit`}
+                          className="text-[var(--accent-primary)] hover:underline text-xs"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(lesson.id)}
+                          className="text-[var(--accent-tertiary)] hover:opacity-80 text-xs"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="py-12 text-center">
+            <p className="text-[rgba(255,255,255,0.6)] mb-4">No lesson links found</p>
+            <Link href="/admin/lessons/new" className="text-[var(--accent-primary)] hover:underline">
+              Create your first lesson link
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
