@@ -16,9 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SSSAM Academy - Learn from Industry Experts",
   description: "Master in-demand skills with expert-led courses at SSSAM Academy",
-  icons: {
-    icon: "/logo.webp",
-  },
 };
 
 export default function RootLayout({
