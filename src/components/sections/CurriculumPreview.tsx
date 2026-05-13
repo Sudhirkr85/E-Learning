@@ -11,10 +11,10 @@ export function CurriculumPreview({ lessons }: CurriculumPreviewProps) {
   return (
     <section className="relative py-16 md:py-24 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
       {/* Spider-web background */}
-      <div className="absolute inset-0 opacity-35" style={{
+      <div className="absolute inset-0 opacity-20" style={{
         backgroundImage: `
-          linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.055) 25%, rgba(6, 182, 212, 0.055) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.055) 75%, rgba(6, 182, 212, 0.055) 76%, transparent 77%, transparent),
-          linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.055) 25%, rgba(139, 92, 246, 0.055) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.055) 75%, rgba(139, 92, 246, 0.055) 76%, transparent 77%, transparent)
+          linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.08) 25%, rgba(6, 182, 212, 0.08) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.08) 75%, rgba(6, 182, 212, 0.08) 76%, transparent 77%, transparent),
+          linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.08) 25%, rgba(139, 92, 246, 0.08) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.08) 75%, rgba(139, 92, 246, 0.08) 76%, transparent 77%, transparent)
         `,
         backgroundSize: '50px 50px',
       }} />

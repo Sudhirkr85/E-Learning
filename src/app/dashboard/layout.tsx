@@ -14,9 +14,9 @@ export default function DashboardLayout({
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      <div className="min-h-screen bg-slate-950 text-slate-300 flex flex-col md:flex-row">
         <DashboardSidebar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 p-6 md:p-10">{children}</main>
       </div>
       <Footer />
     </>

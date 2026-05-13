@@ -162,7 +162,7 @@ export function Header() {
             aria-label="Toggle menu"
           >
             <svg
-              className="w-6 h-6 text-gray-700"
+              className="w-6 h-6 text-slate-200"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -178,27 +178,27 @@ export function Header() {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden transition-all duration-300 overflow-hidden ${
+          <div className={`md:hidden transition-all duration-300 overflow-hidden ${
           isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <nav className="pt-4 pb-6 space-y-4">
             <Link 
               href={ROUTES.HOME} 
-              className="block text-white/90 hover:text-emerald-200 transition-colors font-medium py-2"
+                className="block text-slate-300 hover:text-emerald-200 transition-colors font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               href={ROUTES.COURSES} 
-              className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
+                className="block text-slate-300 hover:text-blue-400 transition-colors font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Courses
             </Link>
             <a 
               href="#trainers" 
-              className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
+                className="block text-slate-300 hover:text-blue-400 transition-colors font-medium py-2"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#trainers');
@@ -225,9 +225,9 @@ export function Header() {
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
               {user ? (
                 <>
-                  <div className="px-4 py-2 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">
-                      {user.firstName} {user.lastName}
+                      <div className="px-4 py-2 border-b border-slate-800">
+                        <p className="text-sm font-medium text-slate-200">
+                          {user.firstName} {user.lastName}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
                       {user.emailAddresses?.[0]?.emailAddress}

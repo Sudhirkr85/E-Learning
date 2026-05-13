@@ -14,7 +14,7 @@ export function FAQSection({ faqs }: FAQSectionProps) {
   return (
     <section id="faq" className="relative bg-gradient-to-b from-slate-950 to-slate-900 py-20 md:py-28">
       {/* Background Pattern */}
-      <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.04%22%3E%3Cpath%20d%3D%22M0%2040L40%200H20L0%2020M40%2040V20L20%2040%22/%3E%3C/g%3E%3C/svg%3E')]" />
+        <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.02%22%3E%3Cpath%20d%3D%22M0%2040L40%200H20L0%2020M40%2040V20L20%2040%22/%3E%3C/g%3E%3C/svg%3E')]" />
 
       <Container className="relative z-10">
         <div className="max-w-4xl mx-auto">
@@ -77,7 +77,7 @@ export function FAQSection({ faqs }: FAQSectionProps) {
 
           {/* CTA Section */}
           <div className="text-center">
-            <div className="rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/90 to-red-500/90 p-8 text-white md:p-12">
+            <div className="rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/8 to-red-500/8 p-8 text-white md:p-12">
               <Heading level={3} className="mb-4 text-2xl font-bold md:text-3xl">
                 Still Have Questions?
               </Heading>
