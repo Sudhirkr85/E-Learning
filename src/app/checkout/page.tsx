@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
@@ -260,53 +259,34 @@ export default function CheckoutPage() {
               ) : null}
 
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <Card className="overflow-hidden border border-slate-800 bg-slate-900/80 p-0 lg:col-span-2">
-                  <div className="grid grid-cols-1 md:grid-cols-[220px_1fr]">
-                    <div className="relative min-h-56 md:min-h-full">
-                      {course?.thumbnail ? (
-                        <Image
-                          src={course.thumbnail}
-                          alt={course.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 220px"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex min-h-56 h-full items-center justify-center bg-slate-800 text-slate-500">
-                          Loading course...
-                        </div>
-                      )}
+                <Card className="lg:col-span-2 border border-slate-800 bg-slate-900/80 p-6 md:p-8">
+                  <div className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
+                    Selected Course
                     </div>
 
-                    <div className="p-6 md:p-8">
-                      <div className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
-                        Selected Course
-                      </div>
-                      <Heading level={3} className="mb-3 text-white">
-                        {course?.title || 'Loading course details'}
-                      </Heading>
-                      <Text className="mb-6 text-slate-300">
-                        {course?.shortDescription || course?.description || 'Loading the latest course information.'}
-                      </Text>
+                  <Heading level={3} className="mb-3 text-white">
+                    {course?.title || 'Loading course details'}
+                  </Heading>
+                  <Text className="mb-6 text-slate-300">
+                    {course?.shortDescription || course?.description || 'Loading the latest course information.'}
+                  </Text>
 
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                          <Text className="mb-1 text-slate-500">Instructor</Text>
-                          <Text className="font-semibold text-white">{course?.instructor || 'Loading...'}</Text>
-                        </div>
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                          <Text className="mb-1 text-slate-500">Duration</Text>
-                          <Text className="font-semibold text-white">{course?.duration || 'Loading...'}</Text>
-                        </div>
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                          <Text className="mb-1 text-slate-500">Lessons</Text>
-                          <Text className="font-semibold text-white">{course?.lessons ?? 'Loading...'}</Text>
-                        </div>
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
-                          <Text className="mb-1 text-slate-500">Category</Text>
-                          <Text className="font-semibold text-white">{course?.category || 'Loading...'}</Text>
-                        </div>
-                      </div>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                      <Text className="mb-1 text-slate-500">Instructor</Text>
+                      <Text className="font-semibold text-white">{course?.instructor || 'Loading...'}</Text>
+                    </div>
+                    <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                      <Text className="mb-1 text-slate-500">Duration</Text>
+                      <Text className="font-semibold text-white">{course?.duration || 'Loading...'}</Text>
+                    </div>
+                    <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                      <Text className="mb-1 text-slate-500">Lessons</Text>
+                      <Text className="font-semibold text-white">{course?.lessons ?? 'Loading...'}</Text>
+                    </div>
+                    <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+                      <Text className="mb-1 text-slate-500">Category</Text>
+                      <Text className="font-semibold text-white">{course?.category || 'Loading...'}</Text>
                     </div>
                   </div>
                 </Card>

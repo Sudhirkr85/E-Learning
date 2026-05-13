@@ -37,10 +37,10 @@ function PaymentSuccessContent() {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center">
+        <div className="min-h-screen bg-slate-950 flex items-center">
           <Container>
             <div className="max-w-md mx-auto text-center">
-              <Text>Loading payment details...</Text>
+              <Text className="text-slate-300">Loading payment details...</Text>
             </div>
           </Container>
         </div>
@@ -53,54 +53,54 @@ function PaymentSuccessContent() {
     <>
       <Header />
 
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center">
+      <div className="min-h-screen bg-slate-950 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_35%),linear-gradient(to_bottom,rgba(15,23,42,0.95),rgba(2,6,23,1))] flex items-center">
         <Container>
           <div className="max-w-md mx-auto">
-            <Card className="p-12 bg-white text-center">
+            <Card className="border border-slate-800 bg-slate-900/95 p-12 text-center shadow-2xl shadow-black/40">
               {/* Success Icon */}
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">✓</span>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-400/25 bg-emerald-400/10 shadow-[0_0_0_6px_rgba(16,185,129,0.08)]">
+                <span className="text-4xl text-emerald-300">✓</span>
               </div>
 
-              <Heading level={2} className="mb-2">
+              <Heading level={2} className="mb-2 text-slate-50">
                 Payment Successful!
               </Heading>
 
-              <Text size="lg" color="muted" className="mb-4">
+              <Text size="lg" className="mb-4 text-slate-300">
                 Your enrollment is confirmed
               </Text>
 
-              <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+              <div className="mb-6 rounded-xl border border-slate-800 bg-slate-950/80 p-4 text-left">
                 <div className="mb-3">
-                  <Text size="sm" color="muted">
+                  <Text size="sm" className="text-slate-400">
                     Order ID
                   </Text>
-                  <Text className="font-mono font-semibold">{purchaseData?.orderId}</Text>
+                  <Text className="font-mono text-sm font-semibold text-slate-100 break-all">{purchaseData?.orderId}</Text>
                 </div>
-                <Divider className="my-3" />
+                <Divider className="my-3 border-slate-800" />
                 <div className="mb-3">
-                  <Text size="sm" color="muted">
+                  <Text size="sm" className="text-slate-400">
                     Payment ID
                   </Text>
-                  <Text className="font-mono font-semibold text-sm">{purchaseData?.paymentId}</Text>
+                  <Text className="font-mono text-sm font-semibold text-slate-100 break-all">{purchaseData?.paymentId}</Text>
                 </div>
-                <Divider className="my-3" />
+                <Divider className="my-3 border-slate-800" />
                 <div className="mb-3">
-                  <Text size="sm" color="muted">
+                  <Text size="sm" className="text-slate-400">
                     Amount Paid
                   </Text>
-                  <Text className="text-2xl font-bold text-green-600">₹{purchaseData?.amount?.toLocaleString()}</Text>
+                  <Text className="text-2xl font-bold text-emerald-400">₹{purchaseData?.amount?.toLocaleString()}</Text>
                 </div>
-                <Divider className="my-3" />
+                <Divider className="my-3 border-slate-800" />
                 <div>
-                  <Text size="sm" color="muted">
+                  <Text size="sm" className="text-slate-400">
                     Course
                   </Text>
-                  <Text className="font-semibold">{purchaseData?.courseTitle}</Text>
+                  <Text className="font-semibold text-slate-100">{purchaseData?.courseTitle}</Text>
                 </div>
               </div>
 
-              <Text color="secondary" className="mb-6">
+              <Text className="mb-6 text-slate-300">
                 {purchaseData.studentEmail
                   ? `A confirmation email has been sent to ${purchaseData.studentEmail}. You can now access the course content from your dashboard.`
                   : 'You can now access the course content from your dashboard.'}
@@ -129,10 +129,10 @@ export default function PaymentSuccessPage() {
     <Suspense fallback={
       <>
         <Header />
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center">
+        <div className="min-h-screen bg-slate-950 flex items-center">
           <Container>
             <div className="max-w-md mx-auto text-center">
-              <Text>Loading...</Text>
+              <Text className="text-slate-300">Loading...</Text>
             </div>
           </Container>
         </div>
