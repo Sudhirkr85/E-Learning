@@ -151,7 +151,7 @@ export function HeroSection({ course }: HeroProps) {
             {/* Trust Badges */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-6 border-t border-slate-700/50">
               {[
-                '✓ Certified Trainers (50+ Years XP)',
+                '✓ Certified Trainers (5+ Years XP)',
                 '✓ 95% Placement Success',
                 '✓ Live Classes + Lifetime Access',
                 '✓ UPI/Cards/EMI Available'
