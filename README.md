@@ -350,6 +350,202 @@ Static Data (courses.ts) [Fallback Only]
 4. **AWS Cloud Computing & DevOps** - ₹15,999
 5. **Cyber Security & Ethical Hacking** - ₹18,999
 
+## 🎓 Class Sessions & Student Support System
+
+### Overview
+Comprehensive system for managing live class sessions and providing support to enrolled students. After purchase, students get direct access to:
+- 📅 Upcoming class schedules with Google Meet links
+- 🎥 Recording links for completed sessions
+- 📧 Direct contact to instructors and support team
+- 🕐 Office hours and availability information
+
+### Features
+
+**For Admins:**
+- ➕ Create/Edit/Delete class sessions for each course
+- 🔗 Add Google Meet links for live classes
+- 📹 Upload recording links after sessions
+- 📋 Add session notes and descriptions
+- 👥 View all students enrolled in each course with contact details
+- 📊 See revenue analytics per course
+- 🔍 Search and filter students by name, email, or phone
+
+**For Students:**
+- 🚀 "Continue Learning" button on checkout success page
+- 📅 View all upcoming class sessions with dates & times
+- 🎥 Join Google Meet directly from course page
+- 📹 Access recorded sessions after completion
+- 💬 See instructor contact info and support email/phone
+- 🕐 Check office hours and availability
+- 📚 Access course materials and lessons
+
+### Database Schema
+
+**ClassSession Collection:**
+```javascript
+{
+  _id: ObjectId,
+  courseId: string,
+  googleMeetLink: string,      // Meet URL
+  sessionTitle: string,         // e.g., "Lecture 1 - Intro"
+  description: string,          // Optional details
+  sessionDate: string,          // ISO format: "2026-05-20T10:30:00"
+  sessionTime: string,          // HH:mm format: "10:30"
+  durationMinutes: number,      // e.g., 60
+  recordingLink: string,        // Optional recording URL
+  notes: string,                // Session notes
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+**CourseContact Collection:**
+```javascript
+{
+  _id: ObjectId,
+  courseId: string,
+  supportEmail: string,         // Support email
+  supportPhone: string,         // Support phone
+  instructorName: string,       // Instructor name
+  instructorEmail: string,      // Optional: instructor email
+  officeHours: string,          // e.g., "Monday-Friday 9AM-6PM IST"
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### API Endpoints
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/admin/sessions` | GET | Fetch sessions for course |
+| `/api/admin/sessions` | POST | Create new session |
+| `/api/admin/sessions` | PUT | Update session |
+| `/api/admin/sessions` | DELETE | Delete session |
+| `/api/admin/course-contact` | GET | Get support contact info |
+| `/api/admin/course-contact` | POST | Create/update contact |
+| `/api/admin/course-contact` | PUT | Update contact |
+| `/api/admin/course-enrollments` | GET | View enrolled students |
+
+### Admin Workflow
+
+1. Navigate to `/admin/courses`
+2. Click **"Manage Sessions"** on desired course
+3. Add support contact info:
+   - Instructor name
+   - Support email & phone
+   - Optional: instructor email, office hours
+4. Click **"+ Add Session"** to create class sessions
+5. Fill in session details:
+   - Title, description
+   - Google Meet link
+   - Date, time, duration
+   - Optional: recording link, notes
+6. Click **"View Enrollments"** to see all students who purchased
+
+### Student Experience
+
+1. Complete course purchase and payment
+2. Click **"🚀 Continue Learning"** on success page
+3. Land on course details page with:
+   - **Class Schedule** - All upcoming sessions with meet links
+   - **Support Contact** - Email & phone links in sidebar
+   - **Course Materials** - Video lessons and resources
+4. Click "Join Google Meet" to access live sessions
+5. Access recordings after sessions complete
+
+### Pages
+
+**Admin Pages:**
+- `/admin/courses` - Course list with quick actions
+- `/admin/courses/[courseId]/sessions` - Manage sessions & contact info
+- `/admin/courses/[courseId]/enrollments` - View enrolled students with analytics
+
+**Student Pages:**
+- `/checkout/success` - Updated with "Continue Learning" button
+- `/dashboard/courses/[slug]` - Full course details with sessions
+
+### Implementation Files
+
+**New Models:**
+- `src/lib/models/class-session.ts` - ClassSession & CourseContact models
+
+**New APIs:**
+- `src/app/api/admin/sessions/route.ts` - Session CRUD
+- `src/app/api/admin/course-contact/route.ts` - Contact management
+- `src/app/api/admin/course-enrollments/route.ts` - Student list
+
+**New UI Pages:**
+- `src/app/admin/courses/[courseId]/sessions/page.tsx` - Session management UI
+- `src/app/admin/courses/[courseId]/enrollments/page.tsx` - Enrollment viewer UI
+- `src/app/dashboard/courses/[slug]/page.tsx` - Student course details page
+
+**Updated Pages:**
+- `src/app/admin/courses/page.tsx` - Added session/enrollment action buttons
+- `src/app/checkout/success/page.tsx` - Added "Continue Learning" CTA
+
+### Configuration Required
+
+Update your checkout payment flow to pass `courseSlug`:
+
+```javascript
+// In your payment verification/success handler
+const successUrl = `/checkout/success?${new URLSearchParams({
+  payment_id: paymentData.id,
+  order_id: orderId,
+  amount: totalAmount,
+  courseTitle: course.title,
+  courseSlug: course.slug,      // ← IMPORTANT: Add this
+  studentEmail: studentEmail,
+}).toString()}`;
+
+window.location.href = successUrl;
+```
+
+### UI/UX Features
+
+✅ Dark theme (slate-950, slate-900) matching existing design
+✅ Color-coded session status (green for upcoming, gray for past)
+✅ Responsive layouts (mobile, tablet, desktop)
+✅ Sticky support card sidebar on desktop
+✅ Search & filter students by name/email/phone
+✅ Revenue analytics (total enrolled, total revenue, average price)
+✅ Clickable email/phone links for direct contact
+✅ Interactive buttons with hover animations
+
+### Testing Checklist
+
+**Admin Panel:**
+- [ ] Go to `/admin/courses` and see all courses
+- [ ] Click "Manage Sessions" on any course
+- [ ] Add support contact information
+- [ ] Create a test session with future date/time
+- [ ] Verify Google Meet link opens in new tab
+- [ ] Click "View Enrollments" to see students
+- [ ] Search/filter students by name or email
+- [ ] Check revenue stats are calculated correctly
+
+**Student Experience:**
+- [ ] Make test purchase using Razorpay test card
+- [ ] On success page, click "Continue Learning" button
+- [ ] Verify course details page loads
+- [ ] See all class sessions listed
+- [ ] Click "Join Google Meet" button
+- [ ] See support contact info in sidebar
+- [ ] Verify email/phone links are clickable
+- [ ] Check course materials display
+
+### Future Enhancements
+
+- 📊 Attendance tracking (mark present/absent per session)
+- 🎓 Certificate generation on course completion
+- 💬 Bulk messaging to all enrolled students
+- 📅 Calendar widget showing all scheduled sessions
+- 🔐 Access control verification (only purchased students can access)
+- ⏺️ Automatic recording capture from Google Meet
+- 🎯 Session homework/assignments with submission
+- 🔔 Email/SMS reminders before each class
+
 ### Course Features
 - 🎯 **Job-Oriented Curriculum** - Designed for Indian IT industry
 - 🏢 **Placement Support** - Resume building, mock interviews, job connections

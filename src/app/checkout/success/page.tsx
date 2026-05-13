@@ -13,6 +13,7 @@ function PaymentSuccessContent() {
     paymentId: '',
     amount: 0,
     courseTitle: '',
+    courseSlug: '',
     studentEmail: '',
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +23,7 @@ function PaymentSuccessContent() {
     const orderId = searchParams.get('order_id') || searchParams.get('orderId') || '';
     const amount = Number(searchParams.get('amount') || '0');
     const courseTitle = searchParams.get('course_title') || searchParams.get('courseTitle') || '';
+    const courseSlug = searchParams.get('course_slug') || searchParams.get('courseSlug') || '';
     const studentEmail = searchParams.get('student_email') || searchParams.get('studentEmail') || '';
 
     setPurchaseData({
@@ -29,6 +31,7 @@ function PaymentSuccessContent() {
       paymentId,
       amount,
       courseTitle,
+      courseSlug,
       studentEmail,
     });
     setIsLoading(false);
@@ -107,12 +110,29 @@ function PaymentSuccessContent() {
               </Text>
 
               <div className="space-y-3">
+                {purchaseData.courseSlug && (
+                  <Button 
+                    variant="primary" 
+                    size="lg" 
+                    href={`/dashboard/courses/${purchaseData.courseSlug}`} 
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+                  >
+                    🚀 Continue Learning
+                  </Button>
+                )}
                 <Button variant="primary" size="lg" href={ROUTES.DASHBOARD} className="w-full">
                   Go to Dashboard
                 </Button>
                 <Button variant="outline" size="lg" href={ROUTES.MY_COURSES} className="w-full">
                   View My Courses
                 </Button>
+              </div>
+              <div className="mt-6 text-sm text-slate-300">
+                <Text className="block mb-1">Need help? Contact our support:</Text>
+                <div className="flex flex-col gap-1 items-center">
+                  <a href={`mailto:info@sssamacadmy.com`} className="text-blue-400 hover:underline">info@sssamacadmy.com</a>
+                  <a href={`tel:+919217031899`} className="text-blue-400 hover:underline">9217031899</a>
+                </div>
               </div>
             </Card>
           </div>

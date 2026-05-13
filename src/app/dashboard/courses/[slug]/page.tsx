@@ -1,122 +1,94 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Container, Heading, Text, Card, Button } from '@/components/ui';
-import { getCourseById } from '@/data/courses';
-import { checkCourseAccess } from '@/lib/course-access';
-import { useUser } from '@clerk/nextjs';
-import { useUserSync } from '@/hooks/use-user-sync';
+import { Course } from '@/types';
+import { Container, Heading, Text, Card } from '@/components/ui';
 
-interface LessonPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+interface ClassSession {
+  _id: string;
+  sessionTitle: string;
+  description?: string;
+  sessionDate: string;
+  sessionTime: string;
+  durationMinutes: number;
+  googleMeetLink: string;
+  recordingLink?: string;
+  notes?: string;
 }
 
-export default function LessonPage({ params }: LessonPageProps) {
-  const { user } = useUser();
-  const router = useRouter();
-  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sessions, setSessions] = useState<any[]>([]);
-  const [contact, setContact] = useState<any>(null);
-  const { id } = use(params);
-  const course = getCourseById(id);
+interface CourseContact {
+  supportEmail: string;
+  supportPhone: string;
+  instructorName: string;
+  instructorEmail?: string;
+  officeHours?: string;
+}
 
-  useUserSync();
+export default function CourseDetailPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const [course, setCourse] = useState<Course | null>(null);
+  const [sessions, setSessions] = useState<ClassSession[]>([]);
+  const [contact, setContact] = useState<CourseContact | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.id && course) {
-      verifyAccess();
-      fetchCourseData();
-    }
-  }, [id, user?.id, course]);
-
-  const verifyAccess = async () => {
-    try {
-      const studentId = user?.id;
-      if (!studentId || !course) {
-        setHasAccess(false);
-        return;
-      }
-      
-      if (process.env.NODE_ENV === 'development') {
-        setHasAccess(true);
-        setIsLoading(false);
-        return;
-      }
-      
-      const access = await checkCourseAccess(course.id, studentId);
-      setHasAccess(access);
-    } catch (error) {
-      console.error('Error verifying access:', error);
-      if (process.env.NODE_ENV === 'development') {
-        setHasAccess(true);
-      } else {
-        setHasAccess(false);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    fetchCourseData();
+  }, [slug]);
 
   const fetchCourseData = async () => {
     try {
-      if (!course) return;
-      
-      const [sessionsRes, contactRes] = await Promise.all([
-        fetch(`/api/admin/sessions?courseId=${course.id}`),
-        fetch(`/api/admin/course-contact?courseId=${course.id}`),
-      ]);
+      // Fetch course
+      const courseRes = await fetch(`/api/courses/${slug}`);
+      const courseData = await courseRes.json();
 
-      const sessionsData = await sessionsRes.json();
-      const contactData = await contactRes.json();
+      if (courseData.success) {
+        setCourse(courseData.course);
 
-      if (sessionsData.success) {
-        setSessions(sessionsData.sessions || []);
-      }
+        // Fetch sessions and contact using course ID
+        const [sessionsRes, contactRes] = await Promise.all([
+          fetch(`/api/admin/sessions?courseId=${courseData.course.id}`),
+          fetch(`/api/admin/course-contact?courseId=${courseData.course.id}`),
+        ]);
 
-      if (contactData.success && contactData.contact) {
-        setContact(contactData.contact);
+        const sessionsData = await sessionsRes.json();
+        const contactData = await contactRes.json();
+
+        if (sessionsData.success) {
+          setSessions(sessionsData.sessions || []);
+        }
+
+        if (contactData.success && contactData.contact) {
+          setContact(contactData.contact);
+        }
       }
     } catch (error) {
       console.error('Error fetching course data:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Container>
+        <div className="py-12">
+          <Text className="text-slate-300">Loading course details...</Text>
+        </div>
+      </Container>
+    );
+  }
 
   if (!course) {
     return (
       <Container>
         <div className="py-12 text-center">
-          <Heading className="mb-4">Course Not Found</Heading>
-          <Link href="/dashboard/courses">
-            <Button>← Back to My Courses</Button>
-          </Link>
-        </div>
-      </Container>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Container>
-        <div className="py-12 text-center">
-          <Text className="text-slate-300">Loading course...</Text>
-        </div>
-      </Container>
-    );
-  }
-
-  if (!hasAccess) {
-    return (
-      <Container>
-        <div className="py-12 text-center">
-          <Heading className="mb-4">Access Restricted</Heading>
-          <Text className="text-slate-300 mb-6">You need to purchase this course to access the content.</Text>
-          <Link href={`/checkout?course=${course.slug}`}>
-            <Button>Purchase Course</Button>
+          <Heading className="mb-4">Course not found</Heading>
+          <Link href="/dashboard/courses" className="text-blue-400 hover:text-blue-300">
+            ← Back to courses
           </Link>
         </div>
       </Container>
@@ -126,7 +98,7 @@ export default function LessonPage({ params }: LessonPageProps) {
   return (
     <Container>
       <div className="py-12">
-        {/* Header */}
+        {/* Course Header */}
         <div className="mb-12">
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -135,8 +107,11 @@ export default function LessonPage({ params }: LessonPageProps) {
                 Instructor: <span className="font-semibold">{course.instructor}</span>
               </p>
             </div>
-            <Link href="/dashboard/courses">
-              <span className="text-slate-400 hover:text-slate-300 cursor-pointer">← Back</span>
+            <Link
+              href="/dashboard/courses"
+              className="text-slate-400 hover:text-slate-300"
+            >
+              ← Back
             </Link>
           </div>
           <p className="text-slate-300">{course.description}</p>
@@ -145,7 +120,7 @@ export default function LessonPage({ params }: LessonPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {/* Class Sessions */}
+            {/* Class Sessions Section */}
             <Card className="p-8 mb-8">
               <Heading className="text-2xl mb-6 flex items-center gap-2">
                 📅 Class Schedule
@@ -251,7 +226,7 @@ export default function LessonPage({ params }: LessonPageProps) {
               )}
             </Card>
 
-            {/* Course Materials */}
+            {/* Course Materials Section */}
             {course.curriculum && course.curriculum.length > 0 && (
               <Card className="p-8">
                 <Heading className="text-2xl mb-6 flex items-center gap-2">
@@ -308,7 +283,7 @@ export default function LessonPage({ params }: LessonPageProps) {
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Support Info */}
           <div className="lg:col-span-1">
             {/* Support Card */}
             <Card className="p-6 mb-6 sticky top-4">
@@ -360,25 +335,25 @@ export default function LessonPage({ params }: LessonPageProps) {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="p-4 bg-slate-800 rounded">
-                    <p className="text-xs text-slate-400 mb-1">Support Email</p>
-                    <a
-                      href={`mailto:info@sssamacadmy.com`}
-                      className="font-semibold text-blue-400 hover:text-blue-300 break-words whitespace-normal"
-                    >
-                      info@sssamacadmy.com
-                    </a>
-                  </div>
+                    <div className="p-4 bg-slate-800 rounded">
+                      <p className="text-xs text-slate-400 mb-1">Support Email</p>
+                      <a
+                        href={`mailto:info@sssamacadmy.com`}
+                        className="font-semibold text-blue-400 hover:text-blue-300 break-words whitespace-normal"
+                      >
+                        info@sssamacadmy.com
+                      </a>
+                    </div>
 
-                  <div className="p-4 bg-slate-800 rounded">
-                    <p className="text-xs text-slate-400 mb-1">Support Phone</p>
-                    <a href={`tel:+919217031899`} className="font-semibold text-blue-400 hover:text-blue-300">+91 9217031899</a>
-                  </div>
+                    <div className="p-4 bg-slate-800 rounded">
+                      <p className="text-xs text-slate-400 mb-1">Support Phone</p>
+                      <a href={`tel:+919217031899`} className="font-semibold text-blue-400 hover:text-blue-300">+91 9217031899</a>
+                    </div>
                 </div>
               )}
             </Card>
 
-            {/* Course Info */}
+            {/* Course Info Card */}
             <Card className="p-6">
               <Heading className="text-lg mb-4">📊 Course Info</Heading>
 
