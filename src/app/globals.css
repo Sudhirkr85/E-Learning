@@ -1,8 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark Premium Tech Aesthetic */
+  --background: #0a0e27;
+  --background-secondary: #111d3d;
+  --background-tertiary: #1a2847;
+  --foreground: #f0f4f8;
+  --foreground-secondary: #cbd5e1;
+  --foreground-tertiary: #94a3b8;
+  
+  /* Premium Accent Colors */
+  --accent-primary: #06b6d4;
+  --accent-primary-dark: #0891b2;
+  --accent-secondary: #8b5cf6;
+  --accent-tertiary: #ec4899;
+  --accent-gold: #fbbf24;
+  --accent-emerald: #10b981;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(203, 213, 225, 0.15);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 24px 0 rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 40px 0 rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {
@@ -12,59 +35,128 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #0a0e27 0%, #111d3d 50%, #0a0e27 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
-/* Small design utilities for premium look */
+/* Premium Glassmorphism */
 .glass {
-  background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.2));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(203, 213, 225, 0.15);
 }
 
+.glass-strong {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(203, 213, 225, 0.2);
+}
+
+/* Smooth Animations */
 .float-slow {
-  animation: float 6s ease-in-out infinite;
-}
-
-.float-subtle {
   animation: float 8s ease-in-out infinite;
 }
 
+.float-subtle {
+  animation: float 10s ease-in-out infinite;
+}
+
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
 
+/* Glow Effects */
 .glow {
-  box-shadow: 0 6px 20px rgba(99,102,241,0.08), 0 2px 6px rgba(14,165,233,0.04);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.1), 0 0 40px rgba(139, 92, 246, 0.05);
 }
 
+.glow-primary {
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.15), 0 0 48px rgba(6, 182, 212, 0.08);
+}
+
+.glow-strong {
+  box-shadow: 0 0 32px rgba(139, 92, 246, 0.2), 0 0 64px rgba(6, 182, 212, 0.1);
+}
+
+/* Premium Link Underline */
 .link-underline {
   position: relative;
 }
+
 .link-underline::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: -4px;
-  height: 3px;
+  bottom: -2px;
+  height: 2px;
   width: 0;
-  background: linear-gradient(90deg, rgba(99,102,241,0.9), rgba(14,165,233,0.9));
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.8), rgba(139, 92, 246, 0.8));
   border-radius: 9999px;
-  transition: width 250ms ease;
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .link-underline:hover::after,
 .link-underline:focus::after {
   width: 100%;
+}
+
+/* Mesh Background Pattern */
+.mesh-background {
+  background-image: 
+    linear-gradient(0deg, transparent 24%, rgba(6, 182, 212, 0.03) 25%, rgba(6, 182, 212, 0.03) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.03) 75%, rgba(6, 182, 212, 0.03) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(139, 92, 246, 0.03) 25%, rgba(139, 92, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(139, 92, 246, 0.03) 75%, rgba(139, 92, 246, 0.03) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+}
+
+/* Cursor reveal effect container */
+.cursor-reveal-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.cursor-reveal-mesh {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.4), rgba(139, 92, 246, 0.4));
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.6), rgba(139, 92, 246, 0.6));
+}
+
+/* Selection Styling */
+::selection {
+  background: rgba(6, 182, 212, 0.2);
+  color: var(--foreground);
+}
+
+/* Smooth Transitions */
+* {
+  @apply transition-colors duration-200;
 }

@@ -8,34 +8,40 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+    <footer className="bg-gradient-to-br from-background-secondary via-background to-background-tertiary relative overflow-hidden border-t border-slate-700/50">
+      {/* Background Effects */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       
       <Container className="relative z-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
-          {/* Brand */}
+          {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="font-bold text-xl text-white">SA</span>
               </div>
-              <span className="text-2xl font-bold text-white">{SITE_CONFIG.name}</span>
+              <div>
+                <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+                  {SITE_CONFIG.name}
+                </div>
+                <div className="text-xs text-foreground-tertiary">Premium Academy</div>
+              </div>
             </div>
-            <Text size="sm" color="muted" className="text-gray-300 mb-6 leading-relaxed max-w-md">
-              SSSAM Academy is India's trusted platform for professional IT training. We offer job-focused courses in AI, Full Stack Development, Data Science, Cybersecurity, and Digital Marketing with 95% placement success rate. Join 15,000+ graduates from top IT companies.
+            <Text size="sm" className="text-foreground-secondary mb-6 leading-relaxed max-w-md">
+              India's trusted platform for professional IT training. Job-focused courses with 95% placement success rate. Join 15,000+ graduates from top IT companies.
             </Text>
             
             {/* Newsletter */}
             <div className="mb-6">
-              <h4 className="font-semibold text-white mb-3">Stay Updated</h4>
+              <h4 className="font-semibold text-foreground mb-3">Stay Updated</h4>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-gray-750"
+                  className="flex-1 px-4 py-2.5 bg-background-tertiary border border-slate-700/50 rounded-lg text-foreground placeholder-foreground-tertiary focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
                 />
-                <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                <button className="px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-purple-600 text-white font-semibold rounded-lg hover:from-cyan-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
                   Subscribe
                 </button>
               </div>
@@ -84,110 +90,71 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-white mb-6">Quick Links</h4>
+            <h4 className="font-semibold text-foreground mb-6">Quick Links</h4>
             <ul className="space-y-3">
-              <li>
-                <Link href="/about" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/courses" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  All Courses
-                </Link>
-              </li>
-              <li>
-                <Link href="/trainers" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Instructors
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Blog
-                </Link>
-              </li>
+              {['About Us', 'All Courses', 'Trainers', 'Resources'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-foreground-secondary hover:text-cyan-400 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h4 className="font-semibold text-white mb-6">Support</h4>
+            <h4 className="font-semibold text-foreground mb-6">Support</h4>
             <ul className="space-y-3">
-              <li>
-                <Link href="/help" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/community" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Community
-                </Link>
-              </li>
+              {['Help Center', 'Contact Us', 'FAQ', 'Community'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-foreground-secondary hover:text-cyan-400 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-white mb-6">Legal</h4>
+            <h4 className="font-semibold text-foreground mb-6">Legal</h4>
             <ul className="space-y-3">
-              <li>
-                <Link href="/privacy" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/refund" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Refund Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/cookies" className="text-gray-300 hover:text-blue-400 transition-colors">
-                  Cookie Policy
-                </Link>
-              </li>
+              {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Cookies'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-foreground-secondary hover:text-cyan-400 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <Divider className="border-gray-700" />
+        <Divider className="border-slate-700/50" />
 
-        {/* Bottom */}
+        {/* Bottom Section */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <Text size="sm" color="muted" className="text-gray-400">
-            &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved. | Trusted online training platform in India
+          <Text size="sm" className="text-foreground-tertiary">
+            &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved. | Premium Tech Training
           </Text>
           
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-300">
-            <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-6 text-sm justify-center md:justify-end">
+            <div className="flex items-center gap-2 text-foreground-secondary hover:text-cyan-400 transition-colors">
               <span>📧</span>
-              <a href={`mailto:${SITE_CONFIG.email}`} className="hover:text-blue-400 transition-colors">
+              <a href={`mailto:${SITE_CONFIG.email}`}>
                 {SITE_CONFIG.email}
               </a>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 text-foreground-secondary hover:text-cyan-400 transition-colors">
               <span>📞</span>
-              <a href={`tel:${SITE_CONFIG.phone}`} className="hover:text-blue-400 transition-colors">
+              <a href={`tel:${SITE_CONFIG.phone}`}>
                 {SITE_CONFIG.phone}
               </a>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <span>📍</span>
-              <span>Bengaluru, India</span>
+              <span>Gurugram, India</span>
             </div>
           </div>
         </div>

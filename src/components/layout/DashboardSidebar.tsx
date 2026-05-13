@@ -16,7 +16,7 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <aside className="w-full md:w-64 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200 p-4 md:sticky md:top-20 md:h-[calc(100vh-80px)]">
+    <aside className="w-full md:w-64 bg-gradient-to-b from-background-secondary to-background-tertiary border-b md:border-b-0 md:border-r border-slate-700/50 p-4 md:sticky md:top-20 md:h-[calc(100vh-80px)] overflow-y-auto">
       <nav className="space-y-2">
         {menuItems.map(item => {
           const isActive = pathname === item.href;
@@ -24,10 +24,10 @@ export function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
                 isActive
-                  ? 'bg-blue-100 text-blue-600 font-semibold'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg'
+                  : 'text-foreground-secondary hover:text-cyan-300 hover:bg-cyan-500/10'
               }`}
             >
               <span className="text-xl">{item.icon}</span>
@@ -37,10 +37,10 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      {/* Logout Button */}
-      <div className="mt-8 pt-8 border-t border-gray-200">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors text-left">
-          <span className="text-xl">🚪</span>
+      {/* Logout Section */}
+      <div className="mt-8 pt-8 border-t border-slate-700/50">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-foreground-secondary hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 font-medium text-left group">
+          <span className="text-xl group-hover:scale-110 transition-transform">🚪</span>
           <span>Logout</span>
         </button>
       </div>

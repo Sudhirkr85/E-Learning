@@ -5,5 +5,5 @@ interface DividerProps {
 }
 
 export function Divider({ className = '' }: DividerProps) {
-  return <div className={`border-b border-gray-200 ${className}`} />;
+  return <div className={`border-b border-slate-700/50 ${className}`} />;
 }

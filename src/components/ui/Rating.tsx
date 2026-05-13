@@ -14,13 +14,13 @@ export function Rating({ rating, reviews, size = 'md', className = '' }: RatingP
     <div className={`flex items-center gap-2 ${className}`}>
       <div className="flex gap-1">
         {[...Array(5)].map((_, i) => (
-          <span key={i} className={`${iconSize} ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'}`}>
+          <span key={i} className={`${iconSize} ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-slate-600'}`}>
             ★
           </span>
         ))}
       </div>
       {reviews !== undefined && (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-foreground-tertiary">
           {rating.toFixed(1)} ({reviews.toLocaleString()} reviews)
         </span>
       )}

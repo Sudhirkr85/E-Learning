@@ -12,8 +12,8 @@ interface CardProps {
 export function Card({ children, className = '', onClick, interactive = false }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-lg shadow-md ${
-        interactive ? 'hover:shadow-lg hover:scale-105 cursor-pointer transition-all duration-200' : ''
+      className={`glass rounded-2xl shadow-lg ${
+        interactive ? 'hover:shadow-xl hover:scale-105 cursor-pointer group transition-all duration-300' : ''
       } ${className}`}
       onClick={onClick}
     >

@@ -14,9 +14,9 @@ const sizes = {
 };
 
 const colors = {
-  primary: 'text-gray-900',
-  secondary: 'text-gray-700',
-  muted: 'text-gray-500',
+  primary: 'text-foreground',
+  secondary: 'text-foreground-secondary',
+  muted: 'text-foreground-tertiary',
 };
 
 export function Text({ children, className = '', size = 'base', color = 'secondary' }: TextProps) {
