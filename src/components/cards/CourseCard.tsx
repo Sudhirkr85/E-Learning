@@ -17,33 +17,33 @@ export function CourseCard({ course }: CourseCardProps) {
 
   return (
     <Link href={`/courses/${course.slug}`}>
-      <Card interactive className={`overflow-hidden h-full group transition-all duration-300 transform rounded-2xl flex flex-col ${
+      <Card interactive className={`overflow-hidden h-full group transition-all duration-300 flex flex-col rounded-xl border ${
         isFeatured 
-          ? 'ring-2 ring-cyan-500/50 shadow-2xl bg-gradient-to-br from-background-secondary via-background-secondary to-background-tertiary' 
-          : 'bg-gradient-to-br from-background-secondary to-background-tertiary'
+          ? 'bg-slate-950 border-cyan-500/40 shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20 hover:border-cyan-500/60' 
+          : 'bg-slate-950 border-slate-700/50 hover:border-slate-600/80 hover:shadow-lg hover:shadow-slate-900/50'
       }`}>
         {/* Image Container */}
-        <div className="relative w-full h-56 overflow-hidden">
+        <div className="relative w-full h-64 overflow-hidden bg-slate-800">
           <Image
             src={course.thumbnail}
             alt={course.title}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           
-          {/* Image Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          {/* Subtle overlay - barely visible */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           
           {/* Top Badges */}
-          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+          <div className="absolute top-3 left-3 flex flex-col gap-2 z-20">
             {isFeatured && (
-              <Badge variant="success" className="!text-xs">
+              <Badge variant="success" className="!text-xs backdrop-blur-sm bg-emerald-500/90 shadow-lg">
                 ⭐ FEATURED
               </Badge>
             )}
             {isBestSeller && !isFeatured && (
-              <Badge variant="warning" className="!text-xs">
+              <Badge variant="warning" className="!text-xs backdrop-blur-sm bg-amber-500/90 shadow-lg">
                 🏆 BESTSELLER
               </Badge>
             )}
@@ -51,16 +51,16 @@ export function CourseCard({ course }: CourseCardProps) {
 
           {/* Discount Badge */}
           {discountPercentage > 0 && (
-            <div className="absolute top-4 right-4 bg-gradient-to-br from-red-500/90 to-pink-600/90 backdrop-blur-sm text-white rounded-lg px-2 py-1 font-bold shadow-md z-10 text-center">
-              <div className="text-xs">Save</div>
-              <div className="text-sm">{discountPercentage}%</div>
+            <div className="absolute top-3 right-3 bg-gradient-to-br from-red-500 to-red-600 backdrop-blur-sm text-white rounded-lg px-2.5 py-1.5 font-bold shadow-lg z-20 text-center">
+              <div className="text-xs font-semibold">Save</div>
+              <div className="text-sm font-bold">{discountPercentage}%</div>
             </div>
           )}
 
           {/* Batch Badge */}
           {course.batchInfo && (
-            <div className="absolute bottom-4 left-4 z-10">
-              <Badge variant="info" className="!text-xs">
+            <div className="absolute bottom-3 left-3 z-20">
+              <Badge variant="info" className="!text-xs backdrop-blur-sm bg-blue-500/90 shadow-lg">
                 📅 {course.batchInfo}
               </Badge>
             </div>
@@ -68,64 +68,64 @@ export function CourseCard({ course }: CourseCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5 flex flex-col h-full gap-3">
+        <div className="p-6 flex flex-col h-full gap-4 bg-slate-950">
           {/* Level Badge */}
           <div className="flex flex-wrap gap-2">
-            <Badge variant="info" className="!text-xs">
+            <Badge variant="info" className="!text-xs bg-slate-800 text-cyan-400 border border-cyan-500/30">
               {course.level}
             </Badge>
             {course.nextBatch && (
-              <Badge variant="success" className="!text-xs">
+              <Badge variant="success" className="!text-xs bg-slate-800 text-emerald-400 border border-emerald-500/30">
                 📅 {course.nextBatch}
               </Badge>
             )}
           </div>
 
           {/* Title */}
-          <h3 className="font-bold text-lg md:text-base text-foreground line-clamp-2 group-hover:text-cyan-300 transition-colors">
+          <h3 className="font-bold text-lg text-white line-clamp-2 group-hover:text-cyan-300 transition-colors">
             {course.title}
           </h3>
 
           {/* Description */}
-          <Text size="sm" color="secondary" className="line-clamp-2 flex-grow">
+          <Text size="sm" color="secondary" className="line-clamp-2 flex-grow text-slate-400">
             {course.shortDescription}
           </Text>
 
           {/* Rating */}
           <div className="flex items-center gap-2">
             <Rating rating={course.rating} size="sm" />
-            <Text size="sm" className="text-foreground-tertiary text-xs">
+            <Text size="sm" className="text-slate-500 text-xs">
               ({course.reviews.toLocaleString()})
             </Text>
           </div>
 
           {/* Course Stats */}
-          <div className="grid grid-cols-3 gap-3 py-2 border-t border-slate-700/50">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-cyan-400 font-bold text-sm">{course.lessons}</span>
-              <Text size="sm" className="text-foreground-tertiary text-xs">Lessons</Text>
+          <div className="grid grid-cols-3 gap-4 py-4 border-t border-slate-700">
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="text-cyan-400 font-bold text-base">{course.lessons}</span>
+              <Text size="sm" className="text-slate-500 text-xs">Lessons</Text>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-purple-400 font-bold text-sm">{course.duration}</span>
-              <Text size="sm" className="text-foreground-tertiary text-xs">Duration</Text>
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="text-purple-400 font-bold text-base">{course.duration}</span>
+              <Text size="sm" className="text-slate-500 text-xs">Duration</Text>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-emerald-400 font-bold text-sm">{(course.students / 1000).toFixed(1)}k+</span>
-              <Text size="sm" className="text-foreground-tertiary text-xs">Students</Text>
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="text-emerald-400 font-bold text-base">{(course.students / 1000).toFixed(1)}k+</span>
+              <Text size="sm" className="text-slate-500 text-xs">Students</Text>
             </div>
           </div>
 
           {/* Price Section */}
-          <div className={`border-t border-slate-700/50 pt-3 mt-auto ${
-            isFeatured ? 'bg-gradient-to-r from-cyan-500/5 to-purple-500/5 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl' : ''
+          <div className={`border-t border-slate-700 pt-4 mt-auto ${
+            isFeatured ? 'bg-gradient-to-r from-cyan-500/10 to-purple-500/10 -mx-6 -mb-6 px-6 py-4 rounded-b-[10px]' : ''
           }`}>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-baseline gap-2">
-                <span className={`font-bold ${isFeatured ? 'text-3xl text-cyan-400' : 'text-2xl text-foreground'}`}>
+                <span className={`font-bold ${isFeatured ? 'text-3xl text-cyan-400' : 'text-2xl text-white'}`}>
                   ₹{course.price.toLocaleString('en-IN')}
                 </span>
                 {course.originalPrice && (
-                  <span className="text-sm text-foreground-tertiary line-through">
+                  <span className="text-sm text-slate-500 line-through font-medium">
                     ₹{course.originalPrice.toLocaleString('en-IN')}
                   </span>
                 )}
@@ -133,13 +133,13 @@ export function CourseCard({ course }: CourseCardProps) {
             </div>
             
             {/* Payment Info */}
-            <Text size="sm" className="text-foreground-tertiary mb-2 flex items-center gap-1 text-xs">
+            <Text size="sm" className="text-slate-500 mb-3 flex items-center gap-1.5 text-xs font-medium">
               <span className="text-emerald-400">💳</span>
               UPI • Cards • EMI Available
             </Text>
             
             {course.status === 'published' && (
-              <div className={`text-sm font-bold flex items-center gap-2 ${isFeatured ? 'text-cyan-300' : 'text-foreground-secondary'} group-hover:text-cyan-400`}>
+              <div className={`text-sm font-semibold flex items-center gap-2 transition-colors ${isFeatured ? 'text-cyan-400 group-hover:text-cyan-300' : 'text-slate-300 group-hover:text-cyan-400'}`}>
                 <span>Explore Course</span>
                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
