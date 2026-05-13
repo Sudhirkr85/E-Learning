@@ -33,7 +33,7 @@ export function CourseCard({ course }: CourseCardProps) {
           />
           
           {/* Image Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
           
           {/* Top Badges */}
           <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
@@ -51,7 +51,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
           {/* Discount Badge */}
           {discountPercentage > 0 && (
-            <div className="absolute top-4 right-4 bg-gradient-to-br from-red-500/80 to-pink-600/80 backdrop-blur-sm text-white rounded-lg px-2 py-1 font-bold shadow-lg z-10 text-center">
+            <div className="absolute top-4 right-4 bg-gradient-to-br from-red-500/90 to-pink-600/90 backdrop-blur-sm text-white rounded-lg px-2 py-1 font-bold shadow-md z-10 text-center">
               <div className="text-xs">Save</div>
               <div className="text-sm">{discountPercentage}%</div>
             </div>
@@ -68,7 +68,7 @@ export function CourseCard({ course }: CourseCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5 flex flex-col h-full gap-4">
+        <div className="p-5 flex flex-col h-full gap-3">
           {/* Level Badge */}
           <div className="flex flex-wrap gap-2">
             <Badge variant="info" className="!text-xs">
@@ -94,30 +94,30 @@ export function CourseCard({ course }: CourseCardProps) {
           {/* Rating */}
           <div className="flex items-center gap-2">
             <Rating rating={course.rating} size="sm" />
-            <Text size="xs" className="text-foreground-tertiary">
+            <Text size="sm" className="text-foreground-tertiary text-xs">
               ({course.reviews.toLocaleString()})
             </Text>
           </div>
 
           {/* Course Stats */}
-          <div className="grid grid-cols-3 gap-3 py-3 border-t border-slate-700/50">
+          <div className="grid grid-cols-3 gap-3 py-2 border-t border-slate-700/50">
             <div className="flex flex-col items-center gap-1">
               <span className="text-cyan-400 font-bold text-sm">{course.lessons}</span>
-              <Text size="xs" className="text-foreground-tertiary">Lessons</Text>
+              <Text size="sm" className="text-foreground-tertiary text-xs">Lessons</Text>
             </div>
             <div className="flex flex-col items-center gap-1">
               <span className="text-purple-400 font-bold text-sm">{course.duration}</span>
-              <Text size="xs" className="text-foreground-tertiary">Duration</Text>
+              <Text size="sm" className="text-foreground-tertiary text-xs">Duration</Text>
             </div>
             <div className="flex flex-col items-center gap-1">
               <span className="text-emerald-400 font-bold text-sm">{(course.students / 1000).toFixed(1)}k+</span>
-              <Text size="xs" className="text-foreground-tertiary">Students</Text>
+              <Text size="sm" className="text-foreground-tertiary text-xs">Students</Text>
             </div>
           </div>
 
           {/* Price Section */}
-          <div className={`border-t border-slate-700/50 pt-4 mt-auto ${
-            isFeatured ? 'bg-gradient-to-r from-cyan-500/10 to-purple-500/10 -mx-5 -mb-5 px-5 py-4 rounded-b-2xl' : ''
+          <div className={`border-t border-slate-700/50 pt-3 mt-auto ${
+            isFeatured ? 'bg-gradient-to-r from-cyan-500/5 to-purple-500/5 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl' : ''
           }`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-baseline gap-2">
@@ -133,7 +133,7 @@ export function CourseCard({ course }: CourseCardProps) {
             </div>
             
             {/* Payment Info */}
-            <Text size="xs" className="text-foreground-tertiary mb-3 flex items-center gap-1">
+            <Text size="sm" className="text-foreground-tertiary mb-2 flex items-center gap-1 text-xs">
               <span className="text-emerald-400">💳</span>
               UPI • Cards • EMI Available
             </Text>

@@ -12,47 +12,128 @@ interface HeroProps {
 }
 
 export function HeroSection({ course }: HeroProps) {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const meshRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Array<{ x: number; y: number; vx: number; vy: number }>>([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!meshRef.current) return;
-      const rect = meshRef.current.getBoundingClientRect();
-      setMousePos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initialize particles
+    const particleCount = 80;
+    const particles: Array<{ x: number; y: number; vx: number; vy: number }> = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
       });
+    }
+
+    particlesRef.current = particles;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const particles = particlesRef.current;
+      const mouse = mouseRef.current;
+
+      // Update and draw particles
+      particles.forEach((particle, i) => {
+        // Update position
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        // Bounce off edges
+        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.3)';
+        ctx.fill();
+
+        // Draw connections to nearby particles
+        particles.slice(i + 1).forEach(otherParticle => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.strokeStyle = `rgba(6, 182, 212, ${0.15 * (1 - distance / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+
+        // Draw connections to mouse
+        const dx = particle.x - mouse.x;
+        const dy = particle.y - mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 150) {
+          ctx.beginPath();
+          ctx.moveTo(particle.x, particle.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(147, 51, 234, ${0.3 * (1 - distance / 150)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   return (
-    <section className="relative bg-gradient-to-br from-background via-background-secondary to-background overflow-hidden" ref={meshRef}>
-      {/* Mesh Background with Cursor Reveal */}
-      <div className="absolute inset-0 mesh-background opacity-100" style={{
-        backgroundPosition: `${mousePos.x * 0.05}px ${mousePos.y * 0.05}px`,
-      }}></div>
-      
-      {/* Cursor Reveal Overlay */}
-      <div 
+    <section className="relative bg-gradient-to-br from-background via-background-secondary to-background overflow-hidden">
+      {/* Particle Canvas Background */}
+      <canvas
+        ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle 200px at ${mousePos.x}px ${mousePos.y}px, rgba(6,182,212,0.08) 0%, transparent 70%)`
-        }}
-      ></div>
+        style={{ opacity: 0.6 }}
+      />
       
       {/* Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       
-      <Container className="relative z-10 py-16 md:py-24 lg:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <Container className="relative z-10 py-8 md:py-12 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Content */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Special Offer Badge */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-600/60 to-pink-600/60 border border-red-500/40 text-white px-4 py-2 rounded-full text-xs md:text-sm font-semibold backdrop-blur-sm">
               <span className="text-lg">🔥</span>
@@ -60,7 +141,7 @@ export function HeroSection({ course }: HeroProps) {
             </div>
 
             {/* Main Headline - SEO Optimized */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Heading level={1} className="text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
                 Master Full Stack
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
@@ -74,7 +155,7 @@ export function HeroSection({ course }: HeroProps) {
               </Text>
               
               {/* Batch Info */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-1">
                 <Badge variant="info">
                   📅 {course.batchInfo || 'Next Batch: June 15, 2026'}
                 </Badge>
@@ -84,7 +165,7 @@ export function HeroSection({ course }: HeroProps) {
               </div>
               
               {/* Price Highlight */}
-              <div className="flex flex-wrap items-center gap-4 pt-4">
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <div className="flex items-baseline gap-3">
                   <span className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                     ₹{course.price}
@@ -99,12 +180,12 @@ export function HeroSection({ course }: HeroProps) {
               </div>
             </div>
 
-            <Text size="lg" className="text-foreground-secondary leading-relaxed pt-2">
+            <Text size="lg" className="text-foreground-secondary leading-relaxed pt-1">
               {course.description}
             </Text>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Button 
                 variant="primary" 
                 href={`/courses/${course.slug}`} 
@@ -129,27 +210,27 @@ export function HeroSection({ course }: HeroProps) {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 border-t border-slate-700/50">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-700/50">
               <div className="text-center">
                 <div className="text-3xl font-bold text-cyan-400 mb-1">{course.students.toLocaleString()}+</div>
-                <Text size="xs" className="text-foreground-tertiary">Students</Text>
+                <Text size="sm" className="text-foreground-tertiary text-xs">Students</Text>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-400 mb-1">{course.lessons}</div>
-                <Text size="xs" className="text-foreground-tertiary">Lessons</Text>
+                <Text size="sm" className="text-foreground-tertiary text-xs">Lessons</Text>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-yellow-400 mb-1">{course.rating}</div>
-                <Text size="xs" className="text-foreground-tertiary">Rating</Text>
+                <Text size="sm" className="text-foreground-tertiary text-xs">Rating</Text>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-emerald-400 mb-1">{course.duration}</div>
-                <Text size="xs" className="text-foreground-tertiary">Duration</Text>
+                <Text size="sm" className="text-foreground-tertiary text-xs">Duration</Text>
               </div>
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-6 border-t border-slate-700/50">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-3 border-t border-slate-700/50">
               {[
                 '✓ Certified Trainers (5+ Years XP)',
                 '✓ 95% Placement Success',
@@ -166,7 +247,7 @@ export function HeroSection({ course }: HeroProps) {
 
           {/* Featured Image Section */}
           <div className="hidden lg:block relative">
-            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl glow-strong">
+            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src={course.thumbnail}
                 alt={course.title}
@@ -175,7 +256,7 @@ export function HeroSection({ course }: HeroProps) {
                 priority
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/0 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
             </div>
             {/* Floating Badge */}
             <div className="absolute -top-6 -right-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-background px-5 py-3 rounded-xl font-bold shadow-xl animate-bounce">

@@ -18,15 +18,6 @@ export default async function CoursesPage() {
     <>
       <Header />
 
-      <Container className="py-12">
-        <Heading level={1} className="mb-4">
-          All Courses
-        </Heading>
-        <Text size="lg" color="muted">
-          Choose from our complete catalog of professional courses
-        </Text>
-      </Container>
-
       {/* Published Courses */}
       {publishedCourses.length > 0 && (
         <CoursesGrid

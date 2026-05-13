@@ -12,14 +12,14 @@ interface TestimonialCardProps {
 
 export function TestimonialCard({ name, title, content, image, rating }: TestimonialCardProps) {
   return (
-    <Card className="p-8 bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden">
+    <Card className="p-6 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
       {/* Quote Icon */}
       <div className="absolute top-4 right-4 text-blue-100 text-6xl font-serif opacity-50">
         "
       </div>
 
       {/* Rating */}
-      <div className="flex gap-1 mb-6">
+      <div className="flex gap-1 mb-4">
         {[...Array(5)].map((_, i) => (
           <svg 
             key={i} 
@@ -33,14 +33,14 @@ export function TestimonialCard({ name, title, content, image, rating }: Testimo
       </div>
 
       {/* Quote */}
-      <Text size="sm" color="secondary" className="mb-6 italic text-gray-700 leading-relaxed relative z-10">
+      <Text size="sm" color="secondary" className="mb-4 italic text-gray-700 leading-relaxed relative z-10">
         "{content}"
       </Text>
 
       {/* Author */}
-      <div className="flex items-center gap-4 relative z-10">
-        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center border-2 border-white shadow-md">
-          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+      <div className="flex items-center gap-3 relative z-10">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center border-2 border-white shadow-sm">
+          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
           </svg>
         </div>

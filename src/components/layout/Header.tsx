@@ -57,25 +57,21 @@ export function Header() {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <a
-              href="#faq"
+              href="https://sssamacademy.com/download-certificate.html"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#faq');
-              }}
             >
-              FAQ
+              Certificate
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </a>
             <a
-              href="#contact"
+              href="https://www.sssamacademy.com/contact.html"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#contact');
-              }}
             >
-              Contact
+              Contact Us
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </a>
           </nav>
@@ -211,24 +207,20 @@ export function Header() {
               Trainers
             </a>
             <a 
-              href="#faq" 
+              href="https://sssamacademy.com/download-certificate.html" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#faq');
-              }}
             >
-              FAQ
+              Certificate
             </a>
             <a 
-              href="#contact" 
+              href="https://www.sssamacademy.com/contact.html" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#contact');
-              }}
             >
-              Contact
+              Contact Us
             </a>
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
               {user ? (

@@ -19,19 +19,19 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
   const gradientClass = avatarGradients[trainer.image] || 'from-slate-500 to-slate-600';
   
   return (
-    <Card className="overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white border-0 shadow-lg h-full flex flex-col">
+    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-white border-0 shadow-md h-full flex flex-col">
       {/* Avatar Container with Glassmorphism */}
       <div className={`relative w-full h-48 bg-gradient-to-br ${gradientClass} overflow-hidden flex items-center justify-center`}>
         {/* Blur effect background */}
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/10"></div>
+        <div className="absolute inset-0 backdrop-blur-sm bg-black/10"></div>
         
         {/* Avatar Circle with Initials */}
-        <div className={`relative z-10 w-24 h-24 rounded-full bg-gradient-to-br ${gradientClass} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500 border-4 border-white/30`}>
+        <div className={`relative z-10 w-24 h-24 rounded-full bg-gradient-to-br ${gradientClass} flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300 border-4 border-white/20`}>
           <span className="text-4xl font-bold">{trainer.image}</span>
         </div>
         
         {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
         {/* Expertise Badge */}
         <div className="absolute top-4 left-4 right-4 z-10">
@@ -42,9 +42,9 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className="p-5 flex flex-col flex-grow">
         {/* Name and Title */}
-        <div className="text-center mb-3">
+        <div className="text-center mb-2">
           <Heading level={4} className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
             {trainer.name}
           </Heading>
@@ -54,13 +54,13 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
         </div>
 
         {/* Bio */}
-        <Text size="sm" color="secondary" className="text-gray-700 line-clamp-3 mb-4 text-center leading-relaxed flex-grow">
+        <Text size="sm" color="secondary" className="text-gray-700 line-clamp-3 mb-3 text-center leading-relaxed flex-grow">
           {trainer.bio}
         </Text>
 
         {/* Social Links */}
         {trainer.socials && (
-          <div className="flex gap-3 justify-center items-center pt-4 border-t border-gray-200">
+          <div className="flex gap-3 justify-center items-center pt-3 border-t border-gray-200">
             {trainer.socials.linkedin && (
               <a
                 href={trainer.socials.linkedin}
