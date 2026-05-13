@@ -1,10 +1,10 @@
 // Site Configuration
 export const SITE_CONFIG = {
   name: 'SSSAM Academy',
-  description: 'Learn from industry experts and master in-demand skills',
+  description: 'Professional IT Training for Indian Students | Live Training + Lifetime Recordings',
   url: 'https://sssam-academy.com',
-  email: 'contact@sssam-academy.com',
-  phone: '+1 (555) 123-4567',
+  email: 'info@sssamacadmy.com',
+  phone: '+91 9217031899',
 };
 
 // Routes

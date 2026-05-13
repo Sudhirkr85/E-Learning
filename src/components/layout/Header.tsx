@@ -35,14 +35,14 @@ export function Header() {
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
       isScrolled
-        ? 'bg-slate-900/85 backdrop-blur-sm shadow-md border-b border-slate-800/30'
-        : 'bg-transparent'
+        ? 'bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-800/50'
+        : 'bg-gradient-to-b from-slate-900 to-slate-900/80'
     }`}>
       <Container className="py-4">
         <div className="flex items-center justify-between text-white">
           {/* Logo */}
           <Link href={ROUTES.HOME} className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 transform group-hover:scale-105 transition-transform duration-200">
+            <div className="relative w-10 h-10 transform group-hover:scale-110 transition-transform duration-200">
               <Image
                 src="/images/logo/logo.webp"
                 alt="SSSAM Academy Logo"
@@ -51,91 +51,85 @@ export function Header() {
                 className="object-contain"
               />
             </div>
-            <span className="text-lg font-semibold hidden sm:inline group-hover:text-emerald-300 transition-colors">
+            <span className="text-lg font-bold hidden sm:inline bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent group-hover:from-cyan-300 group-hover:to-blue-300 transition-all">
               SSSAM Academy
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            <Link href={ROUTES.HOME} className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline">
+            <Link href={ROUTES.HOME} className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group">
               Home
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href={ROUTES.COURSES} className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline">
+            <Link href={ROUTES.COURSES} className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group">
               Courses
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <a
-              href="#trainers"
-              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#trainers');
-              }}
-            >
-              Trainers
-            </a>
             <a
               href="#faq"
-              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
+              className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#faq');
               }}
             >
               FAQ
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </a>
             <a
               href="#contact"
-              className="text-white/90 hover:text-emerald-200 transition-colors font-medium link-underline"
+              className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick('#contact');
               }}
             >
               Contact
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </a>
           </nav>
 
           {/* Auth Buttons & CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <Link 
                   href={ROUTES.DASHBOARD}
-                  className="text-white/90 hover:text-emerald-200 transition-colors font-medium"
+                  className="text-gray-300 hover:text-cyan-300 transition-colors font-medium"
                 >
                   Dashboard
                 </Link>
                 <div className="relative group">
-                  <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors font-medium">
-                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                  <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors">
+                    <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                       {user.firstName?.[0] || user.emailAddresses?.[0]?.emailAddress?.[0] || 'U'}
                     </div>
-                    <span className="hidden sm:inline">
+                    <span className="hidden sm:inline text-gray-300">
                       {user.firstName || 'User'}
                     </span>
                   </button>
                   
                   {/* Dropdown Menu */}
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-2">
-                      <div className="px-4 py-2 border-b border-gray-200">
-                        <p className="text-sm font-medium text-gray-900">
+                      <div className="px-4 py-2 border-b border-slate-700">
+                        <p className="text-sm font-medium text-white">
                           {user.firstName} {user.lastName}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-gray-400 truncate">
                           {user.emailAddresses?.[0]?.emailAddress}
                         </p>
                       </div>
                       <Link
                         href={ROUTES.DASHBOARD}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 transition-colors"
                       >
                         Dashboard
                       </Link>
                       <Link
                         href={ROUTES.MY_COURSES}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 transition-colors"
                       >
                         My Courses
                       </Link>
@@ -144,7 +138,7 @@ export function Header() {
                           await signOut();
                           window.location.href = ROUTES.HOME;
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-700 transition-colors"
                       >
                         Sign Out
                       </button>
@@ -157,14 +151,14 @@ export function Header() {
                 <Button 
                   variant="ghost" 
                   href={ROUTES.LOGIN}
-                  className="text-white/90 hover:text-emerald-200 font-medium"
+                  className="text-gray-300 hover:text-cyan-300 font-medium"
                 >
                   Login
                 </Button>
                 <Button 
                   variant="primary" 
                   href={ROUTES.REGISTER}
-                  className="rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg glow transform hover:-translate-y-0.5 transition-all duration-200 px-4 py-2 flex items-center gap-2"
+                  className="rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold shadow-lg transform hover:scale-105 hover:shadow-xl transition-all duration-200 px-5 py-2.5 flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />

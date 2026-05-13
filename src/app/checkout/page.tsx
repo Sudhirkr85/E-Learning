@@ -22,10 +22,6 @@ export default function CheckoutPage() {
     lastName: '',
     email: '',
     phone: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    country: '',
   });
 
   useUserSync();
@@ -101,7 +97,7 @@ export default function CheckoutPage() {
 
   const handlePayment = async () => {
     // Validate form
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'zipCode', 'country'];
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
     const missingField = requiredFields.find(field => !formData[field as keyof typeof formData].trim());
     
     if (missingField) {
@@ -216,14 +212,14 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <Input 
                     label="First Name" 
-                    placeholder="John" 
+                    placeholder="Your first name" 
                     required 
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
                   />
                   <Input 
                     label="Last Name" 
-                    placeholder="Doe" 
+                    placeholder="Your last name" 
                     required 
                     value={formData.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -233,52 +229,19 @@ export default function CheckoutPage() {
                 <Input 
                   label="Email Address" 
                   type="email" 
-                  placeholder="john@example.com" 
+                  placeholder="your.email@example.com" 
                   required 
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                 />
 
                 <Input 
-                  label="Phone Number" 
+                  label="Phone Number (India)" 
                   type="tel" 
-                  placeholder="+1 (555) 123-4567" 
+                  placeholder="+91 9XXX XXX XXX" 
                   required 
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                />
-
-                <Input 
-                  label="Address" 
-                  placeholder="123 Main St" 
-                  required 
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Input 
-                    label="City" 
-                    placeholder="New York" 
-                    required 
-                    value={formData.city}
-                    onChange={(e) => handleInputChange('city', e.target.value)}
-                  />
-                  <Input 
-                    label="ZIP Code" 
-                    placeholder="10001" 
-                    required 
-                    value={formData.zipCode}
-                    onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  />
-                </div>
-
-                <Input 
-                  label="Country" 
-                  placeholder="United States" 
-                  required 
-                  value={formData.country}
-                  onChange={(e) => handleInputChange('country', e.target.value)}
                 />
               </form>
             </Card>

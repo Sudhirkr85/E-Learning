@@ -62,7 +62,3 @@ export function Button({
     </button>
   );
 }
-      {children}
-    </button>
-  );
-}
