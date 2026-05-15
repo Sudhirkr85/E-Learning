@@ -6,7 +6,7 @@ export const courses: Course[] = [
     title: 'AI Powered Full Stack Web Development - Gurugram Batch',
     slug: 'ai-full-stack-web-development-summer-2026',
     description:
-      'A practical, placement-oriented full stack web development course with AI-assisted workflows, real GitHub portfolio projects, and live mentoring from Gurugram trainers. Build production-ready apps using React, Node.js, MongoDB, and deploy with modern DevOps tools.',
+      'A practical, placement-oriented full stack web development course with AI-assisted workflows, real GitHub portfolio projects, and live mentoring from Gurugram trainers. Build production-ready apps using html ,css,javascript, Node.js, MongoDB, and deploy with modern DevOps tools.',
     shortDescription:
       'AI-integrated full stack training with live projects, GitHub portfolio, and placement support',
     thumbnail: '/images/courses/ai-powered-fullstack.webp',
@@ -32,7 +32,7 @@ export const courses: Course[] = [
       'AI Tools',
       'Live Projects',
     ],
-    batchInfo: '1st or 15th of every month',
+    batchInfo: 'Limited seats — enroll early',
     sections: [
       { id: '1', title: 'AI-Driven Frontend', description: 'Responsive UI with React, Tailwind, and AI-assisted design systems', lessons: [] },
       { id: '2', title: 'Modern JavaScript & APIs', description: 'Interactive apps, API integration, and data-driven interfaces', lessons: [] },
@@ -72,7 +72,7 @@ export const courses: Course[] = [
     featured: false,
     status: 'published',
     tags: ['Full Stack', 'Java', 'Python', 'Node.js', 'Cloud', 'AI Tools'],
-    batchInfo: '1st or 15th Batch',
+    batchInfo: 'Limited seats — enroll early',
     sections: [
       { id: '1', title: 'Foundations & Problem Solving', description: 'Java, Python, Git, and professional development workflows', lessons: [] },
       { id: '2', title: 'Frontend Engineering', description: 'React, state management, component architecture, and UI patterns', lessons: [] },
@@ -109,7 +109,7 @@ export const courses: Course[] = [
     featured: false,
     status: 'published',
     tags: ['Data Analytics', 'Power BI', 'SQL', 'Excel', 'Business Intelligence'],
-    batchInfo: 'Upcoming Weekend Batch',
+    batchInfo: 'Limited seats available',
     sections: [
       { id: '1', title: 'Data Foundations', description: 'Advanced Excel, SQL, and analytics fundamentals for real business problems', lessons: [] },
       { id: '2', title: 'Power BI & Visualization', description: 'Building data-driven dashboards and reports for stakeholders', lessons: [] },
@@ -146,7 +146,7 @@ export const courses: Course[] = [
     featured: false,
     status: 'published',
     tags: ['Data Science', 'Python', 'Machine Learning', 'TensorFlow', 'AI'],
-    batchInfo: '1st or 15th Batch',
+    batchInfo: 'Limited seats available',
     sections: [
       { id: '1', title: 'Python for Data Science', description: 'Python libraries, data manipulation, and AI-assisted workflows', lessons: [] },
       { id: '2', title: 'Machine Learning Fundamentals', description: 'Supervised, unsupervised, and model evaluation', lessons: [] },
@@ -183,7 +183,7 @@ export const courses: Course[] = [
     featured: false,
     status: 'published',
     tags: ['Cybersecurity', 'Ethical Hacking', 'Penetration Testing', 'Network Security'],
-    batchInfo: 'Weekend Batch',
+    batchInfo: 'Limited seats available',
     sections: [
       { id: '1', title: 'Security Principles', description: 'Threat modelling, risk assessment, and security controls', lessons: [] },
       { id: '2', title: 'Ethical Hacking Labs', description: 'Penetration testing, OWASP, and web vulnerability analysis', lessons: [] },
@@ -220,7 +220,7 @@ export const courses: Course[] = [
     featured: false,
     status: 'published',
     tags: ['Digital Marketing', 'SEO', 'Google Ads', 'Social Media', 'Analytics'],
-    batchInfo: 'Evening Batch',
+    batchInfo: 'Limited seats available',
     sections: [
       { id: '1', title: 'Marketing Fundamentals', description: 'Digital funnels, customer journeys, and brand strategy', lessons: [] },
       { id: '2', title: 'SEO & Content Strategy', description: 'Search optimization, content planning, and organic growth', lessons: [] },
