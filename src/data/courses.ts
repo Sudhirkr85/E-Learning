@@ -5,8 +5,10 @@ export const courses: Course[] = [
     id: '1',
     title: 'AI Powered Full Stack Web Development Summer Training 2026',
     slug: 'ai-full-stack-web-development-summer-2026',
-    description: 'Fast-track Full Stack Web Development with AI-assisted workflows. Learn HTML, CSS, JavaScript, Node.js and MongoDB through live projects, code reviews and placement-focused guidance. Designed for Indian students seeking practical training and job-ready portfolios during summer.',
-    shortDescription: '30-day AI-powered full stack summer training — practical projects & mentorship',
+    description:
+      'Fast-track Full Stack Web Development with AI-assisted workflows. Learn HTML, CSS, JavaScript, Node.js and MongoDB through live projects, code reviews and placement-focused guidance. Designed for Indian students seeking practical training and job-ready portfolios during summer.',
+    shortDescription:
+      '30-day AI-powered full stack summer training — practical projects & mentorship',
     thumbnail: '/images/courses/ai-powered-fullstack.webp',
     instructor: 'Sudesh Sir & Sudhir Sir',
     instructorImage: '/images/trainers/sudesh-yadav.webp',
@@ -21,116 +23,63 @@ export const courses: Course[] = [
     category: 'Web Development',
     featured: true,
     status: 'published',
-    tags: ['HTML5', 'CSS3', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'Git', 'GitHub', 'AI Coding'],
+    tags: [
+      'HTML5',
+      'CSS3',
+      'JavaScript',
+      'Node.js',
+      'Express.js',
+      'MongoDB',
+      'Git',
+      'GitHub',
+      'AI Coding',
+    ],
     batchInfo: 'Summer 2026 Batch',
     sections: [
-      {
-        id: '1',
-        import { Course } from '@/types';
-
-        export const courses: Course[] = [
-          {
-            id: '1',
-            title: 'AI Powered Full Stack Web Development Summer Training 2026',
-            slug: 'ai-full-stack-web-development-summer-2026',
-            description: 'Fast-track Full Stack Web Development with AI-assisted workflows. Learn HTML, CSS, JavaScript, Node.js and MongoDB through live projects, code reviews and placement-focused guidance. Designed for Indian students seeking practical training and job-ready portfolios during summer.',
-            shortDescription: '30-day AI-powered full stack summer training — practical projects & mentorship',
-            thumbnail: '/images/courses/ai-powered-fullstack.webp',
-            instructor: 'Sudesh Sir & Sudhir Sir',
-            instructorImage: '/images/trainers/sudesh-yadav.webp',
-            price: 9,
-            originalPrice: 999,
-            rating: 4.9,
-            reviews: 2456,
-            students: 15420,
-            duration: '30 days',
-            lessons: 30,
-            level: 'Beginner',
-            category: 'Web Development',
-            featured: true,
-            status: 'published',
-            tags: ['HTML5', 'CSS3', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'Git', 'GitHub', 'AI Coding'],
-            batchInfo: 'Summer 2026 Batch',
-            sections: [
-              {
-                id: '1',
-                title: 'Week 1 — Frontend Development',
-                description: 'HTML5, CSS3, Responsive Design, and Portfolio Project',
-                lessons: [],
-              },
-              {
-                id: '2',
-                title: 'Week 2 — JavaScript Development',
-                description: 'JavaScript Basics, DOM Manipulation, APIs, and Interactive Projects',
-                lessons: [],
-              },
-              {
-                id: '3',
-                title: 'Week 3 — Backend Development',
-                description: 'Node.js, Express.js, MongoDB, REST APIs, and Authentication',
-                lessons: [],
-              },
-              {
-                id: '4',
-                title: 'Week 4 — AI Coding & Deployment',
-                description: 'Git, GitHub, AI Assisted Coding, Deployment, and Career Guidance',
-                lessons: [],
-              },
-            ],
-            curriculum: [
-              { id: '1', title: 'Day 1 — Introduction to Web Development & AI Coding', description: 'How websites work, Frontend vs Backend, Introduction to AI Coding, VS Code Setup, First HTML Page, Using AI tools for coding', videoUrl: '', duration: 60, order: 1 },
-              { id: '2', title: 'Day 2 — HTML Basics', description: 'Headings, Paragraphs, Images, Links, Lists, Buttons', videoUrl: '', duration: 60, order: 2 },
-              { id: '3', title: 'Day 3 — Advanced HTML', description: 'Forms, Tables, Input Types, Semantic Tags, Basic SEO', videoUrl: '', duration: 60, order: 3 },
-              { id: '4', title: 'Day 4 — CSS Basics', description: 'CSS Introduction, Colors, Fonts, Borders, Margin & Padding', videoUrl: '', duration: 60, order: 4 },
-              { id: '5', title: 'Day 5 — CSS Layout & Flexbox', description: 'Flexbox, Navigation Bar, Card Design, Alignment', videoUrl: '', duration: 60, order: 5 },
-              { id: '6', title: 'Day 6 — Responsive Design', description: 'Media Queries, Mobile Responsive Design, Responsive Layout', videoUrl: '', duration: 60, order: 6 },
-              { id: '7', title: 'Day 7 — Frontend Project Day', description: 'Build Personal Portfolio Website', videoUrl: '', duration: 90, order: 7 },
-              { id: '8', title: 'Day 8 — JavaScript Basics', description: 'Variables, Data Types, Operators, Console', videoUrl: '', duration: 60, order: 8 },
-              { id: '9', title: 'Day 9 — Conditions & Loops', description: 'If/Else, Switch, Loops, Break & Continue', videoUrl: '', duration: 60, order: 9 },
-              { id: '10', title: 'Day 10 — Functions & Arrays', description: 'Functions, Parameters, Arrays, Array Methods', videoUrl: '', duration: 60, order: 10 },
-              { id: '11', title: 'Day 11 — DOM Manipulation', description: 'DOM Basics, Query Selector, Events, Change HTML/CSS with JS', videoUrl: '', duration: 60, order: 11 },
-              { id: '12', title: 'Day 12 — Form Validation', description: 'Form Handling, Validation, Error Messages', videoUrl: '', duration: 60, order: 12 },
-              { id: '13', title: 'Day 13 — APIs & Async JavaScript', description: 'Fetch API, JSON, Async/Await, API Requests', videoUrl: '', duration: 60, order: 13 },
-              { id: '14', title: 'Day 14 — JavaScript Project Day', description: 'Build To-Do App / Quiz App', videoUrl: '', duration: 90, order: 14 },
-              { id: '15', title: 'Day 15 — Introduction to Node.js', description: 'What is Backend, Node.js Setup, npm, Modules', videoUrl: '', duration: 60, order: 15 },
-              { id: '16', title: 'Day 16 — Express.js Basics', description: 'Express Installation, Routes, Request & Response', videoUrl: '', duration: 60, order: 16 },
-              { id: '17', title: 'Day 17 — REST API Development', description: 'GET, POST, PUT, DELETE', videoUrl: '', duration: 60, order: 17 },
-              { id: '18', title: 'Day 18 — MongoDB Basics', description: 'Database Basics, MongoDB Atlas, Collections & Documents', videoUrl: '', duration: 60, order: 18 },
-              { id: '19', title: 'Day 19 — MongoDB with Node.js', description: 'Mongoose, Schema, CRUD Operations', videoUrl: '', duration: 60, order: 19 },
-              { id: '20', title: 'Day 20 — Authentication System', description: 'Login System, Password Encryption, JWT Basics', videoUrl: '', duration: 60, order: 20 },
-              { id: '21', title: 'Day 21 — Backend Project Day', description: 'Build Full Stack Authentication App', videoUrl: '', duration: 90, order: 21 },
-              { id: '22', title: 'Day 22 — Git & GitHub', description: 'Git Basics, Repository, Push/Pull, Branches', videoUrl: '', duration: 60, order: 22 },
-              { id: '23', title: 'Day 23 — AI Assisted Coding', description: 'AI Prompt Engineering, Debugging with AI, Faster Coding Techniques', videoUrl: '', duration: 60, order: 23 },
-              { id: '24', title: 'Day 24 — Deployment', description: 'Hosting Basics, Vercel Deployment, Render Deployment', videoUrl: '', duration: 60, order: 24 },
-              { id: '25', title: 'Day 25 — Professional Portfolio', description: 'Developer Portfolio, Resume Basics, LinkedIn Setup', videoUrl: '', duration: 60, order: 25 },
-              { id: '26', title: 'Day 26 — Freelancing & Earning', description: 'Fiverr, Upwork, Client Communication, Pricing Projects', videoUrl: '', duration: 60, order: 26 },
-              { id: '27', title: 'Day 27 — Major Project Planning', description: 'Project Discussion, API Planning, Folder Structure', videoUrl: '', duration: 60, order: 27 },
-              { id: '28', title: 'Day 28 — Major Project Development', description: 'Build E-Commerce, Blog, AI Tool, or Student Management System', videoUrl: '', duration: 90, order: 28 },
-              { id: '29', title: 'Day 29 — Final Project Completion', description: 'Bug Fixing, Testing, Deployment, Optimization', videoUrl: '', duration: 90, order: 29 },
-              { id: '30', title: 'Day 30 — Final Presentation & Career Guidance', description: 'Project Presentation, Interview Guidance, Internship Support, Certificate Distribution, Career Roadmap', videoUrl: '', duration: 90, order: 30 },
-            ],
-            createdAt: '2024-01-01',
-            updatedAt: '2024-05-12',
-          },
-      },
-      {
-        id: '2',
-        title: 'Frontend Development',
-        description: 'React, components, state management',
-        lessons: [],
-      },
-      {
-        id: '3',
-        title: 'Backend Development',
-        description: 'Node.js, Express, authentication',
-        lessons: [],
-      },
-      {
-        id: '4',
-        title: 'Database & DevOps',
-        description: 'MongoDB, deployment, CI/CD',
-        lessons: [],
-      },
+      { id: '1', title: 'Week 1 — Frontend Development', description: 'HTML5, CSS3, Responsive Design, and Portfolio Project', lessons: [] },
+      { id: '2', title: 'Week 2 — JavaScript Development', description: 'JavaScript Basics, DOM Manipulation, APIs, and Interactive Projects', lessons: [] },
+      { id: '3', title: 'Week 3 — Backend Development', description: 'Node.js, Express.js, MongoDB, REST APIs, and Authentication', lessons: [] },
+      { id: '4', title: 'Week 4 — AI Coding & Deployment', description: 'Git, GitHub, AI Assisted Coding, Deployment, and Career Guidance', lessons: [] },
+    ],
+    curriculum: [
+      { id: '1', title: 'Day 1 — Introduction to Web Development & AI Coding', description: 'How websites work, Frontend vs Backend, Introduction to AI Coding, VS Code Setup, First HTML Page, Using AI tools for coding', videoUrl: '', duration: 60, order: 1 },
+      { id: '2', title: 'Day 2 — HTML Basics', description: 'Headings, Paragraphs, Images, Links, Lists, Buttons', videoUrl: '', duration: 60, order: 2 },
+      { id: '3', title: 'Day 3 — Advanced HTML', description: 'Forms, Tables, Input Types, Semantic Tags, Basic SEO', videoUrl: '', duration: 60, order: 3 },
+      { id: '4', title: 'Day 4 — CSS Basics', description: 'CSS Introduction, Colors, Fonts, Borders, Margin & Padding', videoUrl: '', duration: 60, order: 4 },
+      { id: '5', title: 'Day 5 — CSS Layout & Flexbox', description: 'Flexbox, Navigation Bar, Card Design, Alignment', videoUrl: '', duration: 60, order: 5 },
+      { id: '6', title: 'Day 6 — Responsive Design', description: 'Media Queries, Mobile Responsive Design, Responsive Layout', videoUrl: '', duration: 60, order: 6 },
+    ],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-05-12',
+  },
+  {
+    id: '2',
+    title: 'Full Stack Web Development - 6 Month Intensive',
+    slug: 'full-stack-web-development-6-month',
+    description:
+      'Intensive 6-month Full Stack Development program covering Java, Python and Node.js. Build production-grade applications, master backend and frontend frameworks, and prepare for developer roles in Indian IT firms. Live mentorship, real projects and placement-focused guidance. Flexible payment via UPI, cards and netbanking.',
+    shortDescription: '6-month full stack course (Java / Python / Node) with placement focus',
+    thumbnail: '/images/courses/fullstack-6month.webp',
+    instructor: 'Sudesh Yadav & Sudhir Kumar',
+    instructorImage: '/images/trainers/sudhir-kumar.webp',
+    price: 15000,
+    originalPrice: 25000,
+    rating: 4.8,
+    reviews: 1823,
+    students: 10542,
+    duration: '6 months',
+    lessons: 200,
+    level: 'Beginner',
+    category: 'Web Development',
+    featured: false,
+    status: 'published',
+    tags: ['Web Development', 'React', 'Node.js', 'Database', 'Deployment'],
+    batchInfo: 'Regular Batch Available',
+    sections: [
+      { id: '1', title: 'Web Fundamentals', description: 'HTML, CSS, JavaScript essentials', lessons: [] },
+      { id: '2', title: 'Frontend Development', description: 'React, components, state management', lessons: [] },
+      { id: '3', title: 'Backend Development', description: 'Node.js, Express, authentication', lessons: [] },
+      { id: '4', title: 'Database & DevOps', description: 'MongoDB, deployment, CI/CD', lessons: [] },
     ],
     curriculum: [
       { id: '1', title: 'Web Development Fundamentals', videoUrl: '', duration: 45, order: 1 },
@@ -144,7 +93,8 @@ export const courses: Course[] = [
     id: '3',
     title: 'Data Analyst - Advanced Analytics & Power BI',
     slug: 'data-analyst-analytics-power-bi',
-    description: 'Master data analysis with SQL, Excel, and Power BI dashboards. Learn business intelligence and analytics techniques to start a successful data analyst career. Live training with recorded sessions for lifetime access. Trusted by 8,000+ Indian professionals. Weekend batches available. Pay via UPI, cards, or net banking.',
+    description:
+      'Master data analysis with SQL, Excel, and Power BI dashboards. Learn business intelligence and analytics techniques to start a successful data analyst career. Live training with recorded sessions for lifetime access. Weekend batches available. Pay via UPI, cards, or net banking.',
     shortDescription: 'Master Power BI, SQL & Excel for data analyst roles with live projects',
     thumbnail: '/images/courses/data-analyst.webp',
     instructor: 'Sudesh Yadav',
@@ -163,30 +113,10 @@ export const courses: Course[] = [
     tags: ['Data Analysis', 'Power BI', 'SQL', 'Excel', 'Business Intelligence'],
     batchInfo: 'Weekend Batch',
     sections: [
-      {
-        id: '1',
-        title: 'Excel & Data Fundamentals',
-        description: 'Advanced Excel for data analysis',
-        lessons: [],
-      },
-      {
-        id: '2',
-        title: 'SQL for Data Analysis',
-        description: 'Query databases and extract insights',
-        lessons: [],
-      },
-      {
-        id: '3',
-        title: 'Power BI Dashboard Creation',
-        description: 'Build professional dashboards',
-        lessons: [],
-      },
-      {
-        id: '4',
-        title: 'Real-World Projects',
-        description: 'Industry-level data analysis projects',
-        lessons: [],
-      },
+      { id: '1', title: 'Excel & Data Fundamentals', description: 'Advanced Excel for data analysis', lessons: [] },
+      { id: '2', title: 'SQL for Data Analysis', description: 'Query databases and extract insights', lessons: [] },
+      { id: '3', title: 'Power BI Dashboard Creation', description: 'Build professional dashboards', lessons: [] },
+      { id: '4', title: 'Real-World Projects', description: 'Industry-level data analysis projects', lessons: [] },
     ],
     curriculum: [
       { id: '1', title: 'Data Analysis Fundamentals', videoUrl: '', duration: 50, order: 1 },
@@ -199,7 +129,8 @@ export const courses: Course[] = [
     id: '4',
     title: 'Data Science with Python & Machine Learning',
     slug: 'data-science-python-machine-learning',
-    description: 'Comprehensive Data Science training with Python, Pandas, NumPy, and machine learning using Scikit-Learn and TensorFlow. Learn model building, evaluation, and deployment with industry projects designed for Indian job markets. Live classes, project reviews and placement support.',
+    description:
+      'Comprehensive Data Science training with Python, Pandas, NumPy, and machine learning using Scikit-Learn and TensorFlow. Learn model building, evaluation, and deployment with industry projects designed for Indian job markets. Live classes, project reviews and placement support.',
     shortDescription: 'Data Science course with Python, ML & real projects for job readiness',
     thumbnail: '/images/courses/data-science.webp',
     instructor: 'Sudesh Yadav',
@@ -218,30 +149,10 @@ export const courses: Course[] = [
     tags: ['Python', 'Machine Learning', 'Data Science', 'TensorFlow', 'Scikit-Learn'],
     batchInfo: 'Online + Offline',
     sections: [
-      {
-        id: '1',
-        title: 'Python for Data Science',
-        description: 'Python libraries and data manipulation',
-        lessons: [],
-      },
-      {
-        id: '2',
-        title: 'Machine Learning Algorithms',
-        description: 'Supervised and unsupervised learning',
-        lessons: [],
-      },
-      {
-        id: '3',
-        title: 'Deep Learning & Neural Networks',
-        description: 'TensorFlow and advanced ML',
-        lessons: [],
-      },
-      {
-        id: '4',
-        title: 'Real-World ML Projects',
-        description: 'Industry projects and deployment',
-        lessons: [],
-      },
+      { id: '1', title: 'Python for Data Science', description: 'Python libraries and data manipulation', lessons: [] },
+      { id: '2', title: 'Machine Learning Algorithms', description: 'Supervised and unsupervised learning', lessons: [] },
+      { id: '3', title: 'Deep Learning & Neural Networks', description: 'TensorFlow and advanced ML', lessons: [] },
+      { id: '4', title: 'Real-World ML Projects', description: 'Industry projects and deployment', lessons: [] },
     ],
     curriculum: [
       { id: '1', title: 'Python Programming for ML', videoUrl: '', duration: 60, order: 1 },
@@ -254,7 +165,8 @@ export const courses: Course[] = [
     id: '5',
     title: 'Cyber Security & Ethical Hacking',
     slug: 'cyber-security-ethical-hacking',
-    description: 'Practical Cyber Security & Ethical Hacking course teaching network security, web application testing, and defensive best-practices. Hands-on labs, certification guidance and role preparation for security analyst positions in India. Weekend and evening batches available.',
+    description:
+      'Practical Cyber Security & Ethical Hacking course teaching network security, web application testing, and defensive best-practices. Hands-on labs, certification guidance and role preparation for security analyst positions in India. Weekend and evening batches available.',
     shortDescription: 'Cyber security course with hands-on labs & certification guidance',
     thumbnail: '/images/courses/cyber-security.webp',
     instructor: 'Mohit Yadav',
@@ -273,30 +185,10 @@ export const courses: Course[] = [
     tags: ['Cybersecurity', 'Ethical Hacking', 'Penetration Testing', 'Security'],
     batchInfo: 'Weekend & Evening',
     sections: [
-      {
-        id: '1',
-        title: 'Cybersecurity Fundamentals',
-        description: 'Security principles and threats',
-        lessons: [],
-      },
-      {
-        id: '2',
-        title: 'Ethical Hacking Techniques',
-        description: 'Penetration testing and exploitation',
-        lessons: [],
-      },
-      {
-        id: '3',
-        title: 'Network Security',
-        description: 'Firewalls, IDS, and network protection',
-        lessons: [],
-      },
-      {
-        id: '4',
-        title: 'Lab Exercises & Certifications',
-        description: 'Hands-on practice for CEH',
-        lessons: [],
-      },
+      { id: '1', title: 'Cybersecurity Fundamentals', description: 'Security principles and threats', lessons: [] },
+      { id: '2', title: 'Ethical Hacking Techniques', description: 'Penetration testing and exploitation', lessons: [] },
+      { id: '3', title: 'Network Security', description: 'Firewalls, IDS, and network protection', lessons: [] },
+      { id: '4', title: 'Lab Exercises & Certifications', description: 'Hands-on practice for CEH', lessons: [] },
     ],
     curriculum: [
       { id: '1', title: 'Security Fundamentals', videoUrl: '', duration: 50, order: 1 },
@@ -309,7 +201,8 @@ export const courses: Course[] = [
     id: '6',
     title: 'Digital Marketing & SEO Mastery',
     slug: 'digital-marketing-seo-mastery',
-    description: 'Practical Digital Marketing & SEO program covering on-page SEO, Google Ads, social media strategy, and content marketing. Work on live campaigns and build a portfolio to start or scale marketing careers in India. Evening batches and placement guidance available.',
+    description:
+      'Practical Digital Marketing & SEO program covering on-page SEO, Google Ads, social media strategy, and content marketing. Work on live campaigns and build a portfolio to start or scale marketing careers in India. Evening batches and placement guidance available.',
     shortDescription: 'Digital marketing course: SEO, Google Ads, social & content strategy',
     thumbnail: '/images/courses/digital-marketing.webp',
     instructor: 'Sudesh Yadav',
@@ -328,30 +221,10 @@ export const courses: Course[] = [
     tags: ['Digital Marketing', 'SEO', 'Google Ads', 'Social Media', 'Content Marketing'],
     batchInfo: 'Evening Batch',
     sections: [
-      {
-        id: '1',
-        title: 'Digital Marketing Fundamentals',
-        description: 'Introduction to digital landscape',
-        lessons: [],
-      },
-      {
-        id: '2',
-        title: 'SEO & Content Strategy',
-        description: 'Organic growth and SEO',
-        lessons: [],
-      },
-      {
-        id: '3',
-        title: 'Google Ads & PPC',
-        description: 'Paid advertising campaigns',
-        lessons: [],
-      },
-      {
-        id: '4',
-        title: 'Social Media & Analytics',
-        description: 'Facebook, Instagram, LinkedIn marketing',
-        lessons: [],
-      },
+      { id: '1', title: 'Digital Marketing Fundamentals', description: 'Introduction to digital landscape', lessons: [] },
+      { id: '2', title: 'SEO & Content Strategy', description: 'Organic growth and SEO', lessons: [] },
+      { id: '3', title: 'Google Ads & PPC', description: 'Paid advertising campaigns', lessons: [] },
+      { id: '4', title: 'Social Media & Analytics', description: 'Facebook, Instagram, LinkedIn marketing', lessons: [] },
     ],
     curriculum: [
       { id: '1', title: 'Digital Marketing Basics', videoUrl: '', duration: 45, order: 1 },
@@ -363,21 +236,21 @@ export const courses: Course[] = [
 ];
 
 export const getFeaturedCourse = (): Course | undefined => {
-  return courses.find(course => course.featured);
+  return courses.find((course) => course.featured);
 };
 
 export const getComingSoonCourses = (): Course[] => {
-  return courses.filter(course => course.status === 'coming-soon');
+  return courses.filter((course) => course.status === 'coming-soon');
 };
 
 export const getPublishedCourses = (): Course[] => {
-  return courses.filter(course => course.status === 'published');
+  return courses.filter((course) => course.status === 'published');
 };
 
 export const getCourseById = (id: string): Course | undefined => {
-  return courses.find(course => course.id === id);
+  return courses.find((course) => course.id === id);
 };
 
 export const getCourseBySlug = (slug: string): Course | undefined => {
-  return courses.find(course => course.slug === slug);
+  return courses.find((course) => course.slug === slug);
 };

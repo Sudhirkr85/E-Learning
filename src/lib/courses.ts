@@ -1,4 +1,9 @@
 import { Course } from '@/types';
+import {
+  courses as staticCourses,
+  getFeaturedCourse as getStaticFeaturedCourse,
+  getCourseBySlug as getStaticCourseBySlug,
+} from '@/data/courses';
 
 // Base URL for API calls
 const getApiBaseUrl = () => {
@@ -18,8 +23,6 @@ const getApiBaseUrl = () => {
  * - No-store cache policy ensures fresh data when admin updates courses
  */
 export async function getAllCourses(): Promise<{ courses: Course[]; fallback: boolean }> {
-  const staticCourses = await import('@/data/courses').then(m => m.courses);
-
   try {
     const response = await fetch(`${getApiBaseUrl()}/courses`, {
       cache: 'no-store', // Ensure fresh data for admin sync
@@ -61,9 +64,7 @@ export async function getAllCourses(): Promise<{ courses: Course[]; fallback: bo
  * - Falls back to static featured course if not found in DB
  */
 export async function getFeaturedCourse(): Promise<{ course: Course | null; fallback: boolean }> {
-  const staticFeaturedCourse = await import('@/data/courses').then(
-    m => m.getFeaturedCourse()
-  );
+  const staticFeaturedCourse = getStaticFeaturedCourse();
 
   try {
     const response = await fetch(`${getApiBaseUrl()}/courses/featured`, {
@@ -106,9 +107,7 @@ export async function getFeaturedCourse(): Promise<{ course: Course | null; fall
  * - Falls back to static course if not found in DB
  */
 export async function getCourseBySlug(slug: string): Promise<{ course: Course | null; fallback: boolean }> {
-  const staticCourse = await import('@/data/courses').then(m =>
-    m.getCourseBySlug(slug)
-  );
+  const staticCourse = getStaticCourseBySlug(slug);
 
   try {
     const response = await fetch(`${getApiBaseUrl()}/courses/${slug}`, {
