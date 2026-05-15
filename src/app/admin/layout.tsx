@@ -36,7 +36,6 @@ export default async function AdminLayout({
               <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Courses</a>
               <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Sessions</a>
               <a href="/admin/coupons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Coupons</a>
-              <a href="/admin/lessons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Lesson Links</a>
               <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Enrollments</a>
             </nav>
           </aside>

@@ -146,7 +146,6 @@ export default function AdminDashboard() {
               <div className="flex flex-col gap-3">
                 <a href="/admin/coupons/new" className="block text-center px-3 py-2 rounded bg-[var(--accent-secondary)] text-white">New Coupon</a>
                 <a href="/admin/courses" className="block text-center px-3 py-2 rounded bg-[rgba(6,182,212,0.12)] text-[var(--accent-primary)]">Manage Sessions</a>
-                <a href="/admin/lessons/new" className="block text-center px-3 py-2 rounded bg-[rgba(255,255,255,0.03)] text-white">New Lesson Link</a>
               </div>
             </div>
           </div>

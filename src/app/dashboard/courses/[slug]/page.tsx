@@ -219,83 +219,9 @@ export default function CourseDetailPage() {
               )}
             </Card>
 
-            {sessions.length > 0 && (
-              <Card className="p-4 mb-8 border border-cyan-500/20 bg-slate-900/70">
-                <Heading className="text-2xl mb-4 flex items-center gap-2">
-                  🔗 Live Class Links
-                </Heading>
-                <p className="text-sm text-slate-400">
-                  All active class sessions are shown in the schedule above, with a live join button.
-                </p>
-              </Card>
-            )}
+            {/* Live Class Links removed per admin request */}
 
-            {/* Course Materials Section */}
-            {course.curriculum && course.curriculum.length > 0 && (
-              <Card className="p-8">
-                <Heading className="text-2xl mb-6 flex items-center gap-2">
-                  📚 Course Materials
-                </Heading>
-
-                <div className="space-y-4">
-                  {course.curriculum.map((lesson, index) => {
-                    const hasRealVideo = lesson.videoUrl && !isPlaceholderVideoUrl(lesson.videoUrl);
-
-                    return (
-                      <div key={lesson.id} className="p-4 bg-slate-800 rounded-lg">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-semibold text-white">
-                              Lesson {index + 1}: {lesson.title}
-                            </h4>
-                            {lesson.description && (
-                              <p className="text-sm text-slate-300 mt-1">{lesson.description}</p>
-                            )}
-                            <p className="text-xs text-slate-400 mt-2">
-                              ⏱️ {lesson.duration} minutes
-                            </p>
-                          </div>
-                          {hasRealVideo ? (
-                            <a
-                              href={lesson.videoUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition whitespace-nowrap"
-                            >
-                              Watch Video
-                            </a>
-                          ) : (
-                            <div className="rounded-md border border-slate-700 bg-slate-900/70 px-3 py-2 text-right text-xs text-slate-300 max-w-[10rem]">
-                              <div className="font-semibold text-white">Video not added yet</div>
-                              <div className="mt-1 text-slate-400">Please contact support</div>
-                            </div>
-                          )}
-                        </div>
-
-                        {lesson.resources && lesson.resources.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-slate-600">
-                            <p className="text-xs text-slate-400 mb-2">Resources:</p>
-                            <div className="flex gap-2 flex-wrap">
-                              {lesson.resources.map((resource) => (
-                                <a
-                                  key={resource.id}
-                                  href={resource.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs bg-slate-700 hover:bg-slate-600 text-blue-400 px-2 py-1 rounded transition"
-                                >
-                                  {resource.title}
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            )}
+            {/* Course Materials removed per admin request */}
           </div>
 
           <div className="lg:col-span-1">

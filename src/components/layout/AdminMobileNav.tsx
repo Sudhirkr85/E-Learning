@@ -7,7 +7,6 @@ const navItems = [
   { href: '/admin/courses', label: 'Courses' },
   { href: '/admin/courses', label: 'Sessions' },
   { href: '/admin/coupons', label: 'Coupons' },
-  { href: '/admin/lessons', label: 'Lesson Links' },
   { href: '/admin/courses', label: 'Enrollments' },
 ];
 
