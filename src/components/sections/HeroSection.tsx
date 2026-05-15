@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Course } from '@/types';
 import { Container, Button, Heading, Text, Badge } from '@/components/ui';
 import { ROUTES } from '@/constants';
+import { getNextMonthlyBatchDateString } from '@/lib/batch';
 import { useState, useRef, useEffect } from 'react';
 
 interface HeroProps {
@@ -157,7 +158,7 @@ export function HeroSection({ course }: HeroProps) {
               {/* Batch Info */}
               <div className="flex flex-wrap items-center gap-3 pt-1">
                 <Badge variant="info">
-                  📅 {course.batchInfo || 'Next Batch: June 15, 2026'}
+                  📅 {getNextMonthlyBatchDateString()}
                 </Badge>
                 <Badge variant="success">
                   🎯 {course.level}

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Divider, Card } from '@/components/ui';
 import { ROUTES, SITE_CONFIG } from '@/constants';
+import { getNextMonthlyBatchDateString } from '@/lib/batch';
 import { Course } from '@/types';
 
 interface NextSession {
@@ -203,9 +204,14 @@ function PaymentSuccessContent() {
                       )}
                     </div>
                   ) : (
-                    <Text size="sm" className="text-slate-400">
-                      Course sessions are being scheduled. The batch start date and link will appear here once the admin sets them.
-                    </Text>
+                    <div>
+                      <Text size="sm" className="text-slate-400 mb-2">
+                        Course sessions are being scheduled by our team.
+                      </Text>
+                      <Text size="sm" className="text-slate-400">
+                        Next monthly batch: <span className="font-semibold text-white">{getNextMonthlyBatchDateString()}</span>. You will receive onboarding and access information before the batch starts.
+                      </Text>
+                    </div>
                   )}
                 </Card>
               )}

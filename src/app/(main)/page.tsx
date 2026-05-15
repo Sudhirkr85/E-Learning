@@ -5,8 +5,8 @@ import { faqs } from '@/data/faq';
 import { TESTIMONIALS } from '@/constants';
 
 export const metadata = {
-  title: 'SSSAM Academy - Learn Modern Skills',
-  description: 'Master in-demand skills with expert instructors. Join thousands of students learning web development, data science, and more.',
+  title: 'SSSAM Academy — IT Training in India | Full Stack, Data Science, Cyber Security',
+  description: 'SSSAM Academy offers industry-focused IT training in India: full stack development, data science, cyber security and digital marketing. Live classes, real projects, and placement support in Gurugram & online.',
 };
 
 export default async function Home() {

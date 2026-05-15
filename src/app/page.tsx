@@ -44,7 +44,7 @@ export default async function Home() {
                 Ready to Transform Your Tech Career?
               </h2>
               <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Join 15,000+ Indian students who've successfully launched their tech careers with SSSAM Academy. Get started today with our special ₹9 summer offer on AI Full Stack course!
+                Join thousands of Indian students who have launched their tech careers with SSSAM Academy. Start today with our limited summer offer on the AI Full Stack course.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
                 <a
