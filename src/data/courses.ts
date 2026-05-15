@@ -378,7 +378,7 @@ export const courses: Course[] = [
     shortDescription: 'Master Power BI, SQL & Excel for data analyst roles with live projects',
     thumbnail: '/images/courses/data-analyst.webp',
     instructor: 'Sudesh Yadav',
-    instructorImage: '/images/trainers/mohit-yadav.webp',
+    instructorImage: '/images/trainers/sudesh-yadav.webp',
     price: 16000,
     originalPrice: 25000,
     rating: 4.7,
