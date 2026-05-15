@@ -29,4 +29,10 @@ export function getNextMonthlyBatchDateString(now = new Date()): string {
   return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+export function getNextMonthlyBatchLabel(now = new Date()): string {
+  const day = now.getDate();
+  const label = day <= 1 || day > 15 ? 'Next Batch Starts' : 'Upcoming Weekend Batch';
+  return `${label}: ${getNextMonthlyBatchDateString(now)}`;
+}
+
 export default getNextMonthlyBatchDateString;

@@ -114,41 +114,44 @@ export default function CourseDetailPage() {
 
   return (
     <Container>
-      <div className="py-12">
+      <div className="py-14">
         {/* Course Header */}
         <div className="mb-12">
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-6">
             <div>
-              <Heading className="mb-2">{course.title}</Heading>
-              <p className="text-slate-300">
-                Instructor: <span className="font-semibold">{course.instructor}</span>
+              <Heading className="mb-2 text-white">{course.title}</Heading>
+              <p className="text-slate-400 text-sm lg:text-base max-w-2xl">
+                Practical learning, live class schedules, and Gurugram-focused placement coaching for students with access to AI-enabled training.
+              </p>
+              <p className="text-slate-400 mt-2">
+                Instructor: <span className="font-semibold text-white">{course.instructor}</span>
               </p>
             </div>
             <Link
               href="/dashboard/courses"
-              className="text-slate-400 hover:text-slate-300"
+              className="inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-100 font-semibold transition"
             >
-              ← Back
+              ← Back to My Courses
             </Link>
           </div>
-          <p className="text-slate-300">{course.description}</p>
+          <p className="text-slate-300 leading-relaxed">{course.description}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Class Sessions Section */}
-            <Card className="p-8 mb-8">
-              <Heading className="text-2xl mb-6 flex items-center gap-2">
+            <Card className="p-8 mb-8 bg-slate-900/95 border border-cyan-500/10 shadow-2xl shadow-cyan-500/10">
+              <Heading className="text-2xl mb-6 flex items-center gap-2 text-white">
                 📅 Class Schedule
               </Heading>
 
               {sessions.length === 0 ? (
-                <div className="py-12 text-center bg-slate-800 rounded-lg">
-                  <Text className="text-slate-400">No class sessions scheduled yet</Text>
+                <div className="py-12 text-center bg-slate-950 rounded-3xl border border-slate-800">
+                  <Text className="text-slate-400">No class sessions scheduled yet. Please check back for the latest batch details.</Text>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {sessions.map((session, index) => {
                     const sessionDate = new Date(session.sessionDate);
                     const isUpcoming = sessionDate > new Date();
@@ -157,29 +160,30 @@ export default function CourseDetailPage() {
                     return (
                       <div
                         key={session._id}
-                        className={`p-4 rounded-lg border-2 transition ${
+                        className={`rounded-3xl border p-6 transition ${
                           isUpcoming
-                            ? 'border-green-500 bg-green-900/20'
-                            : 'border-slate-600 bg-slate-800'
+                            ? 'border-cyan-500/30 bg-cyan-500/10'
+                            : 'border-slate-700 bg-slate-950/80'
                         }`}
                       >
-                        <div className="flex items-start justify-between mb-3">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-3">
                           <div>
-                            <h4 className="font-bold text-white text-lg">
+                            <h4 className="font-semibold text-white text-lg">
                               {index + 1}. {session.sessionTitle}
                             </h4>
+                            <p className="text-slate-400 text-sm mt-1">Live practical session with expert guidance and follow-up resources.</p>
                           </div>
                           {isUpcoming && (
-                            <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded">
-                              UPCOMING
+                            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-200">
+                              Upcoming
                             </span>
                           )}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-sm">
-                          <div>
-                            <span className="text-slate-400">Date:</span>
-                            <p className="font-semibold text-white">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5 text-sm">
+                          <div className="rounded-3xl bg-slate-950/70 p-4">
+                            <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Date</p>
+                            <p className="text-white font-semibold">
                               {sessionDate.toLocaleDateString('en-IN', {
                                 weekday: 'short',
                                 year: 'numeric',
@@ -188,65 +192,63 @@ export default function CourseDetailPage() {
                               })}
                             </p>
                           </div>
-                          <div>
-                            <span className="text-slate-400">Time:</span>
-                            <p className="font-semibold text-white">{session.sessionTime}</p>
+                          <div className="rounded-3xl bg-slate-950/70 p-4">
+                            <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Time</p>
+                            <p className="text-white font-semibold">{session.sessionTime}</p>
+                          </div>
+                          <div className="rounded-3xl bg-slate-950/70 p-4">
+                            <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Mode</p>
+                            <p className="text-white font-semibold">Live Online</p>
                           </div>
                         </div>
 
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           {liveClassLink ? (
                             <a
                               href={liveClassLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold transition inline-flex items-center gap-2"
+                              className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-3 text-sm font-semibold text-white hover:from-cyan-400 hover:to-blue-500 transition"
                             >
-                              🎥 Join Live Class
+                              Join Live Class
                             </a>
                           ) : (
-                            <div className="px-4 py-2 rounded text-sm font-semibold border border-slate-700 bg-slate-900/70 text-slate-300">
-                              Live class link will appear here once scheduled.
+                            <div className="rounded-2xl border border-slate-800 bg-slate-950/90 px-5 py-3 text-sm font-semibold text-slate-300">
+                              Live class link will be shared soon.
                             </div>
                           )}
                         </div>
-
-
                       </div>
                     );
                   })}
                 </div>
               )}
             </Card>
-
-            {/* Live Class Links removed per admin request */}
-
-            {/* Course Materials removed per admin request */}
           </div>
 
           <div className="lg:col-span-1">
-            <Card className="p-6">
-              <Heading className="text-lg mb-4">📊 Course Info</Heading>
+            <Card className="p-6 bg-slate-900/95 border border-cyan-500/10 shadow-2xl shadow-cyan-500/10">
+              <Heading className="text-lg mb-6 text-white">Course Snapshot</Heading>
 
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs text-slate-400">Level</p>
+              <div className="space-y-5">
+                <div className="rounded-3xl bg-slate-950/80 p-4">
+                  <p className="text-xs text-slate-500 uppercase tracking-[0.16em] mb-2">Level</p>
                   <p className="font-semibold text-white">{course.level}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400">Duration</p>
+                <div className="rounded-3xl bg-slate-950/80 p-4">
+                  <p className="text-xs text-slate-500 uppercase tracking-[0.16em] mb-2">Duration</p>
                   <p className="font-semibold text-white">{course.duration}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400">Lessons</p>
+                <div className="rounded-3xl bg-slate-950/80 p-4">
+                  <p className="text-xs text-slate-500 uppercase tracking-[0.16em] mb-2">Lessons</p>
                   <p className="font-semibold text-white">{course.lessons}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400">Category</p>
+                <div className="rounded-3xl bg-slate-950/80 p-4">
+                  <p className="text-xs text-slate-500 uppercase tracking-[0.16em] mb-2">Category</p>
                   <p className="font-semibold text-white">{course.category}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400">Rating</p>
+                <div className="rounded-3xl bg-slate-950/80 p-4">
+                  <p className="text-xs text-slate-500 uppercase tracking-[0.16em] mb-2">Rating</p>
                   <p className="font-semibold text-white">⭐ {course.rating}</p>
                 </div>
               </div>

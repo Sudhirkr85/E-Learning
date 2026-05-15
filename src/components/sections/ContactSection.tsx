@@ -18,20 +18,23 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-gray-50">
+    <section id="contact" className="py-16 md:py-24 bg-slate-950">
       <Container>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <Heading level={2} className="mb-4">
-              Get in Touch
+            <div className="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-cyan-500/20">
+              Contact SSSAM Academy
+            </div>
+            <Heading level={2} className="mb-4 text-white">
+              Speak with our Gurugram career team
             </Heading>
-            <Text size="lg" color="muted">
-              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            <Text size="lg" color="muted" className="text-slate-400">
+              Ready to join India’s best AI-powered IT training institute? Share your goals and we will guide you on the best batch, course, and placement path.
             </Text>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-[1.3fr_0.9fr] rounded-[2rem] border border-cyan-500/10 bg-slate-900/90 p-8 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+            <div className="space-y-4">
               <Input
                 label="Full Name"
                 placeholder="Your name"
@@ -47,30 +50,34 @@ export function ContactSection() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
               />
+              <Input
+                label="Subject"
+                placeholder="What do you want to learn?"
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                required
+              />
             </div>
 
-            <Input
-              label="Subject"
-              placeholder="What is this about?"
-              value={formData.subject}
-              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-              required
-              className="mb-4"
-            />
-
-            <TextArea
-              label="Message"
-              placeholder="Tell us more..."
-              rows={5}
-              value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              required
-              className="mb-6"
-            />
-
-            <Button type="submit" variant="primary" size="lg">
-              Send Message
-            </Button>
+            <div className="flex flex-col gap-4">
+              <TextArea
+                label="Message"
+                placeholder="Tell us about your goals or current experience"
+                rows={8}
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                required
+                className="min-h-[200px]"
+              />
+              <div className="mt-auto">
+                <Button type="submit" variant="primary" size="lg" className="w-full">
+                  Submit Inquiry
+                </Button>
+                <Text size="sm" className="mt-3 text-slate-500">
+                  We respond quickly in Hindi & English. Prefer a call? Reach us at +91 92170 31899.
+                </Text>
+              </div>
+            </div>
           </form>
         </div>
       </Container>

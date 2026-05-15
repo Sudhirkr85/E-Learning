@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Course } from '@/types';
 import { Badge, Card, Rating, Text } from '@/components/ui';
-import { getNextMonthlyBatchDateString } from '@/lib/batch';
+import { getNextMonthlyBatchLabel } from '@/lib/batch';
 
 interface CourseCardProps {
   course: Course;
@@ -75,14 +75,12 @@ export function CourseCard({ course }: CourseCardProps) {
             <Badge variant="info" className="!text-xs bg-slate-800 text-cyan-400 border border-cyan-500/30">
               {course.level}
             </Badge>
-            {/* Show dynamic next batch date (1st or 15th) */}
             <Badge variant="success" className="!text-xs bg-slate-800 text-emerald-400 border border-emerald-500/30">
-              📅 {getNextMonthlyBatchDateString()}
+              {getNextMonthlyBatchLabel()}
             </Badge>
           </div>
 
-          {/* Title */}
-          <h3 className="font-bold text-lg text-white line-clamp-2 group-hover:text-cyan-300 transition-colors">
+          <h3 className="text-xl font-semibold text-white mt-3">
             {course.title}
           </h3>
 

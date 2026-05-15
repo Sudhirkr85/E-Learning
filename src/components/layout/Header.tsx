@@ -40,20 +40,29 @@ export function Header() {
       <Container className="py-4">
         <div className="flex items-center justify-between text-white">
           {/* Logo */}
-          <Link href={ROUTES.HOME} className="flex items-center gap-3 group">
-            <span className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent group-hover:from-cyan-300 group-hover:to-blue-300 transition-all">
-              SSSAM Academy
-            </span>
-          </Link>
+          <div className="flex flex-col">
+            <Link href={ROUTES.HOME} className="flex items-center gap-3 group">
+              <span className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent group-hover:from-cyan-300 group-hover:to-blue-300 transition-all">
+                SSSAM Academy
+              </span>
+            </Link>
+            <p className="text-xs text-slate-400 mt-1">
+              AI-driven IT training in Sector 14, Gurugram
+            </p>
+          </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden xl:flex items-center gap-8">
             <Link href={ROUTES.HOME} className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group">
               Home
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link href={ROUTES.COURSES} className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group">
               Courses
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+            <Link href="/#contact" className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group">
+              Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <a
@@ -63,15 +72,6 @@ export function Header() {
               className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
             >
               Certificate
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a
-              href="https://www.sssamacademy.com/contact.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
-            >
-              Contact Us
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </a>
           </nav>
@@ -196,16 +196,13 @@ export function Header() {
             >
               Courses
             </Link>
-            <a 
-              href="#trainers" 
+            <Link 
+              href="/#contact" 
                 className="block text-slate-300 hover:text-blue-400 transition-colors font-medium py-2"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#trainers');
-              }}
+              onClick={() => setIsMenuOpen(false)}
             >
-              Trainers
-            </a>
+              Contact
+            </Link>
             <a 
               href="https://sssamacademy.com/download-certificate.html" 
               target="_blank"
@@ -213,14 +210,6 @@ export function Header() {
               className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
             >
               Certificate
-            </a>
-            <a 
-              href="https://www.sssamacademy.com/contact.html" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
-            >
-              Contact Us
             </a>
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
               {user ? (

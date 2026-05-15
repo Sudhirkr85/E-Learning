@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Course } from '@/types';
 import { Container, Button, Heading, Text, Badge } from '@/components/ui';
 import { ROUTES } from '@/constants';
-import { getNextMonthlyBatchDateString } from '@/lib/batch';
+import { getNextMonthlyBatchLabel } from '@/lib/batch';
 import { useState, useRef, useEffect } from 'react';
 
 interface HeroProps {
@@ -136,32 +136,32 @@ export function HeroSection({ course }: HeroProps) {
           {/* Content */}
           <div className="space-y-4">
             {/* Special Offer Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-600/60 to-pink-600/60 border border-red-500/40 text-white px-4 py-2 rounded-full text-xs md:text-sm font-semibold backdrop-blur-sm">
-              <span className="text-lg">🔥</span>
-              SPECIAL OFFER - ONLY ₹9
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/70 to-blue-600/70 border border-cyan-400/30 text-white px-4 py-2 rounded-full text-xs md:text-sm font-semibold backdrop-blur-md shadow-lg">
+              <span className="text-lg">🚀</span>
+              AI-Focused Gurugram Batch Open
             </div>
 
             {/* Main Headline - SEO Optimized */}
             <div className="space-y-3">
               <Heading level={1} className="text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
-                Master Full Stack
+                Career-Ready AI Full Stack
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
-                  Web Development
+                  Development Training
                 </span>
               </Heading>
 
               {/* Subheading */}
               <Text size="lg" className="text-foreground-secondary font-medium">
-                AI-Powered Training for Indian Tech Professionals
+                Live practical training in Gurugram for college students, freshers, and career switchers.
               </Text>
 
               {/* Batch Info */}
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <Badge variant="info">
-                  📅 {getNextMonthlyBatchDateString()}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                <Badge variant="info" className="!text-sm">
+                  {getNextMonthlyBatchLabel()}
                 </Badge>
-                <Badge variant="success">
-                  🎯 {course.level}
+                <Badge variant="success" className="!text-sm">
+                  🎯 {course.level} • Placement-Focused
                 </Badge>
               </div>
 
@@ -175,14 +175,14 @@ export function HeroSection({ course }: HeroProps) {
                     ₹{course.originalPrice?.toLocaleString('en-IN')}
                   </span>
                 </div>
-                <Badge variant="warning">
+                <Badge variant="warning" className="!text-sm">
                   Save {Math.round(((course.originalPrice! - course.price) / course.originalPrice!) * 100)}%
                 </Badge>
               </div>
             </div>
 
             <Text size="lg" className="text-foreground-secondary leading-relaxed pt-1">
-              {course.description}
+              {course.description} Learn with AI-enabled workflows, live code reviews, and Gurugram placement coaching designed for India’s fastest-growing tech roles.
             </Text>
 
             {/* CTA Buttons */}

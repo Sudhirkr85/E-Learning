@@ -1,10 +1,16 @@
 // Site Configuration
 export const SITE_CONFIG = {
   name: 'SSSAM Academy',
-  description: 'Professional IT Training for Indian Students | Live Training + Lifetime Recordings',
-  url: 'https://sssam-academy.com',
-  email: 'info@sssamacadmy.com',
+  fullName: 'Smart Solutions School of AI & Machine Learning',
+  description: 'Professional AI-powered IT training from Gurugram with live classes, real projects, and placement-focused career support.',
+  url: 'https://sssamacademy.com',
+  email: 'info@sssamacademy.com',
   phone: '+91 9217031899',
+  address: 'M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14, Gurugram, Haryana 122001',
+  mapsUrl: 'https://maps.google.com/?q=M24+Ground+Floor+Near+SBI+Bank+Old+DLF+Colony+Sector+14+Gurugram+122001',
+  linkedin: 'https://www.linkedin.com/company/sssamacademy/',
+  instagram: 'https://www.instagram.com/sssamacademy/',
+  youtube: 'https://www.youtube.com/@codingwithsudhir',
 };
 
 // Routes

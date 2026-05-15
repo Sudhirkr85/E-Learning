@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SSSAM Academy - Learn from Industry Experts",
-  description: "Master in-demand skills with expert-led courses at SSSAM Academy",
+  title: "SSSAM Academy - AI & IT Training Institute in Gurugram",
+  description: "SSSAM Academy is a Gurugram-based AI-first IT training institute offering full stack, data science, cyber security and digital marketing courses with live projects and placement support.",
 };
 
 export default function RootLayout({
