@@ -142,17 +142,18 @@ export function HeroSection({ course }: HeroProps) {
             </div>
 
             {/* Main Headline - SEO Optimized */}
-            <div className="space-y-3">
-              <Heading level={1} className="text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
-                Career-Ready AI Full Stack
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
-                  Development Training
-                </span>
+            <div className="space-y-3 max-w-3xl">
+              <Heading level={1} className="text-4xl md:text-5xl lg:text-5xl leading-tight md:leading-snug text-foreground">
+                AI Training Institute in Gurugram
               </Heading>
 
               {/* Subheading */}
-              <Text size="lg" className="text-foreground-secondary font-medium">
-                Live practical training in Gurugram for college students, freshers, and career switchers.
+              <Text size="lg" className="text-foreground-secondary font-medium leading-relaxed max-w-3xl">
+                Full Stack, Data Science & Cyber Security
+              </Text>
+
+              <Text size="lg" className="text-foreground-secondary leading-relaxed max-w-3xl">
+                Job-oriented AI-based IT training with live projects and placement support.
               </Text>
 
               {/* Batch Info */}
@@ -182,7 +183,7 @@ export function HeroSection({ course }: HeroProps) {
             </div>
 
             <Text size="lg" className="text-foreground-secondary leading-relaxed pt-1">
-              {course.description} Learn with AI-enabled workflows, live code reviews, and Gurugram placement coaching designed for India’s fastest-growing tech roles.
+              {course.description} Learn with AI-enabled workflows, live code reviews, and Gurugram placement coaching designed for in-demand IT careers across Full Stack Development, Data Science and Cyber Security.
             </Text>
 
             {/* CTA Buttons */}

@@ -14,8 +14,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SSSAM Academy - AI & IT Training Institute in Gurugram",
-  description: "SSSAM Academy is a Gurugram-based AI-first IT training institute offering full stack, data science, cyber security and digital marketing courses with live projects and placement support.",
+  metadataBase: new URL('https://sssamacademy.tech'),
+  title: 'AI Training Institute Gurugram | Full Stack & Data Science',
+  description: 'SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.',
+  openGraph: {
+    title: 'AI Training Institute Gurugram | Full Stack & Data Science',
+    description: 'SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.',
+    type: 'website',
+    url: 'https://sssamacademy.tech',
+    siteName: 'SSSAM Academy',
+    locale: 'en_IN',
+    images: [
+      {
+        url: 'https://sssamacademy.tech/images/logo/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'SSSAM Academy AI Training Institute Gurugram',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI Training Institute Gurugram | Full Stack & Data Science',
+    description: 'SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.',
+    images: ['https://sssamacademy.tech/images/logo/logo.png'],
+  },
 };
 
 export default function RootLayout({
