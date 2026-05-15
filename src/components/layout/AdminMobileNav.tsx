@@ -5,6 +5,7 @@ import { useState } from 'react';
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard' },
   { href: '/admin/courses', label: 'Courses' },
+  { href: '/admin/courses', label: 'Sessions' },
   { href: '/admin/coupons', label: 'Coupons' },
   { href: '/admin/lessons', label: 'Lesson Links' },
   { href: '/admin/courses', label: 'Enrollments' },

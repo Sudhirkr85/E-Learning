@@ -71,7 +71,7 @@ export default function MyCoursesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchasedCourses.map(purchase => (
-          <Link key={purchase.orderId} href={`/dashboard/lessons/${purchase.courseId}`}>
+          <Link key={purchase.orderId} href={`/dashboard/courses/${purchase.course.slug}`}>
             <Card interactive className="overflow-hidden h-full flex flex-col border border-slate-800 bg-slate-900/80">
               {/* Image */}
               <div className="relative w-full h-40 bg-slate-800">

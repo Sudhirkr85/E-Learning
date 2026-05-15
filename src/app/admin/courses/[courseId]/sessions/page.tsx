@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   Container,
   Text,
@@ -10,9 +11,11 @@ import {
   Button,
   Input,
 } from '@/components/ui';
+import { courses } from '@/data/courses';
 interface ClassSession {
   _id: string;
   courseId: string;
+  active?: boolean;
   googleMeetLink: string;
   sessionTitle: string;
   description?: string;
@@ -33,7 +36,9 @@ interface CourseContact {
 
 export default function ManageSessionsPage() {
   const params = useParams();
+  const router = useRouter();
   const courseId = params.courseId as string;
+  const currentCourse = courses.find((course) => course.id === courseId) || courses[0];
 
   const [sessions, setSessions] = useState<ClassSession[]>([]);
   const [contact, setContact] = useState<CourseContact>({
@@ -48,6 +53,7 @@ export default function ManageSessionsPage() {
   const [editingSession, setEditingSession] = useState<ClassSession | null>(null);
 
   const [sessionForm, setSessionForm] = useState({
+    courseId: currentCourse?.id || courseId,
     sessionTitle: '',
     description: '',
     googleMeetLink: '',
@@ -106,7 +112,7 @@ export default function ManageSessionsPage() {
   };
 
   const handleAddSession = async () => {
-    if (!sessionForm.sessionTitle || !sessionForm.googleMeetLink || !sessionForm.sessionDate || !sessionForm.sessionTime) {
+    if (!sessionForm.courseId || !sessionForm.sessionTitle || !sessionForm.googleMeetLink || !sessionForm.sessionDate || !sessionForm.sessionTime) {
       alert('Please fill in all required fields');
       return;
     }
@@ -115,7 +121,7 @@ export default function ManageSessionsPage() {
       const method = editingSession ? 'PUT' : 'POST';
       const body = editingSession
         ? { sessionId: editingSession._id, ...sessionForm }
-        : { courseId, ...sessionForm };
+        : { ...sessionForm };
 
       const response = await fetch('/api/admin/sessions', {
         method,
@@ -126,7 +132,13 @@ export default function ManageSessionsPage() {
       const data = await response.json();
       if (data.success) {
         alert(editingSession ? 'Session updated!' : 'Session created!');
+        const selectedCourseId = sessionForm.courseId;
+        if (selectedCourseId !== courseId) {
+          router.push(`/admin/courses/${selectedCourseId}/sessions`);
+          return;
+        }
         setSessionForm({
+          courseId,
           sessionTitle: '',
           description: '',
           googleMeetLink: '',
@@ -187,6 +199,7 @@ export default function ManageSessionsPage() {
   const handleEditSession = (session: ClassSession) => {
     setEditingSession(session);
     setSessionForm({
+      courseId: session.courseId || courseId,
       sessionTitle: session.sessionTitle,
       description: session.description || '',
       googleMeetLink: session.googleMeetLink,
@@ -195,7 +208,7 @@ export default function ManageSessionsPage() {
       durationMinutes: session.durationMinutes,
       recordingLink: session.recordingLink || '',
       notes: session.notes || '',
-      active: typeof (session as any).active === 'boolean' ? (session as any).active : true,
+      active: typeof session.active === 'boolean' ? session.active : true,
     });
     setShowSessionForm(true);
   };
@@ -214,6 +227,13 @@ export default function ManageSessionsPage() {
     <Container>
       <div className="py-12">
         <Heading className="mb-8">Manage Course Sessions & Support</Heading>
+
+        <Card className="p-4 mb-8 border-slate-700 bg-slate-800/80">
+          <p className="text-sm text-slate-300">
+            Working course: <span className="font-semibold text-white">{currentCourse?.title || 'Select a course'}</span>
+          </p>
+          <p className="text-xs text-slate-400 mt-1">The dropdown uses the six static courses from src/data/courses.ts.</p>
+        </Card>
 
         {/* Contact Information Section */}
         <Card className="p-6 mb-8">
@@ -294,6 +314,7 @@ export default function ManageSessionsPage() {
               onClick={() => {
                 setEditingSession(null);
                 setSessionForm({
+                  courseId,
                   sessionTitle: '',
                   description: '',
                   googleMeetLink: '',
@@ -319,6 +340,24 @@ export default function ManageSessionsPage() {
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-slate-200 mb-2">
+                    Course *
+                  </label>
+                  <select
+                    value={sessionForm.courseId}
+                    onChange={(e) => setSessionForm({ ...sessionForm, courseId: e.target.value })}
+                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {courses.map((course) => (
+                      <option key={course.id} value={course.id}>
+                        {course.title}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-1 text-xs text-slate-400">Choose one of the static course entries. The session will be saved against the selected course.</p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-slate-200 mb-2">
                     Session Title *
@@ -513,6 +552,11 @@ export default function ManageSessionsPage() {
                       >
                         📹 View Recording
                       </a>
+                    </div>
+                  )}
+                  {!session.recordingLink && (
+                    <div className="mt-3 pt-3 border-t border-slate-600 text-sm text-slate-300">
+                      Recording not added yet. Please contact support.
                     </div>
                   )}
                 </div>

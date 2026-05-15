@@ -254,6 +254,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 - ✅ **Route Protection** - Middleware-based access control
 - ✅ **Razorpay Payment** - Complete payment flow with UPI support
 - ✅ **Course Access Control** - Purchase-based content protection
+- ✅ **Session Management** - Admin session forms use the static course list, preserve edit values, and show clear no-recording states on student pages
+- ✅ **Lesson Link Management** - Admin lesson forms use the static course list dropdown instead of manual course IDs
 - ✅ **SEO Optimized** - Metadata on all pages
 - ✅ **Performance Optimized** - Next.js Image component, code splitting
 - ✅ **Summer Training Programs** - Special courses for Indian students
@@ -360,7 +362,9 @@ MongoDB Collections (purchases, classSessions)
 ### Overview
 Comprehensive system for managing live class sessions and providing support to enrolled students. After purchase, students get direct access to:
 - 📅 Upcoming class schedules with Google Meet links
+- 🔗 A separate live class link section on the lesson page for quick access
 - 🎥 Recording links for completed sessions
+- 🧭 Purchased course cards now open the course detail page with live class dates, times, and links
 - 📧 Direct contact to instructors and support team
 - 🕐 Office hours and availability information
 
@@ -374,6 +378,7 @@ Comprehensive system for managing live class sessions and providing support to e
 - 👥 View all students enrolled in each course with contact details
 - 📊 See revenue analytics per course
 - 🔍 Search and filter students by name, email, or phone
+- 🧭 Open Admin > Courses > Manage Sessions to schedule live classes
 
 **For Students:**
 - 🚀 "Continue Learning" button on checkout success page

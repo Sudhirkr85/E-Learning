@@ -82,4 +82,23 @@ export class PurchaseModel {
     const purchase = await this.findByStudentIdAndCourseId(studentId, courseId);
     return purchase !== null;
   }
+
+  static async hasStudentActivePurchase(studentId: string, courseId: string): Promise<boolean> {
+    const collection = await this.getCollection();
+    const purchase = await collection.findOne({
+      studentId,
+      courseId,
+      status: { $in: ['pending', 'completed'] },
+    });
+    return purchase !== null;
+  }
+
+  static async findPendingPurchase(studentId: string, courseId: string): Promise<Purchase | null> {
+    const collection = await this.getCollection();
+    return await collection.findOne({
+      studentId,
+      courseId,
+      status: 'pending',
+    });
+  }
 }

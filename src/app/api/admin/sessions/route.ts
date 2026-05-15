@@ -2,6 +2,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ClassSessionModel } from '@/lib/models/class-session';
 import { getCourseById } from '@/data/courses';
 
+const normalizeExternalUrl = (value: unknown) => {
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  try {
+    return new URL(trimmed).toString();
+  } catch {
+    try {
+      return new URL(`https://${trimmed}`).toString();
+    } catch {
+      return '';
+    }
+  }
+};
+
 export async function GET(req: NextRequest) {
   try {
     const courseId = req.nextUrl.searchParams.get('courseId');
@@ -32,9 +53,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { courseId, googleMeetLink, sessionTitle, description, sessionDate, sessionTime, durationMinutes, recordingLink, notes } = body;
+    const normalizedGoogleMeetLink = normalizeExternalUrl(googleMeetLink);
+    const normalizedRecordingLink = normalizeExternalUrl(recordingLink);
 
     // Validate required fields
-    if (!courseId || !googleMeetLink || !sessionTitle || !sessionDate || !sessionTime || !durationMinutes) {
+    if (!courseId || !normalizedGoogleMeetLink || !sessionTitle || !sessionDate || !sessionTime || !durationMinutes) {
       return NextResponse.json({
         success: false,
         message: 'Missing required fields',
@@ -52,13 +75,13 @@ export async function POST(req: NextRequest) {
 
     const session = await ClassSessionModel.createSession({
       courseId,
-      googleMeetLink,
+      googleMeetLink: normalizedGoogleMeetLink,
       sessionTitle,
       description,
       sessionDate,
       sessionTime,
       durationMinutes,
-      recordingLink,
+      recordingLink: normalizedRecordingLink,
       notes,
     });
 
@@ -88,7 +111,13 @@ export async function PUT(req: NextRequest) {
       }, { status: 400 });
     }
 
-    const success = await ClassSessionModel.updateSession(sessionId, updateData);
+    const normalizedUpdateData = {
+      ...updateData,
+      ...(updateData.googleMeetLink ? { googleMeetLink: normalizeExternalUrl(updateData.googleMeetLink) } : {}),
+      ...(updateData.recordingLink ? { recordingLink: normalizeExternalUrl(updateData.recordingLink) } : {}),
+    };
+
+    const success = await ClassSessionModel.updateSession(sessionId, normalizedUpdateData);
 
     if (!success) {
       return NextResponse.json({

@@ -28,6 +28,29 @@ interface CourseContact {
   officeHours?: string;
 }
 
+const isPlaceholderVideoUrl = (url: string) => url.includes('dQw4w9WgXcQ');
+
+const normalizeExternalUrl = (value?: string) => {
+  if (!value) {
+    return '';
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  try {
+    return new URL(trimmed).toString();
+  } catch {
+    try {
+      return new URL(`https://${trimmed}`).toString();
+    } catch {
+      return '';
+    }
+  }
+};
+
 export default function CourseDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -40,7 +63,7 @@ export default function CourseDetailPage() {
 
   useEffect(() => {
     fetchCourseData();
-  }, [slug]);
+  }, [slug, user?.id]);
 
   const fetchCourseData = async () => {
     try {
@@ -150,6 +173,8 @@ export default function CourseDetailPage() {
                   {sessions.map((session, index) => {
                     const sessionDate = new Date(session.sessionDate);
                     const isUpcoming = sessionDate > new Date();
+                    const liveClassLink = normalizeExternalUrl(session.googleMeetLink);
+                    const recordingLink = normalizeExternalUrl(session.recordingLink);
 
                     return (
                       <div
@@ -205,18 +230,24 @@ export default function CourseDetailPage() {
                         </div>
 
                         <div className="flex gap-2 flex-wrap">
-                          <a
-                            href={session.googleMeetLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold transition inline-flex items-center gap-2"
-                          >
-                            🎥 Join Google Meet
-                          </a>
-
-                          {session.recordingLink && (
+                          {liveClassLink ? (
                             <a
-                              href={session.recordingLink}
+                              href={liveClassLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold transition inline-flex items-center gap-2"
+                            >
+                              🎥 Join Live Class
+                            </a>
+                          ) : (
+                            <div className="px-4 py-2 rounded text-sm font-semibold border border-slate-700 bg-slate-900/70 text-slate-300">
+                              Live class link will appear here once scheduled.
+                            </div>
+                          )}
+
+                          {recordingLink && (
+                            <a
+                              href={recordingLink}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-semibold transition inline-flex items-center gap-2"
@@ -225,6 +256,15 @@ export default function CourseDetailPage() {
                             </a>
                           )}
                         </div>
+
+                        {!recordingLink && (
+                          <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">
+                            <p className="font-semibold text-white">Video not added yet.</p>
+                            <p className="mt-1 text-slate-400">
+                              Please contact support{contact?.supportEmail ? ` at ${contact.supportEmail}` : ''}.
+                            </p>
+                          </div>
+                        )}
 
                         {session.notes && (
                           <div className="mt-4 p-3 bg-slate-700 rounded border-l-4 border-blue-400">
@@ -241,6 +281,61 @@ export default function CourseDetailPage() {
               )}
             </Card>
 
+            {sessions.length > 0 && (
+              <Card className="p-8 mb-8 border border-cyan-500/20 bg-slate-900/70">
+                <Heading className="text-2xl mb-4 flex items-center gap-2">
+                  🔗 Live Class Link
+                </Heading>
+                <p className="text-sm text-slate-400 mb-6">
+                  Admin added live class links appear here for quick access.
+                </p>
+
+                <div className="space-y-4">
+                  {sessions
+                    .map((session) => ({
+                      ...session,
+                      liveClassLink: normalizeExternalUrl(session.googleMeetLink),
+                    }))
+                    .filter((session) => session.liveClassLink)
+                    .map((session) => (
+                      <div
+                        key={`${session._id}-live-link`}
+                        className="rounded-lg border border-slate-700 bg-slate-800/80 p-4"
+                      >
+                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                          <div>
+                            <h4 className="font-semibold text-white">{session.sessionTitle}</h4>
+                            <p className="mt-1 text-sm text-slate-400">
+                              Date: {new Date(session.sessionDate).toLocaleDateString('en-IN', {
+                                weekday: 'short',
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })} | Time: {session.sessionTime}
+                            </p>
+                          </div>
+
+                          <a
+                            href={session.liveClassLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center rounded-md bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                          >
+                            Open Live Class
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+
+                  {sessions.every((session) => !normalizeExternalUrl(session.googleMeetLink)) && (
+                    <div className="rounded-lg border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">
+                      No live class link has been added yet.
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+
             {/* Course Materials Section */}
             {course.curriculum && course.curriculum.length > 0 && (
               <Card className="p-8">
@@ -249,50 +344,61 @@ export default function CourseDetailPage() {
                 </Heading>
 
                 <div className="space-y-4">
-                  {course.curriculum.map((lesson, index) => (
-                    <div key={lesson.id} className="p-4 bg-slate-800 rounded-lg">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-semibold text-white">
-                            Lesson {index + 1}: {lesson.title}
-                          </h4>
-                          {lesson.description && (
-                            <p className="text-sm text-slate-300 mt-1">{lesson.description}</p>
-                          )}
-                          <p className="text-xs text-slate-400 mt-2">
-                            ⏱️ {lesson.duration} minutes
-                          </p>
-                        </div>
-                        <a
-                          href={lesson.videoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition whitespace-nowrap"
-                        >
-                          Watch Video
-                        </a>
-                      </div>
+                  {course.curriculum.map((lesson, index) => {
+                    const hasRealVideo = lesson.videoUrl && !isPlaceholderVideoUrl(lesson.videoUrl);
 
-                      {lesson.resources && lesson.resources.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-slate-600">
-                          <p className="text-xs text-slate-400 mb-2">Resources:</p>
-                          <div className="flex gap-2 flex-wrap">
-                            {lesson.resources.map((resource) => (
-                              <a
-                                key={resource.id}
-                                href={resource.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs bg-slate-700 hover:bg-slate-600 text-blue-400 px-2 py-1 rounded transition"
-                              >
-                                {resource.title}
-                              </a>
-                            ))}
+                    return (
+                      <div key={lesson.id} className="p-4 bg-slate-800 rounded-lg">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-semibold text-white">
+                              Lesson {index + 1}: {lesson.title}
+                            </h4>
+                            {lesson.description && (
+                              <p className="text-sm text-slate-300 mt-1">{lesson.description}</p>
+                            )}
+                            <p className="text-xs text-slate-400 mt-2">
+                              ⏱️ {lesson.duration} minutes
+                            </p>
                           </div>
+                          {hasRealVideo ? (
+                            <a
+                              href={lesson.videoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition whitespace-nowrap"
+                            >
+                              Watch Video
+                            </a>
+                          ) : (
+                            <div className="rounded-md border border-slate-700 bg-slate-900/70 px-3 py-2 text-right text-xs text-slate-300 max-w-[10rem]">
+                              <div className="font-semibold text-white">Video not added yet</div>
+                              <div className="mt-1 text-slate-400">Please contact support</div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ))}
+
+                        {lesson.resources && lesson.resources.length > 0 && (
+                          <div className="mt-3 pt-3 border-t border-slate-600">
+                            <p className="text-xs text-slate-400 mb-2">Resources:</p>
+                            <div className="flex gap-2 flex-wrap">
+                              {lesson.resources.map((resource) => (
+                                <a
+                                  key={resource.id}
+                                  href={resource.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs bg-slate-700 hover:bg-slate-600 text-blue-400 px-2 py-1 rounded transition"
+                                >
+                                  {resource.title}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </Card>
             )}

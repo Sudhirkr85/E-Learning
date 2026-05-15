@@ -157,8 +157,106 @@ export function CheckoutContent() {
       if (!response.ok) {
         const errorMessage = orderData.error || 'Failed to create order';
 
-        if (errorMessage.toLowerCase().includes('already purchased')) {
-          router.push(ROUTES.MY_COURSES);
+        // Handle pending purchase case: offer user to complete existing payment or cancel it
+        if (orderData?.code === 'pending_exists' && orderData?.orderId) {
+          const existingOrderId = orderData.orderId as string;
+          const proceed = window.confirm('You have an unfinished payment for this course. Click OK to complete the existing payment, or Cancel to cancel it and create a new order.');
+
+          if (proceed) {
+            // Fetch order info and open Razorpay for existing order
+            const infoResp = await fetch(`/api/razorpay/order-info?orderId=${encodeURIComponent(existingOrderId)}`);
+            const infoData = await infoResp.json();
+            if (!infoResp.ok) {
+              throw new Error(infoData.error || 'Failed to load existing order');
+            }
+
+            const options: RazorpayOptions = {
+              key: infoData.key,
+              amount: infoData.amount,
+              currency: infoData.currency,
+              name: 'SSSAM Academy',
+              description: infoData.courseTitle || course.title,
+              order_id: infoData.orderId,
+              prefill: {
+                name: customerName,
+                email: customerEmail,
+                contact: customerPhone,
+              },
+              theme: {
+                color: '#22d3ee',
+              },
+              modal: {
+                ondismiss: () => {
+                  setIsLoading(false);
+                },
+              },
+              handler: async (response: RazorpayHandlerResponse) => {
+                try {
+                  const verifyResponse = await fetch('/api/razorpay/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_signature: response.razorpay_signature,
+                    }),
+                  });
+
+                  const verifyData = await verifyResponse.json();
+
+                  if (verifyResponse.ok && verifyData.success) {
+                    const purchase = verifyData.purchase ?? {};
+                    const successParams = new URLSearchParams({
+                      order_id: String(purchase.orderId ?? response.razorpay_order_id ?? ''),
+                      payment_id: String(purchase.paymentId ?? response.razorpay_payment_id ?? ''),
+                      amount: String(purchase.amount ?? infoData.amount / 100),
+                      course_title: String(purchase.courseTitle ?? course.title),
+                      student_email: String(purchase.studentEmail ?? customerEmail),
+                    });
+
+                    router.push(`/checkout/success?${successParams.toString()}`);
+                    return;
+                  }
+
+                  throw new Error('Payment verification failed. Please contact support.');
+                } catch (verifyError) {
+                  console.error('Payment verification error:', verifyError);
+                  setError(verifyError instanceof Error ? verifyError.message : 'Payment verification failed.');
+                  router.push('/payment-failed');
+                } finally {
+                  setIsLoading(false);
+                }
+              },
+            };
+
+            const razorpayWindow = window as RazorpayWindow;
+            if (!razorpayWindow.Razorpay) {
+              throw new Error('Razorpay checkout is not available. Please refresh and try again.');
+            }
+
+            const RazorpayConstructor = razorpayWindow.Razorpay;
+            const razorpay = new RazorpayConstructor(options);
+            razorpay.open();
+            return;
+          }
+
+          // User chose to cancel existing pending order: call cancel endpoint then retry
+          const cancelResp = await fetch('/api/razorpay/cancel-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId: existingOrderId }),
+          });
+
+          const cancelData = await cancelResp.json();
+          if (!cancelResp.ok) {
+            throw new Error(cancelData.error || 'Failed to cancel existing order');
+          }
+
+          // Retry creating a new order after successful cancel
+          setIsLoading(false);
+          await handlePayment();
           return;
         }
 
@@ -226,7 +324,12 @@ export function CheckoutContent() {
         },
       };
 
-      const razorpay = new razorpayWindow.Razorpay(options);
+      if (!razorpayWindow.Razorpay) {
+        throw new Error('Razorpay checkout is not available. Please refresh and try again.');
+      }
+
+      const RazorpayConstructor = razorpayWindow.Razorpay;
+      const razorpay = new RazorpayConstructor(options);
       razorpay.open();
     } catch (paymentError) {
       console.error('Payment error:', paymentError);

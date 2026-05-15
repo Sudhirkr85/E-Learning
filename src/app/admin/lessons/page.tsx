@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { LessonLink } from '@/types';
 import Link from 'next/link';
+import { courses } from '@/data/courses';
 
 export default function LessonsManagement() {
   const [lessons, setLessons] = useState<LessonLink[]>([]);
@@ -98,6 +99,11 @@ export default function LessonsManagement() {
     }
   };
 
+  const getCourseLabel = (courseId: string) => {
+    const course = courses.find((item) => item.id === courseId || item.slug === courseId);
+    return course ? course.title : courseId;
+  };
+
   if (loading) {
     return (
       <div className="py-12 container mx-auto px-4">
@@ -112,6 +118,7 @@ export default function LessonsManagement() {
         <div>
           <h1 className="text-2xl font-semibold mb-2">Lesson Links Management</h1>
           <p className="text-sm text-[rgba(255,255,255,0.7)]">Manage YouTube videos and Google Meet links for courses</p>
+          <p className="mt-1 text-xs text-[rgba(255,255,255,0.5)]">Live class schedules are managed in Admin &gt; Courses &gt; Manage Sessions.</p>
         </div>
         <Link
           href="/admin/lessons/new"
@@ -181,7 +188,8 @@ export default function LessonsManagement() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      <div>{lesson.courseId}</div>
+                      <div className="font-medium text-white">{getCourseLabel(lesson.courseId)}</div>
+                      <div className="text-xs text-[rgba(255,255,255,0.5)]">Course key: {lesson.courseId}</div>
                       {lesson.lessonId && (
                         <div className="text-xs text-[rgba(255,255,255,0.5)]">Lesson: {lesson.lessonId}</div>
                       )}

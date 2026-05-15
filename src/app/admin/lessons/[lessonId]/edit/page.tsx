@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { LessonLink } from '@/types';
 import Link from 'next/link';
+import { courses } from '@/data/courses';
 
 export default function EditLessonLink({ params }: { params: { lessonId: string } }) {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function EditLessonLink({ params }: { params: { lessonId: string 
   const [lesson, setLesson] = useState<LessonLink | null>(null);
   
   const [formData, setFormData] = useState<Partial<LessonLink>>({
-    courseId: '',
+    courseId: courses[0]?.id || '',
     lessonId: '',
     title: '',
     type: 'youtube',
@@ -208,19 +209,24 @@ export default function EditLessonLink({ params }: { params: { lessonId: string 
 
             <div>
               <label htmlFor="courseId" className="block text-sm font-medium text-gray-700">
-                Course ID *
+                Course *
               </label>
-              <input
-                type="text"
+              <select
                 id="courseId"
                 name="courseId"
                 required
-                placeholder="1"
                 value={formData.courseId}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              <p className="mt-1 text-sm text-gray-500">The ID of the course this link belongs to</p>
+              >
+                <option value="">Select a course</option>
+                {courses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.title}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-sm text-gray-500">Choose from the six static courses in src/data/courses.ts</p>
             </div>
 
             <div>

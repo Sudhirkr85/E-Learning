@@ -54,11 +54,11 @@ export async function POST(request: NextRequest) {
     const studentPhone = user.primaryPhoneNumber?.phoneNumber || user.phoneNumbers?.[0]?.phoneNumber || '';
     const amount = fallbackCourse.price;
 
-    // Check if student already purchased this course
-    const hasPurchased = await PurchaseModel.hasStudentPurchasedCourse(studentId, courseId);
-    if (hasPurchased) {
+    // If there's an existing pending purchase, tell the client so they can complete or cancel it
+    const pending = await PurchaseModel.findPendingPurchase(studentId, courseId);
+    if (pending) {
       return NextResponse.json(
-        { error: 'You have already purchased this course' },
+        { error: 'Pending purchase exists', code: 'pending_exists', orderId: pending.orderId },
         { status: 400 }
       );
     }
