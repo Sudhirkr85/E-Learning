@@ -56,6 +56,7 @@ export default function ManageSessionsPage() {
     durationMinutes: 60,
     recordingLink: '',
     notes: '',
+    active: true,
   });
 
   useEffect(() => {
@@ -164,6 +165,24 @@ export default function ManageSessionsPage() {
     }
   };
 
+  const handleToggleActive = async (sessionId: string, current: boolean) => {
+    try {
+      const response = await fetch('/api/admin/sessions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, active: !current }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error('Error toggling active state:', error);
+      alert('Failed to update session state');
+    }
+  };
+
   const handleEditSession = (session: ClassSession) => {
     setEditingSession(session);
     setSessionForm({
@@ -175,6 +194,7 @@ export default function ManageSessionsPage() {
       durationMinutes: session.durationMinutes,
       recordingLink: session.recordingLink || '',
       notes: session.notes || '',
+      active: typeof (session as any).active === 'boolean' ? (session as any).active : true,
     });
     setShowSessionForm(true);
   };
@@ -391,6 +411,17 @@ export default function ManageSessionsPage() {
                     rows={2}
                   />
                 </div>
+
+                <div className="md:col-span-2 flex items-center gap-3">
+                  <label className="text-sm font-medium text-slate-200">Active</label>
+                  <input
+                    type="checkbox"
+                    checked={sessionForm.active}
+                    onChange={(e) => setSessionForm({ ...sessionForm, active: e.target.checked })}
+                    className="w-5 h-5"
+                  />
+                  <p className="text-xs text-slate-400">When inactive, session will be hidden from students.</p>
+                </div>
               </div>
 
               <div className="flex gap-2">
@@ -421,18 +452,24 @@ export default function ManageSessionsPage() {
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEditSession(session)}
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteSession(session._id)}
-                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
-                      >
-                        Delete
-                      </button>
+                        <button
+                          onClick={() => handleEditSession(session)}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSession(session._id)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
+                        >
+                          Delete
+                        </button>
+                        <button
+                          onClick={() => handleToggleActive(session._id, (session as any).active ?? true)}
+                          className={`px-3 py-1 text-white text-sm rounded transition ${((session as any).active ?? true) ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-600 hover:bg-slate-500'}`}
+                        >
+                          {((session as any).active ?? true) ? 'Active' : 'Inactive'}
+                        </button>
                     </div>
                   </div>
 

@@ -43,17 +43,15 @@ export default function AdminCoursesPage() {
 
       {/* Analytics Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="p-4 rounded-lg glass-strong">
+        <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
           <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Courses</div>
           <div className="text-3xl font-bold mt-2">{courses.length}</div>
         </div>
-
-        <div className="p-4 rounded-lg glass-strong">
+        <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
           <div className="text-sm text-[rgba(255,255,255,0.65)]">Published</div>
           <div className="text-3xl font-bold mt-2 text-[var(--accent-emerald)]">{courses.filter(c => c.status === 'published').length}</div>
         </div>
-
-        <div className="p-4 rounded-lg glass-strong">
+        <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
           <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Students</div>
           <div className="text-3xl font-bold mt-2 text-[var(--accent-primary)]">{courses.reduce((sum, c) => sum + (c.students || 0), 0)}</div>
         </div>

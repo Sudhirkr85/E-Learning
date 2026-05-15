@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Course } from '@/types';
 import { Container, Heading, Text, Card } from '@/components/ui';
+import { useUser } from '@clerk/nextjs';
+import { checkCourseAccess } from '@/lib/course-access';
 
 interface ClassSession {
   _id: string;
@@ -34,6 +36,7 @@ export default function CourseDetailPage() {
   const [sessions, setSessions] = useState<ClassSession[]>([]);
   const [contact, setContact] = useState<CourseContact | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
   useEffect(() => {
     fetchCourseData();
@@ -48,21 +51,33 @@ export default function CourseDetailPage() {
       if (courseData.success) {
         setCourse(courseData.course);
 
-        // Fetch sessions and contact using course ID
-        const [sessionsRes, contactRes] = await Promise.all([
-          fetch(`/api/admin/sessions?courseId=${courseData.course.id}`),
-          fetch(`/api/admin/course-contact?courseId=${courseData.course.id}`),
-        ]);
-
-        const sessionsData = await sessionsRes.json();
-        const contactData = await contactRes.json();
-
-        if (sessionsData.success) {
-          setSessions(sessionsData.sessions || []);
+        // Only fetch sessions if the current user has purchased the course
+        const studentId = user?.id;
+        let hasAccess = false;
+        if (studentId) {
+          hasAccess = await checkCourseAccess(courseData.course.id, studentId);
         }
 
-        if (contactData.success && contactData.contact) {
-          setContact(contactData.contact);
+        if (hasAccess) {
+          const [sessionsRes, contactRes] = await Promise.all([
+            fetch(`/api/admin/sessions?courseId=${courseData.course.id}`),
+            fetch(`/api/admin/course-contact?courseId=${courseData.course.id}`),
+          ]);
+
+          const sessionsData = await sessionsRes.json();
+          const contactData = await contactRes.json();
+
+          if (sessionsData.success) {
+            // only show active sessions to students
+            setSessions((sessionsData.sessions || []).filter((s: any) => s.active !== false));
+          }
+
+          if (contactData.success && contactData.contact) {
+            setContact(contactData.contact);
+          }
+        } else {
+          // no access: keep sessions empty
+          setSessions([]);
         }
       }
     } catch (error) {

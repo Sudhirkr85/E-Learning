@@ -12,16 +12,16 @@ export default async function AdminLayout({
   // Each admin page that needs protection should call requireAdminAuth instead
 
   return (
-    <div className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #070821 0%, #0b1530 60%)' }}>
+    <div className="min-h-screen text-white bg-slate-900">
       <div className="flex">
         {/* Sidebar */}
         <div className="hidden md:flex md:w-64 md:flex-col">
-          <aside className="flex flex-col flex-grow pt-6 pb-4 overflow-y-auto glass-strong border-r border-[rgba(255,255,255,0.03)]">
+          <aside className="flex flex-col flex-grow pt-6 pb-4 overflow-y-auto bg-slate-850/40 border-r border-slate-800 backdrop-blur-sm">
             <div className="flex items-center flex-shrink-0 px-6 mb-6">
               <div className="w-full flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-md bg-gradient-to-br from-[rgba(6,182,212,0.12)] to-[rgba(139,92,246,0.12)] flex items-center justify-center glow-primary">
-                    <svg className="w-6 h-6 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3" />
                     </svg>
                   </div>
@@ -31,7 +31,7 @@ export default async function AdminLayout({
             </div>
 
             <nav className="px-4 space-y-1">
-              <a href="/admin/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Dashboard</a>
+              <a href="/admin/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-800">Dashboard</a>
               <a href="/admin/courses" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Courses</a>
               <a href="/admin/coupons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Coupons</a>
               <a href="/admin/lessons" className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[rgba(255,255,255,0.03)]">Lesson Links</a>

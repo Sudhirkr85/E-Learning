@@ -10,6 +10,7 @@ export interface ClassSession {
   sessionDate: string; // ISO string
   sessionTime: string; // HH:mm format (e.g., "10:30")
   durationMinutes: number; // e.g., 60
+  active?: boolean;
   recordingLink?: string;
   notes?: string;
   createdAt: Date;
@@ -39,6 +40,7 @@ export class ClassSessionModel {
     
     const session: ClassSession = {
       ...sessionData,
+      active: typeof sessionData['active'] === 'boolean' ? sessionData['active'] : true,
       createdAt: now,
       updatedAt: now,
     };

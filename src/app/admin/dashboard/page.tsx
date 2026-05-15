@@ -76,7 +76,7 @@ export default function AdminDashboard() {
     <div className="py-8">
       <div className="container mx-auto px-4">
         <div className="relative mb-8">
-          <div className="p-6 rounded-lg glass">
+          <div className="p-6 rounded-lg bg-slate-800 border border-slate-700">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-semibold">Dashboard</h2>
@@ -90,23 +90,20 @@ export default function AdminDashboard() {
         </div>
 
         {/* Analytics cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="p-4 rounded-lg glass-strong">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
             <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Courses</div>
             <div className="text-2xl font-bold mt-2">{stats.totalCourses}</div>
           </div>
-
-          <div className="p-4 rounded-lg glass-strong">
+          <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
             <div className="text-sm text-[rgba(255,255,255,0.65)]">Published Courses</div>
             <div className="text-2xl font-bold mt-2">{stats.publishedCourses}</div>
           </div>
-
-          <div className="p-4 rounded-lg glass-strong">
+          <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
             <div className="text-sm text-[rgba(255,255,255,0.65)]">Total Coupons</div>
             <div className="text-2xl font-bold mt-2">{stats.totalCoupons}</div>
           </div>
-
-          <div className="p-4 rounded-lg glass-strong">
+          <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
             <div className="text-sm text-[rgba(255,255,255,0.65)]">Active Coupons</div>
             <div className="text-2xl font-bold mt-2">{stats.activeCoupons}</div>
           </div>
@@ -115,7 +112,7 @@ export default function AdminDashboard() {
         {/* Course overview */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <div className="p-4 rounded-lg glass-strong">
+            <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Courses Overview</h3>
                 <div className="text-sm text-[rgba(255,255,255,0.7)]">Latest updated courses</div>
@@ -147,7 +144,7 @@ export default function AdminDashboard() {
           </div>
 
           <div>
-            <div className="p-4 rounded-lg glass-strong">
+            <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
               <div className="flex flex-col gap-3">
                 <a href="/admin/courses/new" className="block text-center px-3 py-2 rounded bg-[var(--accent-primary)] text-black font-semibold">New Course</a>

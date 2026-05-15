@@ -75,7 +75,7 @@ export default function LessonPage({ params }: LessonPageProps) {
       const contactData = await contactRes.json();
 
       if (sessionsData.success) {
-        setSessions(sessionsData.sessions || []);
+        setSessions((sessionsData.sessions || []).filter((s: any) => s.active !== false));
       }
 
       if (contactData.success && contactData.contact) {
