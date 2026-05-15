@@ -245,6 +245,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 - ✅ **100% TypeScript** - Full type safety
 - ✅ **Fully Responsive** - Mobile-first design with Tailwind CSS
 - ✅ **Refreshed Public Footer** - Cleaner user-side homepage footer with simpler navigation and contact details
+- ✅ **Register-First Checkout Gate** - Unauthenticated course buyers now see register/login options before payment
 - ✅ **Admin Mobile Navigation** - Drawer-based admin menu for small screens
 - ✅ **Clean Architecture** - Component-driven, modular structure
 - ✅ **India-Focused Content** - Real course data with INR pricing

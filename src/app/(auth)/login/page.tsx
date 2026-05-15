@@ -1,5 +1,5 @@
 import { Header, Footer } from '@/components/layout';
-import { Container, Heading, Text, Divider } from '@/components/ui';
+import { Container, Heading, Text } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import { SignIn } from '@clerk/nextjs';
 
@@ -8,7 +8,13 @@ export const metadata = {
   description: 'Sign in to your SSSAM Academy account',
 };
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams?: { returnTo?: string };
+}) {
+  const returnTo = searchParams?.returnTo || ROUTES.HOME;
+
   return (
     <>
       <Header />
@@ -28,15 +34,15 @@ export default function LoginPage() {
             <SignIn 
               path="/login"
               routing="path"
-              signUpUrl="/register"
-              forceRedirectUrl="/"
-              fallbackRedirectUrl="/"
+              signUpUrl={`/register?returnTo=${encodeURIComponent(returnTo)}`}
+              forceRedirectUrl={returnTo}
+              fallbackRedirectUrl={returnTo}
             />
 
             <div className="mt-6 text-center">
               <Text size="sm" color="muted">
                 Don't have an account?{' '}
-                <a href={ROUTES.REGISTER} className="text-blue-600 hover:text-blue-700 font-semibold">
+                <a href={`/register?returnTo=${encodeURIComponent(returnTo)}`} className="text-blue-600 hover:text-blue-700 font-semibold">
                   Sign up
                 </a>
               </Text>

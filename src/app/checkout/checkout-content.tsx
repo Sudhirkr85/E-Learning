@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Footer, Header } from '@/components/layout';
 import { Button, Card, Container, Divider, Heading, Text } from '@/components/ui';
@@ -43,6 +43,7 @@ type RazorpayWindow = Window & {
 export function CheckoutContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const courseParam = searchParams.get('course');
   const [course, setCourse] = useState<Course | null>(null);
@@ -51,6 +52,9 @@ export function CheckoutContent() {
   const [error, setError] = useState('');
 
   useUserSync();
+
+  const returnTo = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+  const authRedirect = encodeURIComponent(returnTo);
 
   useEffect(() => {
     let active = true;
@@ -90,6 +94,10 @@ export function CheckoutContent() {
   }, [courseParam]);
 
   useEffect(() => {
+    if (!isLoaded || !user) {
+      return;
+    }
+
     const existingScript = document.getElementById('razorpay-checkout-js');
     if (existingScript) {
       setScriptLoaded(true);
@@ -103,7 +111,7 @@ export function CheckoutContent() {
     script.onload = () => setScriptLoaded(true);
     script.onerror = () => setError('Failed to load payment gateway. Please refresh the page.');
     document.body.appendChild(script);
-  }, []);
+  }, [isLoaded, user]);
 
   const customerName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Student';
   const customerEmail = user?.primaryEmailAddress?.emailAddress || '';
@@ -252,7 +260,48 @@ export function CheckoutContent() {
                 Review your selected course and complete payment in one step.
               </Text>
 
-              {error ? (
+              {!isLoaded ? (
+                <Card className="border border-slate-800 bg-slate-900/80 p-6 md:p-8">
+                  <Heading level={3} className="mb-3 text-white">
+                    Checking your account
+                  </Heading>
+                  <Text className="text-slate-300">
+                    We are verifying whether you are signed in.
+                  </Text>
+                </Card>
+              ) : !user ? (
+                <Card className="border border-slate-800 bg-slate-900/80 p-6 md:p-8 text-center">
+                  <div className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
+                    Account Required
+                  </div>
+
+                  <Heading level={3} className="mb-3 text-white">
+                    Create an account to continue
+                  </Heading>
+                  <Text className="mb-6 text-slate-300">
+                    New students should register first. If you already have an account, sign in to continue to checkout.
+                  </Text>
+
+                  <div className="space-y-3">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      href={`${ROUTES.REGISTER}?returnTo=${authRedirect}`}
+                      className="w-full"
+                    >
+                      Register to Continue
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      href={`${ROUTES.LOGIN}?returnTo=${authRedirect}`}
+                      className="w-full border border-slate-700 text-slate-300 hover:bg-slate-800/50"
+                    >
+                      Already have an account? Sign in
+                    </Button>
+                  </div>
+                </Card>
+              ) : error ? (
                 <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                   {error}
                 </div>
@@ -327,7 +376,7 @@ export function CheckoutContent() {
                     size="lg"
                     className="w-full"
                     onClick={handlePayment}
-                    disabled={isLoading || !course || !isLoaded || !scriptLoaded}
+                    disabled={isLoading || !course || !isLoaded || !user || !scriptLoaded}
                   >
                     {isLoading ? 'Processing...' : 'Proceed to Payment'}
                   </Button>
