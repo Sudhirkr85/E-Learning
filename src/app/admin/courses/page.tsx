@@ -68,7 +68,7 @@ export default function AdminCoursesPage() {
   return (
     <div className="py-8 container mx-auto px-4">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold mb-2">Static Courses</h1>
+        <h1 className="text-2xl font-semibold mb-2"> Courses</h1>
         <p className="text-sm text-[rgba(255,255,255,0.7)]">
           Courses are managed in <span className="font-medium">src/data/courses.ts</span>. Admin can only manage sessions and view enrollments.
         </p>
@@ -76,7 +76,7 @@ export default function AdminCoursesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
-          <div className="text-sm text-[rgba(255,255,255,0.65)]">Static Courses</div>
+          <div className="text-sm text-[rgba(255,255,255,0.65)]"> Courses</div>
           <div className="text-3xl font-bold mt-2">{courses.length}</div>
         </div>
         <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
