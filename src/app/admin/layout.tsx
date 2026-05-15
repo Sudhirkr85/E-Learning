@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import LogoutButton from '@/components/LogoutButton';
 import { HeroMesh } from '@/components/ui';
+import AdminMobileNav from '@/components/layout/AdminMobileNav';
 
 export default async function AdminLayout({
   children,
@@ -47,13 +48,9 @@ export default async function AdminLayout({
             <div className="relative">
               <div className="h-20 glass flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-[rgba(255,255,255,0.04)]">
                 <div className="flex items-center gap-4">
-                  <button className="md:hidden p-2 rounded-md hover:bg-[rgba(255,255,255,0.02)]">{/* mobile menu placeholder */}
-                    <svg className="w-5 h-5 text-[var(--foreground)]" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
+                    <AdminMobileNav />
 
-                  <div className="relative w-[360px] max-w-[60vw]">
+                    <div className="relative hidden w-[360px] max-w-[60vw] sm:block">
                     <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none pl-3">
                       <svg className="h-5 w-5 text-[rgba(255,255,255,0.45)]" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
@@ -61,13 +58,13 @@ export default async function AdminLayout({
                     </div>
                     <input
                       className="block w-full pl-10 pr-3 py-2 rounded-md bg-[rgba(255,255,255,0.02)] placeholder-[rgba(255,255,255,0.35)] text-[rgba(255,255,255,0.95)] border border-[rgba(255,255,255,0.03)] focus:outline-none"
-                      placeholder="Search admin..."
+                      placeholder="Search ..."
                       type="search"
                     />
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <div className="hidden sm:block text-sm text-[rgba(255,255,255,0.75)]">Signed in as Admin</div>
                   <LogoutButton />
                 </div>
