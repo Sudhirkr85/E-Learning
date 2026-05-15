@@ -264,18 +264,20 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ### Overview
 Courses are now managed dynamically through MongoDB while maintaining a static fallback mechanism. This enables the admin panel to manage course content (pricing, batches, descriptions, etc.) and have changes immediately reflected on the website without code deployment.
 
+Admin course CRUD is disabled. The admin panel now reads the static course catalog from `src/data/courses.ts` and uses MongoDB only for purchases, sessions, recordings, and student activity.
+
 ### Course Data Flow
 
 ```
-Admin Panel (CRUD Operations)
+Admin Panel (sessions and enrollments only)
+   ↓
+Static Course Catalog (`src/data/courses.ts`)
     ↓
-MongoDB Collection (courses)
+API Endpoints (/api/admin/sessions, /api/admin/course-enrollments)
     ↓
-API Endpoints (/api/courses/*)
+Frontend Pages (read static catalog)
     ↓
-Frontend Pages (auto-fetch with fallback)
-    ↓
-Static Data (courses.ts) [Fallback Only]
+MongoDB Collections (purchases, classSessions)
 ```
 
 ### How It Works

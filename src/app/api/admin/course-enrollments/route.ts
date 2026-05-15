@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PurchaseModel } from '@/lib/models/purchase';
-import { CourseModel } from '@/lib/models/course';
+import { getCourseById } from '@/data/courses';
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,8 +24,7 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .toArray();
 
-    // Get course info
-    const course = await CourseModel.findById(courseId);
+    const course = getCourseById(courseId);
 
     return NextResponse.json({
       success: true,
@@ -37,6 +35,7 @@ export async function GET(req: NextRequest) {
         enrolledAt: e.createdAt,
         amount: e.amount,
         orderId: e.orderId,
+        paymentStatus: e.status,
       })),
       course: course ? { title: course.title, students: enrollments.length } : null,
       totalStudents: enrollments.length,

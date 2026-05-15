@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CourseContactModel } from '@/lib/models/class-session';
-import { CourseModel } from '@/lib/models/course';
+import { getCourseById } from '@/data/courses';
 
 export async function GET(req: NextRequest) {
   try {
@@ -41,8 +41,7 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // Verify course exists
-    const course = await CourseModel.findById(courseId);
+    const course = getCourseById(courseId);
     if (!course) {
       return NextResponse.json({
         success: false,

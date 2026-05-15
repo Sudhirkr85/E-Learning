@@ -135,6 +135,7 @@ export default function ManageSessionsPage() {
           durationMinutes: 60,
           recordingLink: '',
           notes: '',
+          active: true,
         });
         setEditingSession(null);
         setShowSessionForm(false);
@@ -301,6 +302,7 @@ export default function ManageSessionsPage() {
                   durationMinutes: 60,
                   recordingLink: '',
                   notes: '',
+                  active: true,
                 });
                 setShowSessionForm(!showSessionForm);
               }}

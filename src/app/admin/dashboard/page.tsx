@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Course, Coupon } from '@/types';
 import { HeroMesh } from '@/components/ui';
+import { courses as staticCourses } from '@/data/courses';
 
 interface DashboardStats {
   totalCourses: number;
@@ -27,14 +28,11 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const coursesResponse = await fetch('/api/admin/courses');
-      const coursesData = await coursesResponse.json();
-
       const couponsResponse = await fetch('/api/admin/coupons');
       const couponsData = await couponsResponse.json();
 
-      if (coursesData.success && couponsData.success) {
-        const courses = coursesData.courses || [];
+      if (couponsData.success) {
+        const courses = staticCourses;
         const coupons = couponsData.coupons || [];
 
         setStats({
@@ -134,7 +132,6 @@ export default function AdminDashboard() {
                       <div className="mt-2 flex items-center gap-2">
                         <a href={`/admin/courses/${course.id}/sessions`} className="px-3 py-1 rounded bg-[rgba(6,182,212,0.12)] text-[var(--accent-primary)] text-sm">Manage Sessions</a>
                         <a href={`/admin/courses/${course.id}/enrollments`} className="px-3 py-1 rounded bg-[rgba(139,92,246,0.08)] text-[var(--accent-secondary)] text-sm">View Enrollments</a>
-                        <a href={`/admin/courses/${course.id}`} className="px-3 py-1 rounded bg-[rgba(255,255,255,0.03)] text-sm">Edit</a>
                       </div>
                     </div>
                   </div>
@@ -147,7 +144,6 @@ export default function AdminDashboard() {
             <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
               <div className="flex flex-col gap-3">
-                <a href="/admin/courses/new" className="block text-center px-3 py-2 rounded bg-[var(--accent-primary)] text-black font-semibold">New Course</a>
                 <a href="/admin/coupons/new" className="block text-center px-3 py-2 rounded bg-[var(--accent-secondary)] text-white">New Coupon</a>
                 <a href="/admin/lessons/new" className="block text-center px-3 py-2 rounded bg-[rgba(255,255,255,0.03)] text-white">New Lesson Link</a>
               </div>

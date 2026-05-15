@@ -10,6 +10,7 @@ interface Enrollment {
   enrolledAt: string;
   amount: number;
   orderId: string;
+  paymentStatus?: string;
 }
 
 export default function ViewEnrollmentsPage() {
@@ -114,6 +115,7 @@ export default function ViewEnrollmentsPage() {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Email</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Phone</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Amount</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Status</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Enrolled</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Order ID</th>
                 </tr>
@@ -136,6 +138,11 @@ export default function ViewEnrollmentsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="font-semibold text-[var(--accent-emerald)]">₹{enrollment.amount}</span>
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+                        {enrollment.paymentStatus || 'completed'}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-[rgba(255,255,255,0.75)]">
                       {new Date(enrollment.enrolledAt).toLocaleDateString('en-IN', {
