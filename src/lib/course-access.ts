@@ -1,6 +1,6 @@
 export async function checkCourseAccess(courseId: string, studentId: string): Promise<boolean> {
   try {
-    const response = await fetch(`/api/courses/${courseId}/access?studentId=${studentId}`);
+    const response = await fetch(`/api/courses/access?courseId=${encodeURIComponent(courseId)}&studentId=${encodeURIComponent(studentId)}`);
     
     if (!response.ok) {
       return false;

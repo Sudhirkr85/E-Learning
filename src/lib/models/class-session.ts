@@ -6,25 +6,9 @@ export interface ClassSession {
   courseId: string;
   googleMeetLink: string;
   sessionTitle: string;
-  description?: string;
-  sessionDate: string; // ISO string
+  sessionDate: string; // ISO string or YYYY-MM-DD
   sessionTime: string; // HH:mm format (e.g., "10:30")
-  durationMinutes: number; // e.g., 60
   active?: boolean;
-  recordingLink?: string;
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CourseContact {
-  _id?: ObjectId;
-  courseId: string;
-  supportEmail: string;
-  supportPhone: string;
-  instructorName: string;
-  instructorEmail?: string;
-  officeHours?: string; // e.g., "Monday-Friday 9AM-6PM IST"
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,7 +36,7 @@ export class ClassSessionModel {
   static async findByCourseId(courseId: string): Promise<ClassSession[]> {
     const collection = await this.getCollection();
     const sessions = await collection
-      .find({ courseId })
+      .find({ courseId } as any)
       .sort({ sessionDate: 1, sessionTime: 1 })
       .toArray();
     return sessions;
@@ -115,61 +99,5 @@ export class ClassSessionModel {
     } catch (error) {
       return null;
     }
-  }
-}
-
-export class CourseContactModel {
-  private static getCollection() {
-    return getDatabase().then(db => db.collection<CourseContact>('courseContacts'));
-  }
-
-  static async createOrUpdate(contactData: Omit<CourseContact, '_id' | 'createdAt' | 'updatedAt'>): Promise<CourseContact> {
-    const collection = await this.getCollection();
-    const now = new Date();
-    
-    const existing = await collection.findOne({ courseId: contactData.courseId });
-    
-    if (existing) {
-      await collection.updateOne(
-        { courseId: contactData.courseId },
-        {
-          $set: {
-            ...contactData,
-            updatedAt: now,
-          }
-        }
-      );
-      return { ...existing, ...contactData, updatedAt: now };
-    }
-
-    const contact: CourseContact = {
-      ...contactData,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    const result = await collection.insertOne(contact);
-    return { ...contact, _id: result.insertedId };
-  }
-
-  static async findByCourseId(courseId: string): Promise<CourseContact | null> {
-    const collection = await this.getCollection();
-    return await collection.findOne({ courseId });
-  }
-
-  static async updateByCourseId(courseId: string, updateData: Partial<Omit<CourseContact, '_id' | 'createdAt'>>): Promise<boolean> {
-    const collection = await this.getCollection();
-    
-    const result = await collection.updateOne(
-      { courseId },
-      {
-        $set: {
-          ...updateData,
-          updatedAt: new Date(),
-        }
-      }
-    );
-    
-    return result.modifiedCount > 0 || result.upsertedCount > 0;
   }
 }

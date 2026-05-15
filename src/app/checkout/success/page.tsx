@@ -4,7 +4,17 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Divider, Card } from '@/components/ui';
-import { ROUTES } from '@/constants';
+import { ROUTES, SITE_CONFIG } from '@/constants';
+import { Course } from '@/types';
+
+interface NextSession {
+  _id: string;
+  sessionTitle: string;
+  sessionDate: string;
+  sessionTime: string;
+  googleMeetLink: string;
+  active?: boolean;
+}
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -16,6 +26,8 @@ function PaymentSuccessContent() {
     courseSlug: '',
     studentEmail: '',
   });
+  const [course, setCourse] = useState<Course | null>(null);
+  const [nextSession, setNextSession] = useState<NextSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +46,49 @@ function PaymentSuccessContent() {
       courseSlug,
       studentEmail,
     });
-    setIsLoading(false);
+
+    const fetchSessionDetails = async () => {
+      if (!courseSlug) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const courseRes = await fetch(`/api/courses/${courseSlug}`);
+        const courseData = await courseRes.json();
+
+        if (courseData.success) {
+          setCourse(courseData.course);
+          const sessionsRes = await fetch(
+            `/api/admin/sessions?courseId=${encodeURIComponent(courseData.course.id)}`
+          );
+          const sessionsData = await sessionsRes.json();
+
+          if (sessionsData.success) {
+            const activeSessions = (sessionsData.sessions || [])
+              .filter((session: NextSession) => session.active !== false)
+              .map((session: NextSession) => ({
+                ...session,
+                dateTime: new Date(`${session.sessionDate}T${session.sessionTime}`),
+              }))
+              .sort((a: any, b: any) => a.dateTime.getTime() - b.dateTime.getTime());
+
+            const upcoming = activeSessions.find((session: any) => session.dateTime >= new Date());
+            if (upcoming) {
+              setNextSession(upcoming);
+            } else if (activeSessions.length > 0) {
+              setNextSession(activeSessions[0]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading course/session details:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSessionDetails();
   }, [searchParams]);
   if (isLoading) {
     return (
@@ -109,6 +163,53 @@ function PaymentSuccessContent() {
                   : 'You can now access the course content from your dashboard.'}
               </Text>
 
+              {purchaseData.courseSlug && (
+                <Card className="mb-6 border border-slate-800 bg-slate-950/80 p-4 text-left">
+                  <Text size="sm" className="text-slate-400 mb-2">
+                    Next live session details for {course?.title || purchaseData.courseTitle}
+                  </Text>
+                  {nextSession ? (
+                    <div className="space-y-3">
+                      <div>
+                        <Text className="text-slate-400 text-xs">Session</Text>
+                        <Text className="font-semibold text-white">{nextSession.sessionTitle}</Text>
+                      </div>
+                      <div>
+                        <Text className="text-slate-400 text-xs">Start Date</Text>
+                        <Text className="font-semibold text-white">{new Date(`${nextSession.sessionDate}T${nextSession.sessionTime}`).toLocaleDateString('en-IN', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })}</Text>
+                      </div>
+                      <div>
+                        <Text className="text-slate-400 text-xs">Start Time</Text>
+                        <Text className="font-semibold text-white">{nextSession.sessionTime}</Text>
+                      </div>
+                      {nextSession.googleMeetLink ? (
+                        <a
+                          href={nextSession.googleMeetLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                        >
+                          Open live class link
+                        </a>
+                      ) : (
+                        <Text size="sm" className="text-slate-400">
+                          Live class link will be provided before the batch starts.
+                        </Text>
+                      )}
+                    </div>
+                  ) : (
+                    <Text size="sm" className="text-slate-400">
+                      Course sessions are being scheduled. The batch start date and link will appear here once the admin sets them.
+                    </Text>
+                  )}
+                </Card>
+              )}
+
               <div className="space-y-3">
                 {purchaseData.courseSlug && (
                   <Button 
@@ -130,8 +231,8 @@ function PaymentSuccessContent() {
               <div className="mt-6 text-sm text-slate-300">
                 <Text className="block mb-1">Need help? Contact our support:</Text>
                 <div className="flex flex-col gap-1 items-center">
-                  <a href={`mailto:info@sssamacadmy.com`} className="text-blue-400 hover:underline">info@sssamacadmy.com</a>
-                  <a href={`tel:+919217031899`} className="text-blue-400 hover:underline">9217031899</a>
+                  <a href={`mailto:${SITE_CONFIG.email}`} className="text-blue-400 hover:underline">{SITE_CONFIG.email}</a>
+                  <a href={`tel:${SITE_CONFIG.phone}`} className="text-blue-400 hover:underline">{SITE_CONFIG.phone}</a>
                 </div>
               </div>
             </Card>

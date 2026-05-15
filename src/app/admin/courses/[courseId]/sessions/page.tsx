@@ -12,56 +12,34 @@ import {
   Input,
 } from '@/components/ui';
 import { courses } from '@/data/courses';
+
 interface ClassSession {
   _id: string;
   courseId: string;
-  active?: boolean;
   googleMeetLink: string;
   sessionTitle: string;
-  description?: string;
   sessionDate: string;
   sessionTime: string;
-  durationMinutes: number;
-  recordingLink?: string;
-  notes?: string;
-}
-
-interface CourseContact {
-  supportEmail: string;
-  supportPhone: string;
-  instructorName: string;
-  instructorEmail?: string;
-  officeHours?: string;
+  active?: boolean;
 }
 
 export default function ManageSessionsPage() {
   const params = useParams();
   const router = useRouter();
   const courseId = params.courseId as string;
-  const currentCourse = courses.find((course) => course.id === courseId) || courses[0];
+  const selectedCourse = courses.find((course) => course.id === courseId);
+  const currentCourse = selectedCourse || courses[0];
 
   const [sessions, setSessions] = useState<ClassSession[]>([]);
-  const [contact, setContact] = useState<CourseContact>({
-    supportEmail: '',
-    supportPhone: '',
-    instructorName: '',
-    instructorEmail: '',
-    officeHours: '',
-  });
   const [loading, setLoading] = useState(true);
   const [showSessionForm, setShowSessionForm] = useState(false);
   const [editingSession, setEditingSession] = useState<ClassSession | null>(null);
 
   const [sessionForm, setSessionForm] = useState({
-    courseId: currentCourse?.id || courseId,
     sessionTitle: '',
-    description: '',
     googleMeetLink: '',
     sessionDate: '',
     sessionTime: '',
-    durationMinutes: 60,
-    recordingLink: '',
-    notes: '',
     active: true,
   });
 
@@ -69,59 +47,47 @@ export default function ManageSessionsPage() {
     fetchData();
   }, [courseId]);
 
+  useEffect(() => {
+    if (!selectedCourse && courseId) {
+      router.replace(`/admin/courses/${currentCourse.id}/sessions`);
+    }
+  }, [courseId, selectedCourse, currentCourse.id, router]);
+
   const fetchData = async () => {
     try {
-      const [sessionsRes, contactRes] = await Promise.all([
-        fetch(`/api/admin/sessions?courseId=${courseId}`),
-        fetch(`/api/admin/course-contact?courseId=${courseId}`),
-      ]);
-
+      const sessionsRes = await fetch(`/api/admin/sessions?courseId=${encodeURIComponent(currentCourse.id)}`);
       const sessionsData = await sessionsRes.json();
-      const contactData = await contactRes.json();
 
       if (sessionsData.success) {
         setSessions(sessionsData.sessions || []);
       }
-
-      if (contactData.success && contactData.contact) {
-        setContact(contactData.contact);
-      }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching sessions:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSaveContact = async () => {
-    try {
-      const response = await fetch('/api/admin/course-contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId, ...contact }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        alert('Contact information saved successfully!');
-      }
-    } catch (error) {
-      console.error('Error saving contact:', error);
-      alert('Failed to save contact information');
-    }
-  };
-
   const handleAddSession = async () => {
-    if (!sessionForm.courseId || !sessionForm.sessionTitle || !sessionForm.googleMeetLink || !sessionForm.sessionDate || !sessionForm.sessionTime) {
+    if (!sessionForm.sessionTitle || !sessionForm.googleMeetLink || !sessionForm.sessionDate || !sessionForm.sessionTime) {
       alert('Please fill in all required fields');
       return;
     }
 
     try {
+      const payload = {
+        courseId: currentCourse.id,
+        googleMeetLink: sessionForm.googleMeetLink,
+        sessionTitle: sessionForm.sessionTitle,
+        sessionDate: sessionForm.sessionDate,
+        sessionTime: sessionForm.sessionTime,
+        active: sessionForm.active,
+      };
+
       const method = editingSession ? 'PUT' : 'POST';
       const body = editingSession
-        ? { sessionId: editingSession._id, ...sessionForm }
-        : { ...sessionForm };
+        ? { sessionId: editingSession._id, ...payload }
+        : payload;
 
       const response = await fetch('/api/admin/sessions', {
         method,
@@ -132,21 +98,11 @@ export default function ManageSessionsPage() {
       const data = await response.json();
       if (data.success) {
         alert(editingSession ? 'Session updated!' : 'Session created!');
-        const selectedCourseId = sessionForm.courseId;
-        if (selectedCourseId !== courseId) {
-          router.push(`/admin/courses/${selectedCourseId}/sessions`);
-          return;
-        }
         setSessionForm({
-          courseId,
           sessionTitle: '',
-          description: '',
           googleMeetLink: '',
           sessionDate: '',
           sessionTime: '',
-          durationMinutes: 60,
-          recordingLink: '',
-          notes: '',
           active: true,
         });
         setEditingSession(null);
@@ -198,16 +154,12 @@ export default function ManageSessionsPage() {
 
   const handleEditSession = (session: ClassSession) => {
     setEditingSession(session);
+
     setSessionForm({
-      courseId: session.courseId || courseId,
       sessionTitle: session.sessionTitle,
-      description: session.description || '',
       googleMeetLink: session.googleMeetLink,
       sessionDate: session.sessionDate.split('T')[0],
       sessionTime: session.sessionTime,
-      durationMinutes: session.durationMinutes,
-      recordingLink: session.recordingLink || '',
-      notes: session.notes || '',
       active: typeof session.active === 'boolean' ? session.active : true,
     });
     setShowSessionForm(true);
@@ -226,84 +178,29 @@ export default function ManageSessionsPage() {
   return (
     <Container>
       <div className="py-12">
-        <Heading className="mb-8">Manage Course Sessions & Support</Heading>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+          <Heading>Manage Live Class Sessions</Heading>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <label className="text-sm font-medium text-slate-200">Select course</label>
+            <select
+              value={currentCourse.id}
+              onChange={(e) => router.push(`/admin/courses/${e.target.value}/sessions`)}
+              className="rounded-lg bg-slate-900 border border-slate-700 text-slate-100 px-3 py-2"
+            >
+              {courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.id} - {course.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         <Card className="p-4 mb-8 border-slate-700 bg-slate-800/80">
           <p className="text-sm text-slate-300">
-            Working course: <span className="font-semibold text-white">{currentCourse?.title || 'Select a course'}</span>
+            Course: <span className="font-semibold text-white">{currentCourse?.title || 'Select a course'}</span>
           </p>
-          <p className="text-xs text-slate-400 mt-1">The dropdown uses the six static courses from src/data/courses.ts.</p>
-        </Card>
-
-        {/* Contact Information Section */}
-        <Card className="p-6 mb-8">
-          <h3 className="text-xl font-bold text-white mb-6">Support Contact Information</h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-slate-200 mb-2">
-                Instructor Name *
-              </label>
-              <Input
-                type="text"
-                value={contact.instructorName}
-                onChange={(e) => setContact({ ...contact, instructorName: e.target.value })}
-                placeholder="e.g., John Smith"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-200 mb-2">
-                Support Email *
-              </label>
-              <Input
-                type="email"
-                value={contact.supportEmail}
-                onChange={(e) => setContact({ ...contact, supportEmail: e.target.value })}
-                placeholder="support@example.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-200 mb-2">
-                Support Phone *
-              </label>
-              <Input
-                type="tel"
-                value={contact.supportPhone}
-                onChange={(e) => setContact({ ...contact, supportPhone: e.target.value })}
-                placeholder="+91 XXXXX XXXXX"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-200 mb-2">
-                Instructor Email
-              </label>
-              <Input
-                type="email"
-                value={contact.instructorEmail || ''}
-                onChange={(e) => setContact({ ...contact, instructorEmail: e.target.value })}
-                placeholder="instructor@example.com"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-200 mb-2">
-                Office Hours
-              </label>
-              <Input
-                type="text"
-                value={contact.officeHours || ''}
-                onChange={(e) => setContact({ ...contact, officeHours: e.target.value })}
-                placeholder="e.g., Monday-Friday 9AM-6PM IST"
-              />
-            </div>
-          </div>
-
-          <Button onClick={handleSaveContact} className="bg-green-600 hover:bg-green-700">
-            Save Contact Information
-          </Button>
+          <p className="text-xs text-slate-400 mt-1">Sessions are stored by course ID from src/data/courses.ts</p>
         </Card>
 
         {/* Sessions Section */}
@@ -314,15 +211,10 @@ export default function ManageSessionsPage() {
               onClick={() => {
                 setEditingSession(null);
                 setSessionForm({
-                  courseId,
                   sessionTitle: '',
-                  description: '',
                   googleMeetLink: '',
                   sessionDate: '',
                   sessionTime: '',
-                  durationMinutes: 60,
-                  recordingLink: '',
-                  notes: '',
                   active: true,
                 });
                 setShowSessionForm(!showSessionForm);
@@ -341,23 +233,11 @@ export default function ManageSessionsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Course *
-                  </label>
-                  <select
-                    value={sessionForm.courseId}
-                    onChange={(e) => setSessionForm({ ...sessionForm, courseId: e.target.value })}
-                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-blue-500"
-                  >
-                    {courses.map((course) => (
-                      <option key={course.id} value={course.id}>
-                        {course.title}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="mt-1 text-xs text-slate-400">Choose one of the static course entries. The session will be saved against the selected course.</p>
+                  <p className="text-sm text-slate-300 mb-2">
+                    Course: <span className="font-semibold text-white">{currentCourse.title}</span>
+                  </p>
+                  <p className="text-xs text-slate-400">This session will be saved for the current course only.</p>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-slate-200 mb-2">
                     Session Title *
@@ -404,54 +284,6 @@ export default function ManageSessionsPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Duration (minutes)
-                  </label>
-                  <Input
-                    type="number"
-                    value={sessionForm.durationMinutes}
-                    onChange={(e) => setSessionForm({ ...sessionForm, durationMinutes: parseInt(e.target.value) })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Recording Link (optional)
-                  </label>
-                  <Input
-                    type="url"
-                    value={sessionForm.recordingLink}
-                    onChange={(e) => setSessionForm({ ...sessionForm, recordingLink: e.target.value })}
-                    placeholder="https://..."
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={sessionForm.description}
-                    onChange={(e) => setSessionForm({ ...sessionForm, description: e.target.value })}
-                    placeholder="Session details..."
-                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-                    rows={3}
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Notes
-                  </label>
-                  <textarea
-                    value={sessionForm.notes}
-                    onChange={(e) => setSessionForm({ ...sessionForm, notes: e.target.value })}
-                    placeholder="Additional notes..."
-                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-                    rows={2}
-                  />
-                </div>
 
                 <div className="md:col-span-2 flex items-center gap-3">
                   <label className="text-sm font-medium text-slate-200">Active</label>
@@ -488,9 +320,6 @@ export default function ManageSessionsPage() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h4 className="font-bold text-white">{session.sessionTitle}</h4>
-                      {session.description && (
-                        <p className="text-sm text-slate-300 mt-1">{session.description}</p>
-                      )}
                     </div>
                     <div className="flex gap-2">
                         <button
@@ -514,7 +343,7 @@ export default function ManageSessionsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                     <div>
                       <span className="text-slate-400">Date:</span>
                       <p className="text-white font-medium">
@@ -524,10 +353,6 @@ export default function ManageSessionsPage() {
                     <div>
                       <span className="text-slate-400">Time:</span>
                       <p className="text-white font-medium">{session.sessionTime}</p>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Duration:</span>
-                      <p className="text-white font-medium">{session.durationMinutes} min</p>
                     </div>
                     <div>
                       <span className="text-slate-400">Meet Link:</span>
@@ -542,23 +367,6 @@ export default function ManageSessionsPage() {
                     </div>
                   </div>
 
-                  {session.recordingLink && (
-                    <div className="mt-3 pt-3 border-t border-slate-600">
-                      <a
-                        href={session.recordingLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-purple-400 hover:text-purple-300 text-sm"
-                      >
-                        📹 View Recording
-                      </a>
-                    </div>
-                  )}
-                  {!session.recordingLink && (
-                    <div className="mt-3 pt-3 border-t border-slate-600 text-sm text-slate-300">
-                      Recording not added yet. Please contact support.
-                    </div>
-                  )}
                 </div>
               ))
             )}

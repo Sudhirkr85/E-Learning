@@ -11,21 +11,10 @@ import { checkCourseAccess } from '@/lib/course-access';
 interface ClassSession {
   _id: string;
   sessionTitle: string;
-  description?: string;
   sessionDate: string;
   sessionTime: string;
-  durationMinutes: number;
   googleMeetLink: string;
-  recordingLink?: string;
-  notes?: string;
-}
-
-interface CourseContact {
-  supportEmail: string;
-  supportPhone: string;
-  instructorName: string;
-  instructorEmail?: string;
-  officeHours?: string;
+  active?: boolean;
 }
 
 const isPlaceholderVideoUrl = (url: string) => url.includes('dQw4w9WgXcQ');
@@ -57,7 +46,6 @@ export default function CourseDetailPage() {
 
   const [course, setCourse] = useState<Course | null>(null);
   const [sessions, setSessions] = useState<ClassSession[]>([]);
-  const [contact, setContact] = useState<CourseContact | null>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
@@ -82,21 +70,12 @@ export default function CourseDetailPage() {
         }
 
         if (hasAccess) {
-          const [sessionsRes, contactRes] = await Promise.all([
-            fetch(`/api/admin/sessions?courseId=${courseData.course.id}`),
-            fetch(`/api/admin/course-contact?courseId=${courseData.course.id}`),
-          ]);
-
+          const sessionsRes = await fetch(`/api/admin/sessions?courseId=${encodeURIComponent(courseData.course.id)}`);
           const sessionsData = await sessionsRes.json();
-          const contactData = await contactRes.json();
 
           if (sessionsData.success) {
             // only show active sessions to students
             setSessions((sessionsData.sessions || []).filter((s: any) => s.active !== false));
-          }
-
-          if (contactData.success && contactData.contact) {
-            setContact(contactData.contact);
           }
         } else {
           // no access: keep sessions empty
@@ -174,7 +153,6 @@ export default function CourseDetailPage() {
                     const sessionDate = new Date(session.sessionDate);
                     const isUpcoming = sessionDate > new Date();
                     const liveClassLink = normalizeExternalUrl(session.googleMeetLink);
-                    const recordingLink = normalizeExternalUrl(session.recordingLink);
 
                     return (
                       <div
@@ -190,9 +168,6 @@ export default function CourseDetailPage() {
                             <h4 className="font-bold text-white text-lg">
                               {index + 1}. {session.sessionTitle}
                             </h4>
-                            {session.description && (
-                              <p className="text-sm text-slate-300 mt-1">{session.description}</p>
-                            )}
                           </div>
                           {isUpcoming && (
                             <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded">
@@ -201,7 +176,7 @@ export default function CourseDetailPage() {
                           )}
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 text-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 text-sm">
                           <div>
                             <span className="text-slate-400">Date:</span>
                             <p className="font-semibold text-white">
@@ -216,16 +191,6 @@ export default function CourseDetailPage() {
                           <div>
                             <span className="text-slate-400">Time:</span>
                             <p className="font-semibold text-white">{session.sessionTime}</p>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Duration:</span>
-                            <p className="font-semibold text-white">{session.durationMinutes} min</p>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">Status:</span>
-                            <p className="font-semibold text-white">
-                              {isUpcoming ? '🔴 Live' : '✅ Completed'}
-                            </p>
                           </div>
                         </div>
 
@@ -244,36 +209,9 @@ export default function CourseDetailPage() {
                               Live class link will appear here once scheduled.
                             </div>
                           )}
-
-                          {recordingLink && (
-                            <a
-                              href={recordingLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-semibold transition inline-flex items-center gap-2"
-                            >
-                              📹 View Recording
-                            </a>
-                          )}
                         </div>
 
-                        {!recordingLink && (
-                          <div className="mt-4 rounded-lg border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">
-                            <p className="font-semibold text-white">Video not added yet.</p>
-                            <p className="mt-1 text-slate-400">
-                              Please contact support{contact?.supportEmail ? ` at ${contact.supportEmail}` : ''}.
-                            </p>
-                          </div>
-                        )}
 
-                        {session.notes && (
-                          <div className="mt-4 p-3 bg-slate-700 rounded border-l-4 border-blue-400">
-                            <p className="text-sm text-slate-300">
-                              <span className="font-semibold text-blue-400">Note: </span>
-                              {session.notes}
-                            </p>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
@@ -282,57 +220,13 @@ export default function CourseDetailPage() {
             </Card>
 
             {sessions.length > 0 && (
-              <Card className="p-8 mb-8 border border-cyan-500/20 bg-slate-900/70">
+              <Card className="p-4 mb-8 border border-cyan-500/20 bg-slate-900/70">
                 <Heading className="text-2xl mb-4 flex items-center gap-2">
-                  🔗 Live Class Link
+                  🔗 Live Class Links
                 </Heading>
-                <p className="text-sm text-slate-400 mb-6">
-                  Admin added live class links appear here for quick access.
+                <p className="text-sm text-slate-400">
+                  All active class sessions are shown in the schedule above, with a live join button.
                 </p>
-
-                <div className="space-y-4">
-                  {sessions
-                    .map((session) => ({
-                      ...session,
-                      liveClassLink: normalizeExternalUrl(session.googleMeetLink),
-                    }))
-                    .filter((session) => session.liveClassLink)
-                    .map((session) => (
-                      <div
-                        key={`${session._id}-live-link`}
-                        className="rounded-lg border border-slate-700 bg-slate-800/80 p-4"
-                      >
-                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                          <div>
-                            <h4 className="font-semibold text-white">{session.sessionTitle}</h4>
-                            <p className="mt-1 text-sm text-slate-400">
-                              Date: {new Date(session.sessionDate).toLocaleDateString('en-IN', {
-                                weekday: 'short',
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              })} | Time: {session.sessionTime}
-                            </p>
-                          </div>
-
-                          <a
-                            href={session.liveClassLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-md bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                          >
-                            Open Live Class
-                          </a>
-                        </div>
-                      </div>
-                    ))}
-
-                  {sessions.every((session) => !normalizeExternalUrl(session.googleMeetLink)) && (
-                    <div className="rounded-lg border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">
-                      No live class link has been added yet.
-                    </div>
-                  )}
-                </div>
               </Card>
             )}
 
@@ -404,77 +298,7 @@ export default function CourseDetailPage() {
             )}
           </div>
 
-          {/* Sidebar - Support Info */}
           <div className="lg:col-span-1">
-            {/* Support Card */}
-            <Card className="p-6 mb-6 sticky top-4">
-              <Heading className="text-xl mb-4 flex items-center gap-2">
-                💬 Support
-              </Heading>
-
-              {contact ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-slate-800 rounded">
-                    <p className="text-xs text-slate-400 mb-1">Instructor</p>
-                    <p className="font-semibold text-white">{contact.instructorName}</p>
-                    {contact.instructorEmail && (
-                      <a
-                        href={`mailto:${contact.instructorEmail}`}
-                        className="text-sm text-blue-400 hover:text-blue-300 block mt-1"
-                      >
-                        {contact.instructorEmail}
-                      </a>
-                    )}
-                  </div>
-
-                  <div className="p-4 bg-slate-800 rounded">
-                    <p className="text-xs text-slate-400 mb-1">Support Email</p>
-                    <a
-                      href={`mailto:${contact.supportEmail}`}
-                      className="font-semibold text-blue-400 hover:text-blue-300 break-all"
-                    >
-                      {contact.supportEmail}
-                    </a>
-                  </div>
-
-                  <div className="p-4 bg-slate-800 rounded">
-                    <p className="text-xs text-slate-400 mb-1">Support Phone</p>
-                    <a
-                      href={`tel:${contact.supportPhone}`}
-                      className="font-semibold text-blue-400 hover:text-blue-300"
-                    >
-                      {contact.supportPhone}
-                    </a>
-                  </div>
-
-                  {contact.officeHours && (
-                    <div className="p-4 bg-slate-800 rounded">
-                      <p className="text-xs text-slate-400 mb-1">Office Hours</p>
-                      <p className="text-sm text-white">{contact.officeHours}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-3">
-                    <div className="p-4 bg-slate-800 rounded">
-                      <p className="text-xs text-slate-400 mb-1">Support Email</p>
-                      <a
-                        href={`mailto:info@sssamacadmy.com`}
-                        className="font-semibold text-blue-400 hover:text-blue-300 break-words whitespace-normal"
-                      >
-                        info@sssamacadmy.com
-                      </a>
-                    </div>
-
-                    <div className="p-4 bg-slate-800 rounded">
-                      <p className="text-xs text-slate-400 mb-1">Support Phone</p>
-                      <a href={`tel:+919217031899`} className="font-semibold text-blue-400 hover:text-blue-300">+91 9217031899</a>
-                    </div>
-                </div>
-              )}
-            </Card>
-
-            {/* Course Info Card */}
             <Card className="p-6">
               <Heading className="text-lg mb-4">📊 Course Info</Heading>
 

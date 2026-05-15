@@ -226,7 +226,7 @@ export default function EditLessonLink({ params }: { params: { lessonId: string 
                   </option>
                 ))}
               </select>
-              <p className="mt-1 text-sm text-gray-500">Choose from the six static courses in src/data/courses.ts</p>
+              <p className="mt-1 text-sm text-gray-500">Choose from the available courses</p>
             </div>
 
             <div>
@@ -234,7 +234,7 @@ export default function EditLessonLink({ params }: { params: { lessonId: string 
                 Lesson ID
               </label>
               <input
-                type="text"
+                tyto pe="text"
                 id="lessonId"
                 name="lessonId"
                 placeholder="1"

@@ -28,10 +28,7 @@ export async function GET(req: NextRequest) {
     const courseId = req.nextUrl.searchParams.get('courseId');
 
     if (!courseId) {
-      return NextResponse.json({
-        success: false,
-        message: 'Course ID is required',
-      }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'courseId is required' }, { status: 400 });
     }
 
     const sessions = await ClassSessionModel.findByCourseId(courseId);
@@ -52,12 +49,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { courseId, googleMeetLink, sessionTitle, description, sessionDate, sessionTime, durationMinutes, recordingLink, notes } = body;
+    const { courseId: bodyCourseId, googleMeetLink, sessionTitle, sessionDate, sessionTime, active } = body;
     const normalizedGoogleMeetLink = normalizeExternalUrl(googleMeetLink);
-    const normalizedRecordingLink = normalizeExternalUrl(recordingLink);
 
     // Validate required fields
-    if (!courseId || !normalizedGoogleMeetLink || !sessionTitle || !sessionDate || !sessionTime || !durationMinutes) {
+    if (!bodyCourseId || !normalizedGoogleMeetLink || !sessionTitle || !sessionDate || !sessionTime) {
       return NextResponse.json({
         success: false,
         message: 'Missing required fields',
@@ -65,7 +61,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify course exists
-    const course = getCourseById(courseId);
+    const course = getCourseById(bodyCourseId);
     if (!course) {
       return NextResponse.json({
         success: false,
@@ -74,15 +70,12 @@ export async function POST(req: NextRequest) {
     }
 
     const session = await ClassSessionModel.createSession({
-      courseId,
+      courseId: bodyCourseId,
       googleMeetLink: normalizedGoogleMeetLink,
       sessionTitle,
-      description,
       sessionDate,
       sessionTime,
-      durationMinutes,
-      recordingLink: normalizedRecordingLink,
-      notes,
+      active: typeof active === 'boolean' ? active : true,
     });
 
     return NextResponse.json({
@@ -114,8 +107,14 @@ export async function PUT(req: NextRequest) {
     const normalizedUpdateData = {
       ...updateData,
       ...(updateData.googleMeetLink ? { googleMeetLink: normalizeExternalUrl(updateData.googleMeetLink) } : {}),
-      ...(updateData.recordingLink ? { recordingLink: normalizeExternalUrl(updateData.recordingLink) } : {}),
     };
+
+    if (updateData.courseId) {
+      const course = getCourseById(updateData.courseId);
+      if (!course) {
+        return NextResponse.json({ success: false, message: 'Course not found' }, { status: 404 });
+      }
+    }
 
     const success = await ClassSessionModel.updateSession(sessionId, normalizedUpdateData);
 

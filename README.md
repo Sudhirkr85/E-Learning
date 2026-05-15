@@ -4,6 +4,11 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 🚀 **Status**: Production-ready | ✅ India-focused content | 📱 Fully responsive | 🔒 Type-safe | 💳 UPI/Razorpay ready
 
+## 🛠️ Recent Updates
+
+- Admin session management now supports selecting any course from `src/data/courses.ts` and setting a live session start date, time, and meeting link per course.
+- Checkout success page now shows the next scheduled live session details and static support contact info after purchase.
+
 ## 🎯 Quick Start
 
 ```bash
