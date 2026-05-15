@@ -7,6 +7,7 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 ## 🛠️ Recent Updates
 
 - Admin session management now supports selecting any course from `src/data/courses.ts` and setting a live session start date, time, and meeting link per course.
+- Fixed module alias resolution for `@/data/courses` by adding `baseUrl` to `tsconfig.json` and switching `src/lib/courses.ts` to static imports.
 - Checkout success page now shows the next scheduled live session details and static support contact info after purchase.
 
 ## 🎯 Quick Start
