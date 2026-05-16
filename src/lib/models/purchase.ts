@@ -19,6 +19,7 @@ export interface Purchase {
   discountAmount?: number;
   originalAmount: number;
   taxAmount: number;
+  purchaseDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,10 +29,12 @@ export class PurchaseModel {
     return getDatabase().then(db => db.collection<Purchase>('purchases'));
   }
 
-  static async create(purchaseData: Omit<Purchase, '_id' | 'createdAt' | 'updatedAt'>): Promise<Purchase> {
+  static async create(purchaseData: Omit<Purchase, '_id' | 'createdAt' | 'updatedAt' | 'purchaseDate'> & { purchaseDate?: Date }): Promise<Purchase> {
     const collection = await this.getCollection();
+    const purchaseDate = purchaseData.purchaseDate ?? new Date();
     const purchase: Purchase = {
       ...purchaseData,
+      purchaseDate,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

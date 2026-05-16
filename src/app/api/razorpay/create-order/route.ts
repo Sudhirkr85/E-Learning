@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
     const {
       courseId,
       couponCode,
+      studentPhone,
     } = body;
 
     // Validate required fields
@@ -51,7 +52,14 @@ export async function POST(request: NextRequest) {
     const studentId = user.id;
     const studentEmail = user.primaryEmailAddress?.emailAddress || '';
     const studentName = [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || user.fullName || 'Student';
-    const studentPhone = user.primaryPhoneNumber?.phoneNumber || user.phoneNumbers?.[0]?.phoneNumber || '';
+    if (!studentPhone || typeof studentPhone !== 'string' || !studentPhone.trim()) {
+      return NextResponse.json(
+        { error: 'Student phone number is required' },
+        { status: 400 }
+      );
+    }
+
+    const normalizedStudentPhone = studentPhone.trim();
     const amount = fallbackCourse.price;
 
     // If there's an existing pending purchase, tell the client so they can complete or cancel it
@@ -102,7 +110,7 @@ export async function POST(request: NextRequest) {
       studentId,
       studentEmail,
       studentName,
-      studentPhone,
+      studentPhone: normalizedStudentPhone,
       courseId,
       courseTitle: fallbackCourse.title,
       amount: totalAmount,

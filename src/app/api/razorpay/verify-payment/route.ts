@@ -60,6 +60,10 @@ export async function POST(request: NextRequest) {
         courseTitle: purchase?.courseTitle,
         amount: purchase?.amount,
         studentEmail: purchase?.studentEmail,
+        studentName: purchase?.studentName,
+        studentPhone: purchase?.studentPhone,
+        purchaseDate: purchase?.purchaseDate,
+        status: purchase?.status,
       },
     });
 

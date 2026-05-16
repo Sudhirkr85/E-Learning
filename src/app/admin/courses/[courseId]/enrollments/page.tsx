@@ -108,15 +108,15 @@ export default function ViewEnrollmentsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[960px]">
               <thead>
                 <tr className="border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Name</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Email</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Phone</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Amount</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Enrolled</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Amount</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Purchase Date</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-[rgba(255,255,255,0.75)] uppercase">Order ID</th>
                 </tr>
               </thead>
@@ -137,12 +137,7 @@ export default function ViewEnrollmentsPage() {
                       </a>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="font-semibold text-[var(--accent-emerald)]">₹{enrollment.amount}</span>
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
-                        {enrollment.paymentStatus || 'completed'}
-                      </span>
+                      <span className="font-semibold text-[var(--accent-emerald)]">₹{enrollment.amount.toLocaleString('en-IN')}</span>
                     </td>
                     <td className="px-4 py-3 text-sm text-[rgba(255,255,255,0.75)]">
                       {new Date(enrollment.enrolledAt).toLocaleDateString('en-IN', {
@@ -150,6 +145,11 @@ export default function ViewEnrollmentsPage() {
                         month: 'short',
                         day: 'numeric',
                       })}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+                        {enrollment.paymentStatus || 'completed'}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-sm">
                       <code className="bg-[rgba(255,255,255,0.04)] px-2 py-1 rounded text-[rgba(255,255,255,0.8)]">{enrollment.orderId}</code>

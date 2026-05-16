@@ -38,7 +38,9 @@ export async function GET(request: NextRequest) {
         amount: purchase.amount,
         studentEmail: purchase.studentEmail,
         studentName: purchase.studentName,
+        studentPhone: purchase.studentPhone,
         status: purchase.status,
+        purchaseDate: purchase.purchaseDate,
       },
     });
 

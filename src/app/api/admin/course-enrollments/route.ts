@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
         studentName: e.studentName,
         studentEmail: e.studentEmail,
         studentPhone: e.studentPhone,
-        enrolledAt: e.createdAt,
+        enrolledAt: e.purchaseDate || e.createdAt,
         amount: e.amount,
         orderId: e.orderId,
         paymentStatus: e.status,

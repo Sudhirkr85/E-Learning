@@ -47,6 +47,7 @@ export function CheckoutContent() {
   const searchParams = useSearchParams();
   const courseParam = searchParams.get('course');
   const [course, setCourse] = useState<Course | null>(null);
+  const [studentPhone, setStudentPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [error, setError] = useState('');
@@ -115,7 +116,7 @@ export function CheckoutContent() {
 
   const customerName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Student';
   const customerEmail = user?.primaryEmailAddress?.emailAddress || '';
-  const customerPhone = user?.primaryPhoneNumber?.phoneNumber || '';
+  const customerPhone = studentPhone.trim();
 
   const coursePrice = course?.price ?? 0;
   const taxAmount = Math.round(coursePrice * 0.18);
@@ -129,6 +130,11 @@ export function CheckoutContent() {
 
     if (!isLoaded || !user) {
       setError('Please sign in before continuing to payment.');
+      return;
+    }
+
+    if (!customerPhone) {
+      setError('Please enter your phone number before continuing.');
       return;
     }
 
@@ -149,6 +155,7 @@ export function CheckoutContent() {
         },
         body: JSON.stringify({
           courseId: course.id,
+          studentPhone: customerPhone,
         }),
       });
 
@@ -362,6 +369,31 @@ export function CheckoutContent() {
               <Text className="mb-8 text-slate-300">
                 Review your selected course and complete payment in one step.
               </Text>
+
+                  <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 md:p-5">
+                    <div className="mb-4">
+                      <Heading level={4} className="text-base text-white">
+                        Student Contact
+                      </Heading>
+                      <Text className="text-sm text-slate-400">
+                        Enter the phone number we should store with this purchase.
+                      </Text>
+                    </div>
+
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-slate-200">Phone number</span>
+                      <input
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        required
+                        value={studentPhone}
+                        onChange={(event) => setStudentPhone(event.target.value)}
+                        placeholder="e.g. 9876543210"
+                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
+                      />
+                    </label>
+                  </div>
 
               {!isLoaded ? (
                 <Card className="border border-slate-800 bg-slate-900/80 p-6 md:p-8">
