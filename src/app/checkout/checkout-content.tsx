@@ -40,6 +40,18 @@ type RazorpayWindow = Window & {
   Razorpay?: new (options: RazorpayOptions) => { open: () => void };
 };
 
+const formatPhoneNumber = (value: string) => {
+  const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+
+  if (digitsOnly.length <= 5) {
+    return digitsOnly;
+  }
+
+  return `${digitsOnly.slice(0, 5)} ${digitsOnly.slice(5)}`;
+};
+
+const normalizePhoneNumber = (value: string) => value.replace(/\D/g, '').slice(0, 10);
+
 export function CheckoutContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
@@ -126,7 +138,7 @@ export function CheckoutContent() {
 
   const customerName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Student';
   const customerEmail = user?.primaryEmailAddress?.emailAddress || '';
-  const customerPhone = studentPhone.trim();
+  const customerPhone = normalizePhoneNumber(studentPhone);
 
   const coursePrice = course?.price ?? 0;
   const taxAmount = Math.round(coursePrice * 0.18);
@@ -143,8 +155,8 @@ export function CheckoutContent() {
       return;
     }
 
-    if (!customerPhone) {
-      setError('Please enter your phone number before continuing.');
+    if (customerPhone.length !== 10) {
+      setError('Please enter a valid 10-digit phone number.');
       return;
     }
 
@@ -395,12 +407,13 @@ export function CheckoutContent() {
                       <input
                         ref={phoneInputRef}
                         type="tel"
-                        inputMode="tel"
+                        inputMode="numeric"
                         autoComplete="tel"
+                        maxLength={11}
                         required
                         value={studentPhone}
-                        onChange={(event) => setStudentPhone(event.target.value)}
-                        placeholder="e.g. 9876543210"
+                        onChange={(event) => setStudentPhone(formatPhoneNumber(event.target.value))}
+                        placeholder="e.g. 98765 43210"
                         className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
                       />
                     </label>
