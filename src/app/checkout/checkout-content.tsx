@@ -63,6 +63,8 @@ export function CheckoutContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [error, setError] = useState('');
+  const [pendingOrderId, setPendingOrderId] = useState('');
+  const [showPendingModal, setShowPendingModal] = useState(false);
   const phoneInputRef = useRef<HTMLInputElement | null>(null);
 
   useUserSync();
@@ -144,6 +146,102 @@ export function CheckoutContent() {
   const taxAmount = Math.round(coursePrice * 0.18);
   const totalAmount = coursePrice + taxAmount;
 
+  const openExistingPayment = async (existingOrderId: string) => {
+    const infoResp = await fetch(`/api/razorpay/order-info?orderId=${encodeURIComponent(existingOrderId)}`);
+    const infoData = await infoResp.json();
+    if (!infoResp.ok) {
+      throw new Error(infoData.error || 'Failed to load existing order');
+    }
+
+    const options: RazorpayOptions = {
+      key: infoData.key,
+      amount: infoData.amount,
+      currency: infoData.currency,
+      name: 'SSSAM Academy',
+      description: infoData.courseTitle || course?.title,
+      order_id: infoData.orderId,
+      prefill: {
+        name: customerName,
+        email: customerEmail,
+        contact: customerPhone,
+      },
+      theme: {
+        color: '#22d3ee',
+      },
+      modal: {
+        ondismiss: () => {
+          setIsLoading(false);
+        },
+      },
+      handler: async (response: RazorpayHandlerResponse) => {
+        try {
+          const verifyResponse = await fetch('/api/razorpay/verify-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (verifyResponse.ok && verifyData.success) {
+            const purchase = verifyData.purchase ?? {};
+            const successParams = new URLSearchParams({
+              order_id: String(purchase.orderId ?? response.razorpay_order_id ?? ''),
+              payment_id: String(purchase.paymentId ?? response.razorpay_payment_id ?? ''),
+              amount: String(purchase.amount ?? infoData.amount / 100),
+              course_title: String(purchase.courseTitle ?? course?.title ?? ''),
+              student_email: String(purchase.studentEmail ?? customerEmail),
+            });
+
+            router.push(`/checkout/success?${successParams.toString()}`);
+            return;
+          }
+
+          throw new Error('Payment verification failed. Please contact support.');
+        } catch (verifyError) {
+          console.error('Payment verification error:', verifyError);
+          setError(verifyError instanceof Error ? verifyError.message : 'Payment verification failed.');
+          router.push('/payment-failed');
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    };
+
+    const razorpayWindow = window as RazorpayWindow;
+    if (!razorpayWindow.Razorpay) {
+      throw new Error('Razorpay checkout is not available. Please refresh and try again.');
+    }
+
+    const RazorpayConstructor = razorpayWindow.Razorpay;
+    const razorpay = new RazorpayConstructor(options);
+    razorpay.open();
+  };
+
+  const cancelPendingPurchase = async (existingOrderId: string) => {
+    const cancelResp = await fetch('/api/razorpay/cancel-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId: existingOrderId }),
+    });
+
+    const cancelData = await cancelResp.json();
+    if (!cancelResp.ok) {
+      throw new Error(cancelData.error || 'Failed to cancel existing order');
+    }
+
+    setShowPendingModal(false);
+    setPendingOrderId('');
+    setIsLoading(false);
+    await handlePayment();
+  };
+
   const handlePayment = async () => {
     if (!course) {
       setError('Please wait for the course details to load.');
@@ -188,104 +286,9 @@ export function CheckoutContent() {
 
         // Handle pending purchase case: offer user to complete existing payment or cancel it
         if (orderData?.code === 'pending_exists' && orderData?.orderId) {
-          const existingOrderId = orderData.orderId as string;
-          const proceed = window.confirm('You have an unfinished payment for this course. Click OK to complete the existing payment, or Cancel to cancel it and create a new order.');
-
-          if (proceed) {
-            // Fetch order info and open Razorpay for existing order
-            const infoResp = await fetch(`/api/razorpay/order-info?orderId=${encodeURIComponent(existingOrderId)}`);
-            const infoData = await infoResp.json();
-            if (!infoResp.ok) {
-              throw new Error(infoData.error || 'Failed to load existing order');
-            }
-
-            const options: RazorpayOptions = {
-              key: infoData.key,
-              amount: infoData.amount,
-              currency: infoData.currency,
-              name: 'SSSAM Academy',
-              description: infoData.courseTitle || course.title,
-              order_id: infoData.orderId,
-              prefill: {
-                name: customerName,
-                email: customerEmail,
-                contact: customerPhone,
-              },
-              theme: {
-                color: '#22d3ee',
-              },
-              modal: {
-                ondismiss: () => {
-                  setIsLoading(false);
-                },
-              },
-              handler: async (response: RazorpayHandlerResponse) => {
-                try {
-                  const verifyResponse = await fetch('/api/razorpay/verify-payment', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      razorpay_order_id: response.razorpay_order_id,
-                      razorpay_payment_id: response.razorpay_payment_id,
-                      razorpay_signature: response.razorpay_signature,
-                    }),
-                  });
-
-                  const verifyData = await verifyResponse.json();
-
-                  if (verifyResponse.ok && verifyData.success) {
-                    const purchase = verifyData.purchase ?? {};
-                    const successParams = new URLSearchParams({
-                      order_id: String(purchase.orderId ?? response.razorpay_order_id ?? ''),
-                      payment_id: String(purchase.paymentId ?? response.razorpay_payment_id ?? ''),
-                      amount: String(purchase.amount ?? infoData.amount / 100),
-                      course_title: String(purchase.courseTitle ?? course.title),
-                      student_email: String(purchase.studentEmail ?? customerEmail),
-                    });
-
-                    router.push(`/checkout/success?${successParams.toString()}`);
-                    return;
-                  }
-
-                  throw new Error('Payment verification failed. Please contact support.');
-                } catch (verifyError) {
-                  console.error('Payment verification error:', verifyError);
-                  setError(verifyError instanceof Error ? verifyError.message : 'Payment verification failed.');
-                  router.push('/payment-failed');
-                } finally {
-                  setIsLoading(false);
-                }
-              },
-            };
-
-            const razorpayWindow = window as RazorpayWindow;
-            if (!razorpayWindow.Razorpay) {
-              throw new Error('Razorpay checkout is not available. Please refresh and try again.');
-            }
-
-            const RazorpayConstructor = razorpayWindow.Razorpay;
-            const razorpay = new RazorpayConstructor(options);
-            razorpay.open();
-            return;
-          }
-
-          // User chose to cancel existing pending order: call cancel endpoint then retry
-          const cancelResp = await fetch('/api/razorpay/cancel-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId: existingOrderId }),
-          });
-
-          const cancelData = await cancelResp.json();
-          if (!cancelResp.ok) {
-            throw new Error(cancelData.error || 'Failed to cancel existing order');
-          }
-
-          // Retry creating a new order after successful cancel
+          setPendingOrderId(orderData.orderId as string);
+          setShowPendingModal(true);
           setIsLoading(false);
-          await handlePayment();
           return;
         }
 
@@ -546,6 +549,71 @@ export function CheckoutContent() {
         </div>
 
         <Footer />
+
+        {showPendingModal && pendingOrderId ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 px-4 py-6 backdrop-blur-sm">
+            <div className="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/50">
+              <div className="border-b border-slate-800 px-6 py-5">
+                <div className="mb-3 inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-300">
+                  Pending Payment Found
+                </div>
+                <Heading level={3} className="text-white">
+                  Continue or restart this payment?
+                </Heading>
+                <Text className="mt-2 text-sm text-slate-300">
+                  You already have an unfinished order for this course. You can continue the same payment or cancel it and create a fresh one.
+                </Text>
+              </div>
+
+              <div className="px-6 py-5">
+                <div className="mb-4 rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-300">
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="text-slate-500">Order ID</span>
+                    <span className="font-mono text-xs text-slate-200 break-all text-right">{pendingOrderId}</span>
+                  </div>
+                  <div className="text-slate-400">
+                    No access is granted until this payment is successfully verified.
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto border-slate-700 text-slate-200 hover:bg-slate-800"
+                    onClick={async () => {
+                      try {
+                        await cancelPendingPurchase(pendingOrderId);
+                      } catch (cancelError) {
+                        setError(cancelError instanceof Error ? cancelError.message : 'Failed to cancel existing order');
+                      }
+                    }}
+                    disabled={isLoading}
+                  >
+                    Cancel and create new order
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    onClick={async () => {
+                      try {
+                        setShowPendingModal(false);
+                        await openExistingPayment(pendingOrderId);
+                      } catch (existingOrderError) {
+                        setError(existingOrderError instanceof Error ? existingOrderError.message : 'Failed to open existing payment');
+                        setIsLoading(false);
+                      }
+                    }}
+                    disabled={isLoading}
+                  >
+                    Continue payment
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </>
     );
   }

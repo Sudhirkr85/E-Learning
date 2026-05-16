@@ -16,9 +16,10 @@ export async function GET(request: NextRequest) {
     // Check if MongoDB is configured
     try {
       const purchases = await PurchaseModel.findByStudentId(studentId);
+      const completedPurchases = purchases.filter((purchase) => purchase.status === 'completed');
       
       return NextResponse.json({
-        purchases,
+        purchases: completedPurchases,
         studentId,
       });
     } catch (dbError) {
