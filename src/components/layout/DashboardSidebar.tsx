@@ -22,7 +22,7 @@ export function DashboardSidebar() {
     <aside className="w-full md:w-72 bg-slate-950/95 text-slate-300 border-b md:border-b-0 md:border-r border-slate-800/50 p-5 md:sticky md:top-20 md:h-[calc(100vh-80px)] overflow-y-auto backdrop-blur-xl shadow-lg shadow-slate-950/40">
       <div className="mb-6 rounded-3xl border border-cyan-500/10 bg-slate-900/80 p-4 text-sm text-slate-400">
         <p className="font-semibold text-white mb-1">Student Dashboard</p>
-        <p>Live sessions, AI learning pathways, and batch progress in Gurugram style.</p>
+        <p>Live sessions, AI learning pathways, and batch progress.</p>
       </div>
       <nav className="space-y-2">
         {menuItems.map(item => {
