@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Footer, Header } from '@/components/layout';
@@ -51,6 +51,7 @@ export function CheckoutContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [error, setError] = useState('');
+  const phoneInputRef = useRef<HTMLInputElement | null>(null);
 
   useUserSync();
 
@@ -113,6 +114,15 @@ export function CheckoutContent() {
     script.onerror = () => setError('Failed to load payment gateway. Please refresh the page.');
     document.body.appendChild(script);
   }, [isLoaded, user]);
+
+  useEffect(() => {
+    if (!error.toLowerCase().includes('phone number')) {
+      return;
+    }
+
+    phoneInputRef.current?.focus();
+    phoneInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [error]);
 
   const customerName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim() || 'Student';
   const customerEmail = user?.primaryEmailAddress?.emailAddress || '';
@@ -383,6 +393,7 @@ export function CheckoutContent() {
                     <label className="block">
                       <span className="mb-2 block text-sm font-medium text-slate-200">Phone number</span>
                       <input
+                        ref={phoneInputRef}
                         type="tel"
                         inputMode="tel"
                         autoComplete="tel"
