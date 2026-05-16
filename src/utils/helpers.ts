@@ -16,6 +16,41 @@ export const formatDate = (date: string | Date): string => {
   }).format(new Date(date));
 };
 
+// Format time to 12-hour India format (e.g., "10:30 AM")
+export const formatTimeIndia = (time: string, date?: string): string => {
+  if (!time) return '';
+  const datePart = date || new Date().toISOString().split('T')[0];
+  const dt = new Date(`${datePart}T${time}`);
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata',
+    }).format(dt).toLowerCase();
+  } catch (e) {
+    return dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+  }
+};
+
+// Format date to '2 May 2026' (day numeric, short month, year)
+export const formatDateIndia = (date: string | Date): string => {
+  if (!date) return '';
+  const dt = typeof date === 'string' ? new Date(date) : date;
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(dt);
+  } catch (e) {
+    const day = dt.getDate();
+    const month = dt.toLocaleString('en-IN', { month: 'short' });
+    const year = dt.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+};
+
 // Calculate progress percentage
 export const calculateProgress = (completed: number, total: number): number => {
   if (total === 0) return 0;

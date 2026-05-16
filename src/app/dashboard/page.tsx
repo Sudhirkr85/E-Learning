@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
+import { formatDateIndia } from '@/utils/helpers';
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -92,7 +93,7 @@ export default function DashboardPage() {
                   <div className="flex-1">
                     <p className="font-medium">{purchase.courseTitle}</p>
                     <p className="text-sm text-[rgba(255,255,255,0.6)]">
-                      Enrolled on {new Date(purchase.createdAt).toLocaleDateString()}
+                      Enrolled on {formatDateIndia(new Date(purchase.createdAt))}
                     </p>
                   </div>
                   <p className="text-sm font-semibold text-[var(--accent-emerald)] whitespace-nowrap">

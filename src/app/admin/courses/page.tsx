@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { courses } from '@/data/courses';
+import { formatDateIndia } from '@/utils/helpers';
 
 interface EnrollmentRow {
   studentName: string;
@@ -153,7 +154,7 @@ export default function AdminCoursesPage() {
                               <div className="text-right text-xs text-slate-400">
                                 <div className="font-semibold text-emerald-300">₹{student.amount.toLocaleString('en-IN')}</div>
                                 <div>{student.paymentStatus || 'completed'}</div>
-                                <div>{new Date(student.enrolledAt).toLocaleDateString('en-IN')}</div>
+                                <div>{formatDateIndia(new Date(student.enrolledAt))}</div>
                               </div>
                             </div>
                           </div>

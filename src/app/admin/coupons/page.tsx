@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Coupon } from '@/types';
 import Link from 'next/link';
+import { formatDateIndia } from '@/utils/helpers';
 
 export default function CouponsManagement() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -170,8 +171,8 @@ export default function CouponsManagement() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      <div>{new Date(coupon.validFrom).toLocaleDateString()}</div>
-                      <div className="text-[rgba(255,255,255,0.5)]">to {new Date(coupon.validUntil).toLocaleDateString()}</div>
+                      <div>{formatDateIndia(new Date(coupon.validFrom))}</div>
+                      <div className="text-[rgba(255,255,255,0.5)]">to {formatDateIndia(new Date(coupon.validUntil))}</div>
                     </td>
                     <td className="px-4 py-3 text-sm">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${

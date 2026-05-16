@@ -12,6 +12,7 @@ import {
   Input,
 } from '@/components/ui';
 import { courses } from '@/data/courses';
+import { formatTimeIndia, formatDateIndia } from '@/utils/helpers';
 
 interface ClassSession {
   _id: string;
@@ -347,12 +348,12 @@ export default function ManageSessionsPage() {
                     <div>
                       <span className="text-slate-400">Date:</span>
                       <p className="text-white font-medium">
-                        {new Date(session.sessionDate).toLocaleDateString()}
+                        {formatDateIndia(session.sessionDate)}
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-400">Time:</span>
-                      <p className="text-white font-medium">{session.sessionTime}</p>
+                      <p className="text-white font-medium">{formatTimeIndia(session.sessionTime, session.sessionDate)}</p>
                     </div>
                     <div>
                       <span className="text-slate-400">Meet Link:</span>

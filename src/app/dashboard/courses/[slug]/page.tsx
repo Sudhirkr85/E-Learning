@@ -7,6 +7,7 @@ import { Course } from '@/types';
 import { Container, Heading, Text, Card } from '@/components/ui';
 import { useUser } from '@clerk/nextjs';
 import { checkCourseAccess } from '@/lib/course-access';
+import { formatTimeIndia, formatDateIndia } from '@/utils/helpers';
 
 interface ClassSession {
   _id: string;
@@ -184,17 +185,12 @@ export default function CourseDetailPage() {
                           <div className="rounded-3xl bg-slate-950/70 p-4">
                             <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Date</p>
                             <p className="text-white font-semibold">
-                              {sessionDate.toLocaleDateString('en-IN', {
-                                weekday: 'short',
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
+                              {formatDateIndia(sessionDate)}
                             </p>
                           </div>
                           <div className="rounded-3xl bg-slate-950/70 p-4">
                             <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Time</p>
-                            <p className="text-white font-semibold">{session.sessionTime}</p>
+                            <p className="text-white font-semibold">{formatTimeIndia(session.sessionTime, session.sessionDate)}</p>
                           </div>
                           <div className="rounded-3xl bg-slate-950/70 p-4">
                             <p className="text-slate-400 uppercase text-[0.7rem] tracking-[0.16em] mb-2">Mode</p>

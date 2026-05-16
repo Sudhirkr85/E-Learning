@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { formatDateIndia } from '@/utils/helpers';
 
 interface Enrollment {
   studentName: string;
@@ -140,11 +141,7 @@ export default function ViewEnrollmentsPage() {
                       <span className="font-semibold text-[var(--accent-emerald)]">₹{enrollment.amount.toLocaleString('en-IN')}</span>
                     </td>
                     <td className="px-4 py-3 text-sm text-[rgba(255,255,255,0.75)]">
-                      {new Date(enrollment.enrolledAt).toLocaleDateString('en-IN', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                      {formatDateIndia(new Date(enrollment.enrolledAt))}
                     </td>
                     <td className="px-4 py-3 text-sm">
                       <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">

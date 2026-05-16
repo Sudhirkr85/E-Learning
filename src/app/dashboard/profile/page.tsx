@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Container, Heading, Text, Card, Divider, Button, Input } from '@/components/ui';
 import { useUser } from '@clerk/nextjs';
+import { formatDateIndia } from '@/utils/helpers';
 import { useUserSync } from '@/hooks/use-user-sync';
 
 export default function ProfilePage() {
@@ -202,8 +203,8 @@ export default function ProfilePage() {
 
               <div>
                 <Text className="mb-2 text-slate-400">Account Created</Text>
-                <Text className="text-slate-100 font-medium">
-                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}
+                  <Text className="text-slate-100 font-medium">
+                  {user?.createdAt ? formatDateIndia(new Date(user.createdAt)) : 'Unknown'}
                 </Text>
               </div>
             </div>

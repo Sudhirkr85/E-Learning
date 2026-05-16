@@ -406,8 +406,8 @@ Comprehensive system for managing live class sessions and providing support to e
   googleMeetLink: string,      // Meet URL
   sessionTitle: string,         // e.g., "Lecture 1 - Intro"
   description: string,          // Optional details
-  sessionDate: string,          // ISO format: "2026-05-20T10:30:00"
-  sessionTime: string,          // HH:mm format: "10:30"
+   sessionDate: string,          // ISO format: "2026-05-20T10:30:00"
+   sessionTime: string,          // HH:mm format: "10:30" (stored). UI displays this as 12-hour India time, e.g., "10:30 AM" IST
   durationMinutes: number,      // e.g., 60
   recordingLink: string,        // Optional recording URL
   notes: string,                // Session notes

@@ -7,6 +7,7 @@ import { Container, Heading, Text, Card, Button } from '@/components/ui';
 import { courses } from '@/data/courses';
 import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
+import { formatDateIndia } from '@/utils/helpers';
 
 export default function MyCoursesPage() {
   const { user } = useUser();
@@ -29,16 +30,19 @@ export default function MyCoursesPage() {
       
       if (response.ok) {
         const data = await response.json();
-        // Get course details for each purchase
-        const coursesWithDetails = data.purchases.map((purchase: any) => {
+        // Get course details for each purchase and format dates from API
+        const coursesWithDetails = (data.purchases || []).map((purchase: any) => {
           const course = courses.find(c => c.id === purchase.courseId);
-          return {
-            ...purchase,
-            course,
-          };
-        }).filter((item: any) => item.course); // Filter out courses that don't exist
-        
-        setPurchasedCourses(coursesWithDetails);
+          return course
+            ? {
+                ...purchase,
+                course,
+                formattedPurchaseDate: formatDateIndia(new Date(purchase.createdAt)),
+              }
+            : null;
+        }).filter((item: any) => item !== null);
+
+        setPurchasedCourses(coursesWithDetails as any[]);
       }
     } catch (error) {
       console.error('Error fetching purchased courses:', error);
@@ -92,7 +96,7 @@ export default function MyCoursesPage() {
                 {/* Purchase Info */}
                 <div className="mb-4">
                   <Text size="sm" className="text-slate-400">
-                    Purchased on {new Date(purchase.createdAt).toLocaleDateString()}
+                    Purchased on {purchase.formattedPurchaseDate ?? formatDateIndia(new Date(purchase.createdAt))}
                   </Text>
                   <Text size="sm" className="font-semibold text-emerald-400">
                     ₹{purchase.amount.toLocaleString()}

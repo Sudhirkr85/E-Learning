@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Course, Coupon } from '@/types';
 import { HeroMesh } from '@/components/ui';
 import { courses as staticCourses } from '@/data/courses';
+import { formatDateIndia } from '@/utils/helpers';
 
 interface DashboardStats {
   totalCourses: number;
@@ -126,7 +127,7 @@ export default function AdminDashboard() {
                           <div className="text-sm font-semibold">{course.title}</div>
                           <div className="text-xs text-[rgba(255,255,255,0.6)]">{course.status}</div>
                         </div>
-                        <div className="text-right text-xs text-[rgba(255,255,255,0.6)]">Updated {new Date(course.updatedAt).toLocaleDateString()}</div>
+                        <div className="text-right text-xs text-[rgba(255,255,255,0.6)]">Updated {formatDateIndia(new Date(course.updatedAt))}</div>
                       </div>
 
                       <div className="mt-2 flex items-center gap-2">

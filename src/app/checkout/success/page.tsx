@@ -6,6 +6,7 @@ import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Divider, Card } from '@/components/ui';
 import { ROUTES, SITE_CONFIG } from '@/constants';
 import { Course } from '@/types';
+import { formatTimeIndia, formatDateIndia } from '@/utils/helpers';
 
 interface NextSession {
   _id: string;
@@ -176,16 +177,11 @@ function PaymentSuccessContent() {
                       </div>
                       <div>
                         <Text className="text-slate-400 text-xs">Start Date</Text>
-                        <Text className="font-semibold text-white">{new Date(`${nextSession.sessionDate}T${nextSession.sessionTime}`).toLocaleDateString('en-IN', {
-                          weekday: 'long',
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric',
-                        })}</Text>
+                        <Text className="font-semibold text-white">{formatDateIndia(new Date(`${nextSession.sessionDate}T${nextSession.sessionTime}`))}</Text>
                       </div>
                       <div>
                         <Text className="text-slate-400 text-xs">Start Time</Text>
-                        <Text className="font-semibold text-white">{nextSession.sessionTime}</Text>
+                        <Text className="font-semibold text-white">{formatTimeIndia(nextSession.sessionTime, nextSession.sessionDate)}</Text>
                       </div>
                       {nextSession.googleMeetLink ? (
                         <a
