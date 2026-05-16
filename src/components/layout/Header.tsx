@@ -203,11 +203,11 @@ export function Header() {
             >
               Contact
             </Link>
-            <a 
-              href="https://sssamacademy.com/download-certificate.html" 
+            <a
+              href="https://sssamacademy.com/download-certificate.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-gray-700 hover:text-blue-600 transition-colors font-medium py-2"
+              className="block text-slate-300 hover:text-cyan-300 transition-colors font-medium py-2"
             >
               Certificate
             </a>
@@ -215,27 +215,27 @@ export function Header() {
               {user ? (
                 <>
                       <div className="px-4 py-2 border-b border-slate-800">
-                        <p className="text-sm font-medium text-slate-200">
-                          {user.firstName} {user.lastName}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {user.emailAddresses?.[0]?.emailAddress}
-                    </p>
-                  </div>
-                  <Link
-                    href={ROUTES.DASHBOARD}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href={ROUTES.MY_COURSES}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    My Courses
-                  </Link>
+                            <p className="text-sm font-medium text-slate-200">
+                              {user.firstName} {user.lastName}
+                        </p>
+                        <p className="text-xs text-slate-400 truncate">
+                          {user.emailAddresses?.[0]?.emailAddress}
+                        </p>
+                      </div>
+                      <Link
+                        href={ROUTES.DASHBOARD}
+                        className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                      <Link
+                        href={ROUTES.MY_COURSES}
+                        className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        My Courses
+                      </Link>
                   <button
                     onClick={async () => {
                       await signOut();

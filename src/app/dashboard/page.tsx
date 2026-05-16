@@ -96,9 +96,19 @@ export default function DashboardPage() {
                       Enrolled on {formatDateIndia(new Date(purchase.createdAt))}
                     </p>
                   </div>
-                  <p className="text-sm font-semibold text-[var(--accent-emerald)] whitespace-nowrap">
-                    ₹{purchase.amount.toLocaleString()}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-sm font-semibold text-[var(--accent-emerald)] whitespace-nowrap">
+                      ₹{purchase.amount.toLocaleString()}
+                    </p>
+                    <a
+                      href={`https://sssamacademy.com/download-certificate.html?orderId=${purchase.orderId || ''}&email=${encodeURIComponent(purchase.studentEmail || '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-md"
+                    >
+                      Certificate
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
