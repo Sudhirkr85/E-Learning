@@ -33,15 +33,15 @@ export function HeroSection({ course }: HeroProps) {
     window.addEventListener('resize', resizeCanvas);
 
     // Initialize particles
-    const particleCount = 80;
+    const particleCount = 110;
     const particles: Array<{ x: number; y: number; vx: number; vy: number }> = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
       });
     }
 
@@ -69,10 +69,10 @@ export function HeroSection({ course }: HeroProps) {
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
 
-        // Draw particle
+        // Draw particle (slightly larger + stronger alpha)
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(6, 182, 212, 0.3)';
+        ctx.arc(particle.x, particle.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.6)';
         ctx.fill();
 
         // Draw connections to nearby particles
@@ -81,12 +81,12 @@ export function HeroSection({ course }: HeroProps) {
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 120) {
+          if (distance < 140) {
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(6, 182, 212, ${0.15 * (1 - distance / 120)})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(6, 182, 212, ${0.35 * (1 - distance / 140)})`;
+            ctx.lineWidth = 1;
             ctx.stroke();
           }
         });
@@ -96,12 +96,12 @@ export function HeroSection({ course }: HeroProps) {
         const dy = particle.y - mouse.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 150) {
+        if (distance < 180) {
           ctx.beginPath();
           ctx.moveTo(particle.x, particle.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = `rgba(147, 51, 234, ${0.3 * (1 - distance / 150)})`;
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = `rgba(147, 51, 234, ${0.5 * (1 - distance / 180)})`;
+          ctx.lineWidth = 1.2;
           ctx.stroke();
         }
       });
@@ -123,13 +123,13 @@ export function HeroSection({ course }: HeroProps) {
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.6 }}
+        style={{ opacity: 0.95 }}
       />
 
       {/* Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/12 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/12 rounded-full blur-3xl"></div>
 
       <Container className="relative z-10 py-8 md:py-12 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
