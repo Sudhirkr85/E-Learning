@@ -47,7 +47,7 @@ export function Header() {
               </span>
             </Link>
             <p className="text-xs text-slate-400 mt-1">
-              AI-driven IT training in Sector 14, Gurugram
+              SMART SOLUTIONS SCHOOL OF AI & MACHINE LEARNING
             </p>
           </div>
 
