@@ -2,31 +2,26 @@ import { MetadataRoute } from 'next';
 
 const siteUrl = 'https://sssamacademy.tech';
 
+const lastModified = new Date();
+
+const routes = [
+  {
+    url: '/',
+    changeFrequency: 'weekly' as const,
+    priority: 1,
+  },
+  {
+    url: '/courses',
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  },
+] as const;
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: `${siteUrl}/`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${siteUrl}/full-stack-development-course-gurgaon`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${siteUrl}/data-science-training-gurgaon`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${siteUrl}/cyber-security-course-gurgaon`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${siteUrl}/digital-marketing-course-gurgaon`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${siteUrl}/courses`,
-      lastModified: new Date(),
-    },
-  ];
+  return routes.map(({ url, changeFrequency, priority }) => ({
+    url: `${siteUrl}${url}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  }));
 }
