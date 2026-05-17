@@ -36,6 +36,10 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId } = await auth();
   const pathname = req.nextUrl.pathname;
 
+  if (pathname === '/sitemap.xml' || pathname === '/robots.txt') {
+    return NextResponse.next();
+  }
+
   // Handle admin routes separately
   if (isAdminRoute(req)) {
     // For admin login page and API, allow access
