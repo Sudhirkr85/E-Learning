@@ -6,6 +6,7 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Wired the enquiry popup to the backend using the shared base API URL and the public enquiries endpoint.
 - Hid visible scrollbar chrome inside the enquiry popup so scrolling stays functional without showing a sidebar-like bar.
 - Adjusted the enquiry popup so scrolling is only enabled inside the modal when content actually needs it.
 - Switched the enquiry popup course field to a searchable input with live matching suggestions and manual entry support.

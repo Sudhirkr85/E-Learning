@@ -6,7 +6,8 @@ import { Button, Input } from '@/components/ui';
 const INITIAL_DELAY_MS = 2000;
 const REPEAT_DELAY_MS = 5 * 60 * 1000;
 const CLOSE_ANIMATION_MS = 220;
-const ENQUIRY_API_URL = 'https://sssam-r3pz.onrender.com/api/enquiries/public';
+const BASE_API_URL = 'https://sssam-r3pz.onrender.com/api';
+const ENQUIRY_API_URL = `${BASE_API_URL}/enquiries/public`;
 
 type FormValues = {
   name: string;
