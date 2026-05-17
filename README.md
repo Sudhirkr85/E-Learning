@@ -6,6 +6,11 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Hid visible scrollbar chrome inside the enquiry popup so scrolling stays functional without showing a sidebar-like bar.
+- Adjusted the enquiry popup so scrolling is only enabled inside the modal when content actually needs it.
+- Switched the enquiry popup course field to a searchable input with live matching suggestions and manual entry support.
+- Refined the enquiry popup into a smaller, more premium callback-style modal with tighter spacing and lighter form density.
+- Added a lightweight premium enquiry popup with direct public API submission, timed reappearance, and smooth dark modal animations.
 - Checkout now captures the student's phone number on-site, stores it in pending/completed purchase records, and shows it in the admin enrollments view.
 - Admin session management now supports selecting any course from `src/data/courses.ts` and setting a live session start date, time, and meeting link per course.
 - Fixed module alias resolution for `@/data/courses` by adding `baseUrl` to `tsconfig.json` and switching `src/lib/courses.ts` to static imports.

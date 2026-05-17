@@ -152,6 +152,16 @@ body {
   mask-position: var(--mx) var(--my);
 }
 
+/* Hide scrollbar chrome while preserving scroll behavior */
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 /* Premium Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
