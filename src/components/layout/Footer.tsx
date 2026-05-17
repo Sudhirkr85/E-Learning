@@ -106,7 +106,7 @@ export function Footer() {
             &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved.
           </Text>
           <div className="flex flex-wrap items-center gap-3">
-            <span>Based in Gurugram, Haryana</span>
+            <span>AI-first IT training institute in Gurugram</span>
             <span className="hidden md:inline">•</span>
             <span>Live training, AI-integrated curriculum</span>
           </div>

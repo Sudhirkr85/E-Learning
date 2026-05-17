@@ -252,6 +252,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 - 🎓 **Summer Training** - Special programs for college students
 - 💼 **Job-Oriented** - Curriculum designed for Indian job market
 
+## Copywriting Guidelines
+
+Please follow the project's SEO & copywriting rules in `COPYWRITING_GUIDELINES.md` when editing site copy.
+
 ## ✨ Features
 
 - ✅ **11 Pages** with 9 dynamic + static routes

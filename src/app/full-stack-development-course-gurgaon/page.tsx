@@ -150,7 +150,7 @@ export default function FullStackDevelopmentCoursePage() {
               <ul className="list-disc list-inside space-y-3 text-slate-300">
                 <li>Mock interviews and resume optimization</li>
                 <li>Portfolio reviews and live project showcases</li>
-                <li>Job-ready preparation for Gurugram-based roles</li>
+                <li>Job-ready preparation for IT roles in Gurugram</li>
               </ul>
             </div>
           </Container>

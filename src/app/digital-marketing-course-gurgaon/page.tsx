@@ -167,7 +167,7 @@ export default function DigitalMarketingCoursePage() {
                   },
                   {
                     question: 'Can I join from outside Gurgaon?',
-                    answer: 'Yes, online batches are available for students across Delhi NCR with Gurugram-based support.',
+                    answer: 'Yes, online batches are available for students across Delhi NCR with local Gurugram support.',
                   },
                   {
                     question: 'Will I receive placement assistance?',
