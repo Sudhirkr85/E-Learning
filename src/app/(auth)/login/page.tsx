@@ -96,17 +96,6 @@ export default async function LoginPage({
                   forceRedirectUrl={returnTo}
                   fallbackRedirectUrl={returnTo}
                   appearance={clerkAppearance}
-                  localization={{
-                    signIn: {
-                      start: {
-                        title: 'Sign in to SSSAM Academy',
-                        subtitle: 'Welcome back! Continue your learning journey.',
-                        actionText: 'Don’t have an account?',
-                        actionLink: 'Create Account',
-                      },
-                    },
-                    formFieldAction__forgotPassword: 'Forgot password?',
-                  }}
                 />
               </section>
             </div>
@@ -118,3 +107,5 @@ export default async function LoginPage({
     </>
   );
 }
+
+

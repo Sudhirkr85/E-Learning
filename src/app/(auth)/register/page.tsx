@@ -96,16 +96,6 @@ export default async function RegisterPage({
                   forceRedirectUrl={returnTo}
                   fallbackRedirectUrl={returnTo}
                   appearance={clerkAppearance}
-                  localization={{
-                    signUp: {
-                      start: {
-                        title: 'Create your SSSAM Academy account',
-                        subtitle: 'Start your learning journey with AI-powered full stack training.',
-                        actionText: 'Already have an account?',
-                        actionLink: 'Continue',
-                      },
-                    },
-                  }}
                 />
               </section>
             </div>
@@ -117,3 +107,5 @@ export default async function RegisterPage({
     </>
   );
 }
+
+
