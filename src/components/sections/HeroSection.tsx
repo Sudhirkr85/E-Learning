@@ -144,12 +144,12 @@ export function HeroSection({ course }: HeroProps) {
             {/* Main Headline - SEO Optimized */}
             <div className="space-y-3 max-w-3xl">
               <Heading level={1} className="text-4xl md:text-5xl lg:text-5xl leading-tight md:leading-snug text-foreground">
-                AI Training Institute in Gurugram
+                30-Day AI-Powered Full Stack Development Bootcamp
               </Heading>
 
               {/* Subheading */}
               <Text size="lg" className="text-foreground-secondary font-medium leading-relaxed max-w-3xl">
-                Full Stack, Data Science & Cyber Security
+                AI Training Institute for Modern Web Development & AI Tools
               </Text>
 
               <Text size="lg" className="text-foreground-secondary leading-relaxed max-w-3xl">

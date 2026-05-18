@@ -61,6 +61,12 @@ export const faqs: FAQ[] = [
     answer: 'Visit us at M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14, Gurugram. You can also call +91 92170 31899 or request a callback on our website.',
     category: 'Location',
   },
+  {
+    id: '11',
+    question: 'Will I receive a certificate after completing the 30-day full stack bootcamp?',
+    answer: 'Students who complete the bootcamp will receive a 30-Day Training Completion Certificate. It is useful for college training records, internship documentation, resume and portfolio support, and as proof of project-based learning.',
+    category: 'Courses',
+  },
 ];
 
 export const getFAQsByCategory = (category: string): FAQ[] => {

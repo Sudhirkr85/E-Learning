@@ -59,6 +59,11 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
               <Heading level={1} className="mb-4 text-white">
                 {course.title}
               </Heading>
+              {course.slug === 'ai-full-stack-web-development-summer-2026' && (
+                <Text size="lg" color="secondary" className="mb-4 text-slate-300">
+                  Gurugram Live Batch • 30-Day Practical Training
+                </Text>
+              )}
 
               <Text size="lg" color="secondary" className="mb-6 text-slate-300">
                 {course.description}
@@ -115,7 +120,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 src={course.thumbnail}
                 alt={course.title}
                 fill
-                className="object-cover"
+                className="object-contain md:object-cover"
               />
             </div>
           </div>
@@ -166,7 +171,11 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
       <Divider />
 
       {/* Curriculum */}
-      <CurriculumPreview lessons={course.curriculum} />
+      <CurriculumPreview
+        lessons={course.curriculum}
+        title={course.curriculumTitle}
+        subtitle={course.curriculumSubtitle}
+      />
 
       <Divider />
 
@@ -182,18 +191,18 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
         }} />
         <Container className="relative z-10">
           <Heading level={2} className="mb-8 text-white">
-            What You'll Learn
+            {course.learningTitle || "What You'll Learn"}
           </Heading>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
+            {(course.learningPoints || [
               'Master the fundamentals and advanced concepts',
               'Build real-world projects from scratch',
               'Learn industry best practices and patterns',
               'Get personalized feedback and support',
               'Understand how to apply these skills professionally',
               'Join a community of like-minded learners',
-            ].map((item, index) => (
+            ]).map((item, index) => (
               <div key={index} className="flex gap-3">
                 <span className="text-2xl flex-shrink-0 text-cyan-400">✓</span>
                 <Text color="secondary" className="text-slate-300">{item}</Text>
@@ -223,7 +232,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
               Ready to Get Started?
             </Heading>
             <Text size="lg" className="text-slate-300 mb-8">
-              Join thousands of students learning this course
+              {course.ctaSupportText || 'Join thousands of students learning this course'}
             </Text>
             <Button
               variant="primary"
@@ -241,3 +250,4 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
     </>
   );
 }
+

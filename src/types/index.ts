@@ -24,6 +24,12 @@ export interface Course {
   tags: string[];
   batchInfo?: string;
   nextBatch?: string;
+  curriculumTitle?: string;
+  curriculumSubtitle?: string;
+  learningTitle?: string;
+  learningPoints?: string[];
+  certificateText?: string;
+  ctaSupportText?: string;
   createdAt: string;
   updatedAt: string;
 }

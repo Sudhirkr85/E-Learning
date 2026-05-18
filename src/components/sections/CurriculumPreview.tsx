@@ -5,9 +5,11 @@ import { Lesson } from '@/types';
 
 interface CurriculumPreviewProps {
   lessons: Lesson[];
+  title?: string;
+  subtitle?: string;
 }
 
-export function CurriculumPreview({ lessons }: CurriculumPreviewProps) {
+export function CurriculumPreview({ lessons, title, subtitle }: CurriculumPreviewProps) {
   return (
     <section className="relative py-16 md:py-24 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
       {/* Spider-web background */}
@@ -21,10 +23,10 @@ export function CurriculumPreview({ lessons }: CurriculumPreviewProps) {
       <Container className="relative z-10">
         <div className="max-w-2xl mx-auto">
           <Heading level={2} className="mb-4 text-white">
-            Curriculum Overview
+            {title || 'Curriculum Overview'}
           </Heading>
           <Text size="lg" color="muted" className="mb-12 text-slate-400">
-            Get a sneak peek at what you'll learn in this course
+            {subtitle || "Get a sneak peek at what you'll learn in this course"}
           </Text>
 
           <div className="space-y-3">
@@ -43,9 +45,6 @@ export function CurriculumPreview({ lessons }: CurriculumPreviewProps) {
                         {lesson.description}
                       </Text>
                     )}
-                    <Text size="sm" color="muted" className="text-xs text-slate-500">
-                      ⏱️ {lesson.duration} minutes
-                    </Text>
                   </div>
                 </div>
               </Card>
@@ -64,3 +63,4 @@ export function CurriculumPreview({ lessons }: CurriculumPreviewProps) {
     </section>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -389,10 +389,10 @@ export function CheckoutContent() {
           <Container className="relative z-10">
             <div className="mx-auto max-w-5xl">
               <Heading level={1} className="mb-3 text-white">
-                Checkout
+                Complete Your Enrollment
               </Heading>
               <Text className="mb-8 text-slate-300">
-                Review your selected course and complete payment in one step.
+                Secure your seat in the 30-Day AI-Powered Full Stack Development Bootcamp.
               </Text>
 
                   <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 md:p-5">
@@ -401,7 +401,7 @@ export function CheckoutContent() {
                         Student Contact
                       </Heading>
                       <Text className="text-sm text-slate-400">
-                        Enter the phone number we should store with this purchase.
+                        Enter your WhatsApp number for class updates, support, and course access.
                       </Text>
                     </div>
 
@@ -504,7 +504,7 @@ export function CheckoutContent() {
 
                 <Card className="sticky top-24 self-start border border-slate-800 bg-slate-900/80 p-6">
                   <Heading level={3} className="mb-4 text-white">
-                    Order Summary
+                    Introductory Student Pricing
                   </Heading>
 
                   <div className="mb-5 rounded-xl border border-slate-800 bg-slate-950/70 p-4">
@@ -517,11 +517,11 @@ export function CheckoutContent() {
 
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-4">
-                      <Text className="text-slate-400">Course fee</Text>
+                      <Text className="text-slate-400">Course Access</Text>
                       <Text className="font-semibold text-white">₹{coursePrice.toLocaleString()}</Text>
                     </div>
                     <div className="flex items-center justify-between gap-4">
-                      <Text className="text-slate-400">GST (18%)</Text>
+                      <Text className="text-slate-400">GST</Text>
                       <Text className="font-semibold text-white">₹{taxAmount.toLocaleString()}</Text>
                     </div>
                   </div>
@@ -529,7 +529,7 @@ export function CheckoutContent() {
                   <Divider className="my-5 border-slate-800" />
 
                   <div className="mb-6 flex items-end justify-between gap-4">
-                    <Text className="text-lg font-semibold text-white">Total</Text>
+                    <Text className="text-lg font-semibold text-white">Total Payable</Text>
                     <Text className="text-3xl font-bold text-cyan-300">₹{totalAmount.toLocaleString()}</Text>
                   </div>
 
@@ -540,8 +540,11 @@ export function CheckoutContent() {
                     onClick={handlePayment}
                     disabled={isLoading || !course || !isLoaded || !user || !scriptLoaded}
                   >
-                    {isLoading ? 'Processing...' : 'Proceed to Payment'}
+                    {isLoading ? 'Processing...' : 'Complete Enrollment'}
                   </Button>
+                  <Text size="sm" className="mt-3 text-center text-slate-400">
+                    ✅ Beginner Friendly • Certificate Included • Secure Payment
+                  </Text>
                 </Card>
               </div>
             </div>
@@ -617,3 +620,5 @@ export function CheckoutContent() {
       </>
     );
   }
+
+
