@@ -65,6 +65,10 @@ export default function AdminCertificatesPage() {
 
   const updateCertificate = async (certificateId: string, status: CertificateRow['status']) => {
     const form = editing[certificateId];
+    if (status === 'approved' && !form?.completionDate) {
+      setMessage('Please select completion date before approving the certificate.');
+      return;
+    }
     try {
       setMessage('');
       const response = await fetch(`/api/admin/certificates/${certificateId}`, {

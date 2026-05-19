@@ -40,6 +40,14 @@ export async function PATCH(
 
     const { certificateId } = await params;
     const body = await request.json();
+    const isApproving = body?.status === 'approved';
+
+    if (isApproving && !body?.completionDate) {
+      return NextResponse.json(
+        { success: false, error: 'Completion date is required before approving certificate.' },
+        { status: 400 }
+      );
+    }
 
     const updated = await CertificateModel.updateByCertificateId(certificateId, {
       status: body?.status,

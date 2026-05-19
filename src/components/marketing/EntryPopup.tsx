@@ -266,7 +266,7 @@ export function EntryPopup() {
     };
   }, [isMounted]);
 
-  if (pathname?.startsWith('/admin')) {
+  if (pathname !== '/') {
     return null;
   }
 
