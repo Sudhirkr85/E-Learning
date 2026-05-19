@@ -11,6 +11,19 @@ export default async function VerifyCertificatePage({ searchParams }: Props) {
   const params = await searchParams;
   const certificateId = params.certificateId?.trim();
   const certificate = certificateId ? await CertificateModel.findByCertificateId(certificateId) : null;
+  const certificatePreviewData = certificate
+    ? {
+        certificateId: certificate.certificateId,
+        studentName: certificate.studentName,
+        courseTitle: certificate.courseTitle,
+        status: certificate.status,
+        issueDate: certificate.issueDate ? certificate.issueDate.toISOString() : null,
+        approvedBy: certificate.approvedBy || null,
+        completionDate: certificate.completionDate ? certificate.completionDate.toISOString() : null,
+        trainingStartDate: certificate.trainingStartDate ? certificate.trainingStartDate.toISOString() : null,
+        trainingEndDate: certificate.trainingEndDate ? certificate.trainingEndDate.toISOString() : null,
+      }
+    : null;
 
   return (
     <>
@@ -35,12 +48,12 @@ export default async function VerifyCertificatePage({ searchParams }: Props) {
         </div>
 
         <div className="mx-auto mt-10 max-w-6xl">
-          {certificate ? (
+          {certificatePreviewData ? (
             <>
               <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-200">
                 Certificate verified successfully.
               </div>
-              <CertificatePreview certificate={certificate} />
+              <CertificatePreview certificate={certificatePreviewData} />
             </>
           ) : certificateId ? (
             <div className="rounded-[28px] border border-red-400/20 bg-red-500/10 p-8 text-center text-red-100">

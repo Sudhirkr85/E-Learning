@@ -78,7 +78,8 @@ export function CertificatePreview({ certificate }: CertificatePreviewProps) {
                     alt="Signature"
                     width={170}
                     height={54}
-                    className="h-auto w-[140px] object-contain brightness-110 contrast-125 saturate-105 sm:w-[170px] md:ml-auto"
+                    style={{ width: "100%", height: "auto" }}
+                    className="max-w-[140px] object-contain brightness-110 contrast-125 saturate-105 sm:max-w-[170px] md:ml-auto"
                   />
                   <div className="mt-2 text-lg font-semibold text-[#102348] sm:text-xl">Satish Soni</div>
                   <div className="mt-1 text-xs text-[#4f638a] sm:text-sm">Director</div>

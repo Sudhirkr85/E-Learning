@@ -6,6 +6,8 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Fixed certificate verification to serialize MongoDB documents into plain objects before passing data to client certificate preview components.
+- Fixed signature image rendering in certificate preview to preserve aspect ratio and remove Next.js width/height warning noise in the browser console.
 - Added a premium certificate workflow with student application, admin approval, public verification, and downloadable certificate previews.
 - Fixed Next.js SEO metadata routes so `sitemap.xml` and `robots.txt` are served through App Router metadata files without auth interception.
 - Wired the enquiry popup to the backend using the shared base API URL and the public enquiries endpoint.
