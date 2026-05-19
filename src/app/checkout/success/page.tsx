@@ -61,7 +61,7 @@ function PaymentSuccessContent() {
         if (courseData.success) {
           setCourse(courseData.course);
           const sessionsRes = await fetch(
-            `/api/admin/sessions?courseId=${encodeURIComponent(courseData.course.id)}`
+            `/api/courses/sessions?courseId=${encodeURIComponent(courseData.course.id)}`
           );
           const sessionsData = await sessionsRes.json();
 

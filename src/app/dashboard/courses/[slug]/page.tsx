@@ -71,12 +71,11 @@ export default function CourseDetailPage() {
         }
 
         if (hasAccess) {
-          const sessionsRes = await fetch(`/api/admin/sessions?courseId=${encodeURIComponent(courseData.course.id)}`);
+          const sessionsRes = await fetch(`/api/courses/sessions?courseId=${encodeURIComponent(courseData.course.id)}`);
           const sessionsData = await sessionsRes.json();
 
           if (sessionsData.success) {
-            // only show active sessions to students
-            setSessions((sessionsData.sessions || []).filter((s: any) => s.active !== false));
+            setSessions((sessionsData.sessions || []));
           }
         } else {
           // no access: keep sessions empty
