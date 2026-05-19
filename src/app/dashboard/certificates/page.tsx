@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useUserSync } from '@/hooks/use-user-sync';
 import { CertificateRequest } from '@/types';
@@ -33,6 +33,8 @@ export default function CertificatesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useUserSync();
 
@@ -270,7 +272,7 @@ export default function CertificatesPage() {
 
               {/* Modal */}
               {isModalOpen ? (
-                <div className="fixed inset-0 z-[9999] overflow-y-auto">
+                <div className="fixed inset-0 z-[9999]">
                   <div
                     className="fixed inset-0 bg-[#020817]/78 backdrop-blur-2xl backdrop-saturate-150"
                     onClick={() => setIsModalOpen(false)}
@@ -278,20 +280,27 @@ export default function CertificatesPage() {
 
                   <div className="relative z-[10000] mx-auto flex min-h-full w-full max-w-5xl items-start justify-center px-4 py-6 md:items-center md:py-8">
                     <div className="transform transition-all duration-300 ease-out">
-                      <div className="relative max-h-[calc(100vh-3rem)] overflow-y-auto rounded-2xl bg-[#071125] shadow-2xl animate-fade-in-scale md:max-h-[calc(100vh-4rem)]">
+                      <div className="relative rounded-2xl bg-[#071125] shadow-2xl animate-fade-in-scale md:max-h-[calc(100vh-4rem)]">
                         <button
                           onClick={() => setIsModalOpen(false)}
-                          className="sticky right-3 top-3 z-20 ml-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-[#0b1833]/90 text-slate-200 shadow-lg backdrop-blur hover:bg-[#12264a] hover:text-white"
+                          className={`absolute right-3 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-[#0b1833]/90 text-slate-200 shadow-lg backdrop-blur hover:bg-[#12264a] hover:text-white transition-all duration-200 ${isAtTop ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
                           aria-label="Close preview"
                         >
                           <span className="text-xl leading-none">&times;</span>
                         </button>
-                        <div className="px-4 pb-4 pt-2 sm:p-6">
-                          {previewCertificate ? (
-                            <CertificatePreview
-                              certificate={previewCertificate as CertificateRequest}
-                            />
-                          ) : null}
+
+                        <div ref={scrollRef} onScroll={() => {
+                          const el = scrollRef.current;
+                          if (!el) return;
+                          setIsAtTop(el.scrollTop === 0);
+                        }} className="max-h-[calc(100vh-3rem)] overflow-y-auto rounded-2xl">
+                          <div className="px-4 pb-4 pt-2 sm:p-6">
+                            {previewCertificate ? (
+                              <CertificatePreview
+                                certificate={previewCertificate as CertificateRequest}
+                              />
+                            ) : null}
+                          </div>
                         </div>
                       </div>
                     </div>
