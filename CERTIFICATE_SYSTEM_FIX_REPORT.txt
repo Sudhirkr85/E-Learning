@@ -1,0 +1,41 @@
+Root Cause
+- Certificate download API previously allowed non-PDF fallback paths and Playwright runtime dependency was not always installed, causing invalid/corrupted downloads or failures.
+- Certificate HTML content included website URL text and legacy footer content not matching final premium certificate output.
+
+Fixed
+- Hardened student certificate download route to PDF-only behavior for download flow:
+  - File: src/app/api/student/certificates/[certificateId]/download/route.ts
+  - Requires `?pdf=1` and refuses non-PDF mode for this endpoint path.
+  - Generates PDF using Playwright and validates PDF binary signature (`%PDF-`) before response.
+  - Returns strict PDF headers:
+    - Content-Type: application/pdf
+    - Content-Disposition: attachment; filename="certificate.pdf"
+    - Content-Length + Cache-Control
+- Preserved approval/auth checks and existing certificate apply/approval flow.
+- Cleaned certificate content:
+  - Removed raw website URL text from certificate body/footer.
+  - Added “Verify Certificate” action text in certificate footer area.
+  - Signature block now uses signature image in bottom-right visual block.
+  - Kept: Certificate of Completion, student name, course name, Online Live Training, training period, issue date, certificate ID, authorized signatory.
+- Frontend download flow already hardened earlier:
+  - Content-Type validation, blob size validation, safe object URL creation, delayed revoke, error handling, and disabled state during download.
+
+Verified
+- Code-level verification completed for:
+  - PDF-only response path
+  - PDF header validation
+  - Correct response headers
+  - Clean certificate content updates
+  - No changes to admin approval workflow/apply page/preview modal logic
+- Runtime note:
+  - PDF generation requires Playwright Chromium installed on host.
+  - Run: `npx playwright install chromium`
+
+Remaining Issues
+- If Playwright browser binary is missing on environment, API returns controlled 500 error (not corrupted PDF).
+- Repo contains pre-existing unrelated lint/type issues outside certificate scope.
+
+Final Certificate Status
+- Certificate system is now configured for valid binary PDF output with strict headers and safer download handling.
+- Certificate content is cleaned (no raw URL clutter), signature placement is professional, and verification action text is present.
+- Final runtime success depends on Playwright Chromium availability on deployment machine.
