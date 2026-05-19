@@ -22,12 +22,15 @@ export const ROUTES = {
   COURSE_DETAILS: '/courses/:id',
   DASHBOARD: '/dashboard',
   MY_COURSES: '/dashboard/courses',
+  CERTIFICATES: '/dashboard/certificates',
   LESSON: '/dashboard/lessons/:id',
   CHECKOUT: '/checkout',
   PAYMENT_SUCCESS: '/payment-success',
   PAYMENT_FAILED: '/payment-failed',
   PROFILE: '/dashboard/profile',
   SETTINGS: '/dashboard/settings',
+  VERIFY_CERTIFICATE: '/verify-certificate',
+  ADMIN_CERTIFICATES: '/admin/certificates',
 };
 
 // Course Status

@@ -12,10 +12,13 @@ const isStudentPublicRoute = createRouteMatcher([
   '/checkout',
   '/checkout/(.*)',
   '/payment-failed',
+  '/verify-certificate',
+  '/verify-certificate/(.*)',
   '/api/courses(.*)',
   '/api/razorpay(.*)',
   '/api/student(.*)',
   '/api/user(.*)',
+  '/api/certificates(.*)',
 ]);
 
 // Define admin routes that don't need auth

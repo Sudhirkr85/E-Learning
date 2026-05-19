@@ -6,6 +6,7 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Added a premium certificate workflow with student application, admin approval, public verification, and downloadable certificate previews.
 - Fixed Next.js SEO metadata routes so `sitemap.xml` and `robots.txt` are served through App Router metadata files without auth interception.
 - Wired the enquiry popup to the backend using the shared base API URL and the public enquiries endpoint.
 - Hid the enquiry popup on admin routes so it no longer appears inside the admin panel.

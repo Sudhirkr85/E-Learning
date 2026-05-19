@@ -113,6 +113,27 @@ export interface Payment {
   updatedAt: string;
 }
 
+// Certificate Related Types
+export interface CertificateRequest {
+  id?: string;
+  certificateId: string;
+  studentId: string;
+  studentName: string;
+  studentEmail?: string;
+  courseId: string;
+  courseSlug?: string;
+  courseTitle: string;
+  status: 'pending' | 'approved' | 'rejected';
+  issueDate?: string | null;
+  approvedBy?: string | null;
+  completionDate?: string | null;
+  trainingStartDate?: string | null;
+  trainingEndDate?: string | null;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Cart Related Types
 export interface CartItem {
   courseId: string;

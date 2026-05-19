@@ -101,9 +101,7 @@ export default function DashboardPage() {
                       ₹{purchase.amount.toLocaleString()}
                     </p>
                     <a
-                      href={`https://sssamacademy.com/download-certificate.html?orderId=${purchase.orderId || ''}&email=${encodeURIComponent(purchase.studentEmail || '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/dashboard/certificates"
                       className="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-md"
                     >
                       Certificate

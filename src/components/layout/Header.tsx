@@ -65,15 +65,13 @@ export function Header() {
               Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <a
-              href="https://sssamacademy.com/download-certificate.html"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={ROUTES.CERTIFICATES}
               className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
             >
               Certificate
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </Link>
           </nav>
 
           {/* Auth Buttons & CTA */}
@@ -203,14 +201,13 @@ export function Header() {
             >
               Contact
             </Link>
-            <a
-              href="https://sssamacademy.com/download-certificate.html"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={ROUTES.CERTIFICATES}
               className="block text-slate-300 hover:text-cyan-300 transition-colors font-medium py-2"
+              onClick={() => setIsMenuOpen(false)}
             >
               Certificate
-            </a>
+            </Link>
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
               {user ? (
                 <>

@@ -14,6 +14,7 @@ export function DashboardSidebar() {
   const menuItems = [
     { label: 'Dashboard', href: ROUTES.DASHBOARD, icon: '📊' },
     { label: 'My Courses', href: ROUTES.MY_COURSES, icon: '📚' },
+    { label: 'Certificates', href: ROUTES.CERTIFICATES, icon: '🎓' },
     { label: 'Profile', href: ROUTES.PROFILE, icon: '👤' },
     { label: 'Settings', href: ROUTES.SETTINGS, icon: '⚙️' },
   ];
