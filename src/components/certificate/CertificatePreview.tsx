@@ -70,7 +70,7 @@ export function CertificatePreview({ certificate }: CertificatePreviewProps) {
               We appreciate your dedication, commitment, and successful completion of the program, and wish you continued success in your professional journey.
             </p>
 
-            <div className="mt-auto border-t border-[#dfcfac] pt-4 sm:pt-5">
+            <div className="mt-auto pt-5 sm:pt-6">
               <div className="flex justify-end">
                 <div className="w-full max-w-[210px] text-left sm:max-w-[280px] md:text-right">
                   <Image

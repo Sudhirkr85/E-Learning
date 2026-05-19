@@ -95,7 +95,7 @@ export async function GET(
     .boxValue { margin-top: 6px; font-size: 14px; font-weight: 600; color: #102348; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
     .note { margin: 14px auto 0; max-width: 720px; text-align: center; color: #596f96; font-size: 13px; line-height: 1.45; }
-    .footer { margin-top: auto; border-top: 1px solid #dfcfac; padding-top: 14px; display: flex; justify-content: flex-end; }
+    .footer { margin-top: auto; padding-top: 18px; display: flex; justify-content: flex-end; }
     .sign { width: 280px; text-align: right; }
     .sign img { width: 170px; height: auto; object-fit: contain; margin-left: auto; filter: brightness(1.1) contrast(1.25) saturate(1.05); }
     .signName { margin-top: 8px; font-size: 20px; font-weight: 600; color: #102348; }
