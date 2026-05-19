@@ -32,6 +32,7 @@ export default function CertificatesPage() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [isAtTop, setIsAtTop] = useState(true);
@@ -246,9 +247,20 @@ export default function CertificatesPage() {
                         onClick={async () => {
                           if (!selectedCertificate) return;
                           try {
+                            setIsDownloading(true);
                             const res = await fetch(`/api/student/certificates/${selectedCertificate.certificateId}/download?pdf=1`);
-                            if (!res.ok) throw new Error('Download failed');
+                            const contentType = res.headers.get('content-type') || '';
+                            if (!res.ok) {
+                              const errorText = await res.text();
+                              throw new Error(errorText || 'Download failed');
+                            }
+                            if (!contentType.toLowerCase().includes('application/pdf')) {
+                              throw new Error(`Invalid download content type: ${contentType || 'unknown'}`);
+                            }
                             const blob = await res.blob();
+                            if (blob.size === 0) {
+                              throw new Error('Downloaded PDF is empty');
+                            }
                             const url = URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = url;
@@ -256,14 +268,18 @@ export default function CertificatesPage() {
                             document.body.appendChild(a);
                             a.click();
                             a.remove();
-                            URL.revokeObjectURL(url);
+                            setTimeout(() => URL.revokeObjectURL(url), 1000);
                           } catch (err) {
                             console.error(err);
+                            setMessage('PDF download failed. Please try again in a moment.');
+                          } finally {
+                            setIsDownloading(false);
                           }
                         }}
+                        disabled={isDownloading}
                         className="rounded-full bg-gradient-to-r from-[#6ea8ff] to-[#3b82f6] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-105"
                       >
-                        Download Certificate
+                        {isDownloading ? 'Downloading...' : 'Download Certificate'}
                       </button>
                     </>
                   )}

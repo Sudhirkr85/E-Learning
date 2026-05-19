@@ -110,20 +110,43 @@ export async function GET(
 </body>
 </html>`;
 
-    // If client requested PDF, try to render PDF on the server using Playwright.
-    const makePdf = async () => {
+    // If client requested PDF, render a true PDF on the server using Playwright.
+    const makePdf = async (): Promise<Uint8Array | null> => {
       try {
         // Playwright is optional. Suppress TS error when it's not installed.
         // @ts-ignore
         const { chromium } = await import('playwright');
-        const browser = await chromium.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true });
-        const page = await browser.newPage();
-        await page.setContent(content, { waitUntil: 'networkidle' });
-        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
-        await browser.close();
-        return pdfBuffer;
+        const browser = await chromium.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+          headless: true,
+        });
+        try {
+          const page = await browser.newPage();
+          await page.setContent(content, { waitUntil: 'networkidle' });
+          const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+          const pdfBytes = new Uint8Array(pdfBuffer);
+          // Basic PDF signature check: "%PDF-"
+          const isPdf =
+            pdfBytes.length > 5 &&
+            pdfBytes[0] === 0x25 &&
+            pdfBytes[1] === 0x50 &&
+            pdfBytes[2] === 0x44 &&
+            pdfBytes[3] === 0x46 &&
+            pdfBytes[4] === 0x2d;
+          if (!isPdf) {
+            console.error('PDF generation produced invalid bytes (missing PDF header).');
+            return null;
+          }
+          return pdfBytes;
+        } finally {
+          await browser.close();
+        }
       } catch (err) {
         console.error('PDF generation failed (Playwright missing or error):', err);
+        const message = err instanceof Error ? err.message : String(err);
+        if (message.toLowerCase().includes("executable doesn't exist")) {
+          console.error('Playwright browser executable missing. Run: npx playwright install chromium');
+        }
         return null;
       }
     };
@@ -133,18 +156,20 @@ export async function GET(
     if (wantPdf) {
       const pdf = await makePdf();
       if (pdf) {
-        // Convert Node Buffer to Uint8Array for NextResponse body typing
-        const uint8 = new Uint8Array(pdf as any);
-        return new NextResponse(uint8, {
+        return new NextResponse(pdf, {
           status: 200,
           headers: {
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="${certificate.certificateId}.pdf"`,
             'Cache-Control': 'no-store',
+            'Content-Length': String(pdf.byteLength),
           },
         });
       }
-      // Fallback to HTML if PDF couldn't be created
+      return NextResponse.json(
+        { success: false, error: 'Failed to generate PDF certificate' },
+        { status: 500 }
+      );
     }
 
     return new NextResponse(content, {

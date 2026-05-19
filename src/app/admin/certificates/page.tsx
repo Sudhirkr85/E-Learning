@@ -176,10 +176,14 @@ export default function AdminCertificatesPage() {
                       />
                     </td>
                     <td className="px-5 py-4">
-                      <div className="flex flex-wrap gap-2">
-                        <button onClick={() => updateCertificate(certificate.certificateId, 'approved')} className="rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950">Approve</button>
-                        <button onClick={() => updateCertificate(certificate.certificateId, 'rejected')} className="rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-red-950">Reject</button>
-                      </div>
+                      {certificate.status !== 'approved' ? (
+                        <div className="flex flex-wrap gap-2">
+                          <button onClick={() => updateCertificate(certificate.certificateId, 'approved')} className="rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-emerald-950">Approve</button>
+                          <button onClick={() => updateCertificate(certificate.certificateId, 'rejected')} className="rounded-full bg-red-500 px-4 py-2 text-xs font-semibold text-red-950">Reject</button>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-semibold text-emerald-300">Approved</span>
+                      )}
                     </td>
                   </tr>
                 );
