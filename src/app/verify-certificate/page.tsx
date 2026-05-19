@@ -37,7 +37,7 @@ export default async function VerifyCertificatePage({ searchParams }: Props) {
             <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-200">
               Certificate verified successfully.
             </div>
-            <CertificatePreview certificate={certificate} publicView />
+            <CertificatePreview certificate={certificate} />
           </>
         ) : certificateId ? (
           <div className="rounded-[28px] border border-red-400/20 bg-red-500/10 p-8 text-center text-red-100">

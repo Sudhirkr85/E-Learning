@@ -65,13 +65,16 @@ export function Header() {
               Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link
-              href={ROUTES.CERTIFICATES}
-              className="text-gray-300 hover:text-cyan-300 transition-colors font-medium relative group"
-            >
-              Certificate
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
+            <div className="relative group">
+              <button className="text-gray-300 hover:text-cyan-300 transition-colors font-medium flex items-center gap-2">
+                Certificate
+                <svg className="w-3 h-3 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div className="absolute left-0 mt-2 w-44 bg-slate-800 rounded-lg shadow-lg border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <Link href={ROUTES.CERTIFICATES} className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700">Apply</Link>
+                <Link href="/verify-certificate" className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700">Verify</Link>
+              </div>
+            </div>
           </nav>
 
           {/* Auth Buttons & CTA */}
@@ -201,13 +204,10 @@ export function Header() {
             >
               Contact
             </Link>
-            <Link
-              href={ROUTES.CERTIFICATES}
-              className="block text-slate-300 hover:text-cyan-300 transition-colors font-medium py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Certificate
-            </Link>
+            <>
+              <Link href={ROUTES.CERTIFICATES} className="block text-slate-300 hover:text-cyan-300 transition-colors font-medium py-2" onClick={() => setIsMenuOpen(false)}>Apply</Link>
+              <Link href="/verify-certificate" className="block text-slate-300 hover:text-cyan-300 transition-colors font-medium py-2" onClick={() => setIsMenuOpen(false)}>Verify</Link>
+            </>
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
               {user ? (
                 <>

@@ -21,6 +21,19 @@ export default async function CertificateDetailPage({ params }: Props) {
     notFound();
   }
 
+  // Convert MongoDB document to plain object safe for Client Component props
+  const certificatePlain = {
+    certificateId: certificate.certificateId,
+    studentName: certificate.studentName,
+    courseTitle: certificate.courseTitle,
+    status: certificate.status,
+    issueDate: certificate.issueDate ? certificate.issueDate.toISOString() : null,
+    approvedBy: certificate.approvedBy || null,
+    completionDate: certificate.completionDate ? certificate.completionDate.toISOString() : null,
+    trainingStartDate: certificate.trainingStartDate ? certificate.trainingStartDate.toISOString() : null,
+    trainingEndDate: certificate.trainingEndDate ? certificate.trainingEndDate.toISOString() : null,
+  };
+
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-8 max-w-3xl">
@@ -30,9 +43,7 @@ export default async function CertificateDetailPage({ params }: Props) {
       </div>
 
       <CertificatePreview
-        certificate={certificate}
-        downloadHref={`/api/student/certificates/${certificate.certificateId}/download`}
-        verifyHref={`/verify-certificate?certificateId=${certificate.certificateId}`}
+        certificate={certificatePlain}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CertificateModel } from '@/lib/models/certificate';
+import { SITE_CONFIG } from '@/constants';
 
 interface RouteParams {
   params: Promise<{ certificateId: string }>;
@@ -50,136 +51,48 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>${escapeHtml(certificate.certificateId)} - SSSAM Academy</title>
           <style>
-            :root {
-              color-scheme: dark;
-            }
-            body {
-              margin: 0;
-              min-height: 100vh;
-              display: grid;
-              place-items: center;
-              background: linear-gradient(135deg, #08111f 0%, #0d1b33 55%, #121f3d 100%);
-              color: #f8fafc;
-              font-family: Inter, Arial, sans-serif;
-            }
-            .sheet {
-              width: min(1120px, calc(100vw - 32px));
-              border: 1px solid rgba(216, 187, 114, 0.25);
-              border-radius: 28px;
-              background: rgba(5, 12, 23, 0.94);
-              box-shadow: 0 30px 120px rgba(2, 10, 25, 0.55);
-              overflow: hidden;
-            }
-            .sheet-inner {
-              padding: 42px;
-              display: grid;
-              grid-template-columns: 1.45fr 0.95fr;
-              gap: 28px;
-            }
-            .panel {
-              border: 1px solid rgba(255,255,255,0.08);
-              border-radius: 24px;
-              background: rgba(255,255,255,0.03);
-              padding: 28px;
-            }
-            .eyebrow {
-              letter-spacing: 0.3em;
-              text-transform: uppercase;
-              color: #d8bb72;
-              font-size: 12px;
-              font-weight: 700;
-            }
-            h1 {
-              margin: 10px 0 0;
-              font-size: 52px;
-              line-height: 1;
-            }
-            .muted { color: #cbd5e1; }
-            .name { font-size: 46px; font-weight: 700; margin: 10px 0 0; }
-            .grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .info, .status-box, .signature, .detail-box { border-radius: 18px; border: 1px solid rgba(255,255,255,0.08); background: rgba(2,6,23,0.35); padding: 18px; }
-            .label { color: #94a3b8; text-transform: uppercase; letter-spacing: 0.18em; font-size: 11px; }
-            .value { margin-top: 8px; font-size: 18px; font-weight: 600; }
-            .right { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
-            .cert-id { font-family: monospace; font-size: 14px; }
-            .approved { display: inline-flex; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); padding: 10px 16px; font-weight: 700; }
-            .signature-name { margin-top: 22px; font-size: 30px; color: #f0d48c; font-family: Georgia, serif; }
-            @media print {
-              body { background: #fff; }
-              .sheet { width: 100%; box-shadow: none; }
-            }
-            @media (max-width: 900px) {
-              .sheet-inner { grid-template-columns: 1fr; padding: 24px; }
-              h1 { font-size: 34px; }
-              .name { font-size: 34px; }
-              .grid { grid-template-columns: 1fr; }
-            }
+            body { margin: 0; font-family: Inter, Arial, sans-serif; background: #08111f; color: #0b1724; }
+            .page { min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
+            .card { width: min(1120px, 100%); border-radius: 28px; padding: 0; background: linear-gradient(145deg, rgba(8,17,31,.98), rgba(10,22,45,1)); box-shadow: 0 30px 120px rgba(2,10,25,.55); }
+            .inner { background: #fff; margin: 24px; border-radius: 20px; position: relative; padding: 36px; }
+            .watermark { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; opacity:0.06; font-size:120px; font-weight:800; color:#000; pointer-events:none; }
+            .brand { color: #b58f2a; letter-spacing: .35em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+            h1 { margin: 8px 0 0; font-size: 42px; color: #0b1724; }
+            .muted { color: #6b7280; margin-top:6px; }
+            .logo { display:flex; justify-content:center; }
+            .certIdBox { position:absolute; right:36px; top:36px; background:#fff9ef; border:1px solid rgba(214,177,92,0.25); padding:10px 14px; border-radius:10px; }
+            .certIdBox .label { color:#8b6a1a; font-weight:700; font-size:12px; }
+            .studentName { text-align:center; margin-top:18px; font-size:44px; font-weight:800; color:#0b1724; }
+            .courseName { text-align:center; margin-top:8px; font-size:22px; font-weight:700; color:#0b1724; }
+            .mainSentence { margin-top:14px; text-align:center; color:#374151; }
+            .pills { display:flex; gap:8px; justify-content:center; margin-top:14px; }
+            .pill { background:#f3ecd6; color:#6b4d12; padding:8px 12px; border-radius:999px; font-weight:700; }
+            .signature { position:absolute; left:48px; bottom:36px; text-align:left; }
+            .contact { position:absolute; right:48px; bottom:36px; text-align:right; color:#374151; }
+            .badge { display:inline-block; background:linear-gradient(90deg,#d6b15c,#f0d48c); color:#08111f; padding:8px 12px; border-radius:999px; font-weight:800; }
+            @media print { body { background:#fff } .card { box-shadow:none } }
           </style>
         </head>
         <body>
           <div class="sheet">
-            <div class="sheet-inner">
-              <div class="panel">
-                <div style="display:flex; justify-content:space-between; gap:20px; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,0.10); padding-bottom:20px; margin-bottom:24px;">
-                  <div>
-                    <div class="eyebrow">SSSAM Academy</div>
-                    <h1>Certificate of Completion</h1>
-                    <div class="muted" style="margin-top:8px;">Premium completion certificate for live training programs</div>
-                  </div>
-                  <div style="border-radius:18px; border:1px solid rgba(216,187,114,0.25); background:rgba(216,187,114,0.10); padding:16px; text-align:right; min-width:180px;">
-                    <div class="label">Certificate ID</div>
-                    <div class="cert-id" style="margin-top:8px; color:#fff;">${escapeHtml(certificate.certificateId)}</div>
-                  </div>
-                </div>
+            <div class="inner">
+              <div class="certId">${escapeHtml(certificate.certificateId)}</div>
+              <div class="brand">SSSAM Academy</div>
+              <h1>Certificate of Completion</h1>
+              <div class="muted">Premium Certificate of Completion for Live Training Programs</div>
 
+              <div class="award">
                 <div class="label">Awarded to</div>
                 <div class="name">${escapeHtml(certificate.studentName)}</div>
-
-                <div class="grid" style="margin-top:24px;">
-                  <div class="info">
-                    <div class="label">Course</div>
-                    <div class="value">${escapeHtml(certificate.courseTitle)}</div>
-                  </div>
-                  <div class="info">
-                    <div class="label">Mode</div>
-                    <div class="value">Online Live Training</div>
-                  </div>
-                  <div class="info">
-                    <div class="label">Training Start</div>
-                    <div class="value">${displayDate(certificate.trainingStartDate)}</div>
-                  </div>
-                  <div class="info">
-                    <div class="label">Training End</div>
-                    <div class="value">${displayDate(certificate.trainingEndDate)}</div>
-                  </div>
-                  <div class="info">
-                    <div class="label">Issue Date</div>
-                    <div class="value">${displayDate(certificate.issueDate)}</div>
-                  </div>
-                  <div class="info">
-                    <div class="label">Verify Certificate</div>
-                    <div class="value">${escapeHtml(`${process.env.NEXT_PUBLIC_APP_URL || ''}/verify-certificate?certificateId=${encodeURIComponent(certificate.certificateId)}`)}</div>
-                  </div>
-                </div>
+                <div class="course">${escapeHtml(certificate.courseTitle)}</div>
+                <div class="meta">Training: ${displayDate(certificate.trainingStartDate)} — ${displayDate(certificate.trainingEndDate)} | Issued: ${displayDate(certificate.issueDate)}</div>
               </div>
 
-              <div class="right">
-                <div class="status-box">
-                  <div class="eyebrow">Certificate Status</div>
-                  <div class="approved" style="margin-top:14px;">APPROVED</div>
-                  <div class="detail-box" style="margin-top:18px;">
-                    <div class="label">Training Period</div>
-                    <div class="value" style="font-size:16px; font-weight:500;">${displayDate(certificate.trainingStartDate)} to ${displayDate(certificate.trainingEndDate)}</div>
-                    <div class="label" style="margin-top:16px;">Completion Date</div>
-                    <div class="value" style="font-size:16px; font-weight:500;">${displayDate(certificate.completionDate)}</div>
-                  </div>
-                </div>
-
-                <div class="signature">
-                  <div class="label">Authorized Signature</div>
-                  <div class="signature-name">Sudesh Yadav</div>
-                  <div class="muted" style="margin-top:4px;">Founder, SSSAM Academy</div>
-                </div>
+              <div class="signature">
+                <img src="/images/signatures/satish-kumar.svg" alt="signature" style="max-width:280px; display:block;" />
+                <div style="margin-top:6px; font-weight:700;">${escapeHtml(certificate.approvedBy || 'Satish Kumar')}</div>
+                <div style="font-size:13px;">Director</div>
+                <div style="font-size:13px;">SSSAM Academy</div>
               </div>
             </div>
           </div>

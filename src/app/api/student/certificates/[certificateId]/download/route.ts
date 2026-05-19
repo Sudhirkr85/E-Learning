@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { CertificateModel } from '@/lib/models/certificate';
 import { formatDateIndia } from '@/utils/helpers';
+import { SITE_CONFIG } from '@/constants';
 
 const escapeHtml = (value: string) =>
   value
@@ -33,67 +34,118 @@ export async function GET(
       return NextResponse.json({ success: false, error: 'Certificate is pending approval' }, { status: 403 });
     }
 
+    const modeText = (certificate && (certificate as any).mode) ? `(${escapeHtml(String((certificate as any).mode))})` : '';
+
     const content = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(certificate.certificateId)} - SSSAM Academy Certificate</title>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #08111f; color: #f8fafc; }
-    .page { min-height: 100vh; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }
-    .card { width: min(1120px, 100%); border: 1px solid rgba(214,177,92,.35); border-radius: 28px; padding: 48px; background: linear-gradient(145deg, rgba(8,17,31,.96), rgba(10,22,45,.98)); box-shadow: 0 30px 120px rgba(2,10,25,.55); }
-    .brand { color: #d8bb72; letter-spacing: .35em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
-    .title { margin: 12px 0 0; font-size: 52px; line-height: 1; }
-    .subtitle { margin-top: 8px; color: #cbd5e1; }
-    .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; margin-top: 32px; }
-    .panel { border-radius: 24px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); padding: 28px; }
-    .name { margin: 0; font-size: 44px; line-height: 1.05; }
-    .label { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #94a3b8; }
-    .value { margin-top: 10px; font-size: 18px; font-weight: 700; }
-    .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
-    .metaItem { border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: rgba(2,6,23,.35); padding: 16px; }
-    .signature { margin-top: 20px; font-family: Georgia, serif; font-size: 34px; color: #f0d48c; }
-    .button { display: inline-block; margin-top: 20px; padding: 14px 22px; border-radius: 999px; background: linear-gradient(90deg, #caa95c, #f0d48c); color: #08111f; font-weight: 700; text-decoration: none; }
-  </style>
+      <style>
+        body { margin: 0; font-family: Inter, Arial, sans-serif; background: #08111f; color: #0b1724; }
+        .page { min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
+        .card { width: min(1120px, 100%); border-radius: 28px; padding: 0; background: linear-gradient(145deg, rgba(8,17,31,.98), rgba(10,22,45,1)); box-shadow: 0 30px 120px rgba(2,10,25,.55); }
+        .inner { background: #fff; margin: 24px; border-radius: 20px; position: relative; padding: 36px; }
+        .watermark { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; opacity:0.06; font-size:120px; font-weight:800; color:#000; pointer-events:none; }
+        .brand { color: #b58f2a; letter-spacing: .35em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+        h1 { margin: 8px 0 0; font-size: 42px; color: #0b1724; }
+        .muted { color: #6b7280; margin-top:6px; }
+        .logo { display:flex; justify-content:center; }
+        .certIdBox { position:absolute; right:36px; top:36px; background:#fff9ef; border:1px solid rgba(214,177,92,0.25); padding:10px 14px; border-radius:10px; }
+        .certIdBox .label { color:#8b6a1a; font-weight:700; font-size:12px; }
+        .studentName { text-align:center; margin-top:18px; font-size:44px; font-weight:800; color:#0b1724; }
+        .courseName { text-align:center; margin-top:8px; font-size:22px; font-weight:700; color:#0b1724; }
+        .mainSentence { margin-top:14px; text-align:center; color:#374151; }
+        .pills { display:flex; gap:8px; justify-content:center; margin-top:14px; }
+        .pill { background:#f3ecd6; color:#6b4d12; padding:8px 12px; border-radius:999px; font-weight:700; }
+        .signature { position:absolute; left:48px; bottom:36px; text-align:left; }
+        .contact { position:absolute; right:48px; bottom:36px; text-align:right; color:#374151; }
+        .badge { display:inline-block; background:linear-gradient(90deg,#d6b15c,#f0d48c); color:#08111f; padding:8px 12px; border-radius:999px; font-weight:800; }
+        @media print { body { background:#fff } .card { box-shadow:none } }
+      </style>
 </head>
 <body>
   <div class="page">
-    <div class="card">
-      <div class="brand">SSSAM Academy</div>
-      <h1 class="title">Certificate of Completion</h1>
-      <p class="subtitle">Online Live Training</p>
-      <div class="grid">
-        <div class="panel">
-          <div class="label">Awarded to</div>
-          <h2 class="name">${escapeHtml(certificate.studentName)}</h2>
-          <div class="meta">
-            <div class="metaItem"><div class="label">Course</div><div class="value">${escapeHtml(certificate.courseTitle)}</div></div>
-            <div class="metaItem"><div class="label">Training Start</div><div class="value">${certificate.trainingStartDate ? escapeHtml(formatDateIndia(certificate.trainingStartDate)) : 'To be scheduled'}</div></div>
-            <div class="metaItem"><div class="label">Training End</div><div class="value">${certificate.trainingEndDate ? escapeHtml(formatDateIndia(certificate.trainingEndDate)) : 'To be scheduled'}</div></div>
+      <div class="card">
+        <div class="inner">
+          <div class="watermark">SSSAM</div>
+          <div class="logo"><img src="/images/logo/logo.webp" alt="${SITE_CONFIG.name}" width="96" height="96"/></div>
+          <div class="brand">${SITE_CONFIG.name}</div>
+          <h1>Certificate</h1>
+          <div class="muted">Premium Certificate of Completion for Live Training Programs</div>
+
+          <div class="certIdBox">
+            <div class="label">Certificate ID</div>
+            <div class="value" style="font-family:monospace;">${escapeHtml(certificate.certificateId)}</div>
           </div>
-          <div class="meta" style="grid-template-columns: repeat(2, 1fr);">
-            <div class="metaItem"><div class="label">Certificate ID</div><div class="value">${escapeHtml(certificate.certificateId)}</div></div>
-            <div class="metaItem"><div class="label">Issue Date</div><div class="value">${certificate.issueDate ? escapeHtml(formatDateIndia(certificate.issueDate)) : 'To be scheduled'}</div></div>
+
+          <div class="studentName">${escapeHtml(certificate.studentName)}</div>
+          <div class="courseName">${escapeHtml(certificate.courseTitle)}</div>
+          <div class="mainSentence">This confirms that <strong>${escapeHtml(certificate.studentName)}</strong> has successfully completed the <strong>${escapeHtml(certificate.courseTitle)}</strong> ${modeText} conducted by ${SITE_CONFIG.name}.</div>
+
+          <div class="pills">
+            <div class="pill">${certificate.trainingStartDate ? escapeHtml(formatDateIndia(certificate.trainingStartDate)) : 'TBC'}</div>
+            <div class="pill">to</div>
+            <div class="pill">${certificate.trainingEndDate ? escapeHtml(formatDateIndia(certificate.trainingEndDate)) : 'TBC'}</div>
           </div>
-        </div>
-        <div class="panel">
-          <div class="label">Authorized Signature</div>
-          <div class="signature">Sudesh Yadav</div>
-          <p>Founder, SSSAM Academy</p>
-          <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.08);">
-            <div class="label">Completion Date</div>
-            <div class="value">${certificate.completionDate ? escapeHtml(formatDateIndia(certificate.completionDate)) : 'To be scheduled'}</div>
-            <div class="label" style="margin-top: 18px;">Status</div>
-            <div class="value">${escapeHtml(certificate.status.toUpperCase())}</div>
+
+          <div style="margin-top:12px; text-align:center;"><span class="badge">Verified Completion</span></div>
+
+          <div class="signature">
+            <img src="/images/signatures/satish-kumar.svg" alt="signature" style="max-width:280px; display:block;" />
+            <div style="margin-top:6px; font-weight:700;">Satish Kumar</div>
+            <div style="font-size:13px;">Director</div>
+            <div style="font-size:13px;">SSSAM Academy</div>
           </div>
-          <a class="button" href="javascript:window.print()">Print / Save Certificate</a>
+
+          <div class="contact">
+            <div style="font-weight:700;">${SITE_CONFIG.name}</div>
+            <div style="margin-top:6px;">${SITE_CONFIG.address}</div>
+            <div style="margin-top:6px;">${SITE_CONFIG.email} | ${SITE_CONFIG.url}</div>
+          </div>
         </div>
       </div>
-    </div>
   </div>
 </body>
 </html>`;
+
+    // If client requested PDF, try to render PDF on the server using Playwright.
+    const makePdf = async () => {
+      try {
+        // Playwright is optional. Suppress TS error when it's not installed.
+        // @ts-ignore
+        const { chromium } = await import('playwright');
+        const browser = await chromium.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true });
+        const page = await browser.newPage();
+        await page.setContent(content, { waitUntil: 'networkidle' });
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+        await browser.close();
+        return pdfBuffer;
+      } catch (err) {
+        console.error('PDF generation failed (Playwright missing or error):', err);
+        return null;
+      }
+    };
+
+    const wantPdf = _request.nextUrl?.searchParams?.get('pdf') === '1';
+
+    if (wantPdf) {
+      const pdf = await makePdf();
+      if (pdf) {
+        // Convert Node Buffer to Uint8Array for NextResponse body typing
+        const uint8 = new Uint8Array(pdf as any);
+        return new NextResponse(uint8, {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${certificate.certificateId}.pdf"`,
+            'Cache-Control': 'no-store',
+          },
+        });
+      }
+      // Fallback to HTML if PDF couldn't be created
+    }
 
     return new NextResponse(content, {
       status: 200,

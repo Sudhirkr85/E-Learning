@@ -32,6 +32,7 @@ export default function CertificatesPage() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useUserSync();
 
@@ -67,8 +68,17 @@ export default function CertificatesPage() {
 
   const selectedCertificate = selectedCourse?.certificate;
 
-  const handleApply = async () => {
-    if (!selectedCourseId) return;
+  const previewCertificate = selectedCertificate
+    ? ({
+        ...selectedCertificate,
+        courseTitle: selectedCourse?.courseTitle || '',
+        studentName: user?.firstName || user?.fullName || 'Student',
+      } as any)
+    : null;
+
+  const handleApply = async (courseIdParam?: string) => {
+    const courseId = String(courseIdParam || selectedCourseId || '').trim();
+    if (!courseId) return;
 
     try {
       setIsSubmitting(true);
@@ -77,13 +87,15 @@ export default function CertificatesPage() {
       const response = await fetch('/api/student/certificates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId: selectedCourseId }),
+        body: JSON.stringify({ courseId }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
         setMessage('Certificate request submitted successfully.');
+        // ensure selected course stays in view
+        setSelectedCourseId(courseId);
         await fetchCertificateData();
       } else {
         setMessage(data.error || 'Unable to submit certificate request.');
@@ -144,14 +156,29 @@ export default function CertificatesPage() {
                   </div>
                   <div className="text-right text-sm font-semibold text-[#f0d48c]">₹{course.amount.toLocaleString('en-IN')}</div>
                 </div>
-                <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">
-                  {course.certificate?.status === 'approved'
-                    ? 'Approved'
-                    : course.certificate?.status === 'pending'
-                    ? 'Pending Approval'
-                    : course.certificate?.status === 'rejected'
-                    ? 'Rejected - Reapply'
-                    : 'Not Applied'}
+                <div className="mt-3 flex items-center justify-between gap-2">
+                  <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">
+                    {course.certificate?.status === 'approved'
+                      ? 'Approved'
+                      : course.certificate?.status === 'pending'
+                      ? 'Pending Approval'
+                      : course.certificate?.status === 'rejected'
+                      ? 'Rejected - Reapply'
+                      : 'Not Applied'}
+                  </div>
+
+                  {!course.certificate || course.certificate.status === 'rejected' ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCourseId(course.courseId);
+                        handleApply(course.courseId);
+                      }}
+                      className="ml-auto rounded-full bg-[#caa95c]/10 px-3 py-1 text-xs font-semibold text-[#f0d48c] hover:bg-[#caa95c]/15 transition"
+                    >
+                      Apply
+                    </button>
+                  ) : null}
                 </div>
               </button>
             ))}
@@ -165,66 +192,114 @@ export default function CertificatesPage() {
         <div className="space-y-6">
           {selectedCourse ? (
             <>
-              <div className="rounded-[28px] border border-white/8 bg-slate-950/80 p-6 shadow-2xl shadow-black/30">
-                <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="rounded-[20px] bg-slate-950/70 p-6 shadow-sm border border-white/6">
+                <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Selected course</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-white">{selectedCourse.courseTitle}</h2>
+                    <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Course</p>
+                    <h2 className="mt-1 text-xl font-semibold text-white">{selectedCourse.courseTitle}</h2>
                   </div>
-                  <div className="text-right text-sm text-slate-400">
-                    <p>Purchase Date</p>
-                    <p className="mt-1 font-semibold text-white">{formatDateIndia(new Date(selectedCourse.purchaseDate))}</p>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Student</p>
-                    <p className="mt-2 font-semibold text-white">{user?.firstName || user?.fullName || 'Student'}</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Status</p>
-                    <p className="mt-2 font-semibold text-white">{selectedCertificate?.status?.toUpperCase() || 'NOT APPLIED'}</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Certificate ID</p>
-                    <p className="mt-2 font-mono text-sm text-white">{selectedCertificate?.certificateId || 'Generated after application'}</p>
+                  <div className="text-right">
+                    {selectedCertificate?.status === 'approved' ? (
+                      <span className="inline-flex items-center rounded-full bg-green-600/25 px-3 py-1 text-sm font-semibold text-green-200">Approved</span>
+                    ) : selectedCertificate?.status === 'pending' ? (
+                      <span className="inline-flex items-center rounded-full bg-yellow-600/20 px-3 py-1 text-sm font-semibold text-yellow-200">Pending Approval</span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-slate-300">Not Applied</span>
+                    )}
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <button
-                    onClick={handleApply}
-                    disabled={isSubmitting || selectedCertificate?.status === 'pending' || selectedCertificate?.status === 'approved'}
-                    className={`rounded-full px-5 py-3 text-sm font-semibold transition ${isSubmitting || selectedCertificate?.status === 'pending' || selectedCertificate?.status === 'approved' ? 'cursor-not-allowed bg-white/10 text-slate-500' : 'bg-gradient-to-r from-[#caa95c] to-[#f0d48c] text-slate-950 hover:brightness-105'}`}
-                  >
-                    {isSubmitting ? 'Submitting...' : selectedCertificate?.status === 'pending' ? 'Pending Approval' : selectedCertificate?.status === 'approved' ? 'Approved' : selectedCertificate?.status === 'rejected' ? 'Reapply for Certificate' : 'Apply for Certificate'}
-                  </button>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-slate-400">Student</p>
+                    <p className="font-medium text-white">{user?.firstName || user?.fullName || 'Student'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-400">Certificate ID</p>
+                    <p className="font-mono text-white">{selectedCertificate?.certificateId || 'Generated after application'}</p>
+                  </div>
+                </div>
 
-                  {selectedCertificate?.status === 'approved' ? (
-                    <a
-                      href={`/dashboard/certificates/${selectedCertificate.certificateId}`}
-                      className="rounded-full border border-[#74a5ff]/35 bg-[#0d1f40] px-5 py-3 text-sm font-semibold text-[#dbe8ff] transition hover:border-[#9dc0ff] hover:bg-[#102749]"
+                <div className="mt-4 flex items-center gap-3">
+                  {(!selectedCertificate || selectedCertificate.status === 'rejected') && (
+                    <button
+                      onClick={() => handleApply()}
+                      disabled={isSubmitting}
+                      className="rounded-full bg-gradient-to-r from-[#caa95c] to-[#f0d48c] px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm hover:brightness-105 disabled:opacity-50"
                     >
-                      View Certificate
-                    </a>
-                  ) : null}
-                </div>
+                      {isSubmitting ? 'Applying...' : 'Apply'}
+                    </button>
+                  )}
 
-                {message ? <p className="mt-4 text-sm text-[#f0d48c]">{message}</p> : null}
+                  {selectedCertificate?.status === 'approved' && (
+                    <>
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="rounded-full border border-white/8 bg-white/4 px-4 py-2 text-sm font-semibold text-white hover:bg-white/6"
+                      >
+                        View
+                      </button>
+
+                      <button
+                        onClick={async () => {
+                          if (!selectedCertificate) return;
+                          try {
+                            const res = await fetch(`/api/student/certificates/${selectedCertificate.certificateId}/download?pdf=1`);
+                            if (!res.ok) throw new Error('Download failed');
+                            const blob = await res.blob();
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${selectedCertificate.certificateId}.pdf`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            URL.revokeObjectURL(url);
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
+                        className="rounded-full bg-gradient-to-r from-[#6ea8ff] to-[#3b82f6] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-105"
+                      >
+                        Download Certificate
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
 
-              {selectedCertificate ? (
-                <CertificatePreview
-                  certificate={selectedCertificate as CertificateRequest}
-                  downloadHref={`/api/student/certificates/${selectedCertificate.certificateId}/download`}
-                  verifyHref={`/verify-certificate?certificateId=${selectedCertificate.certificateId}`}
-                />
-              ) : (
-                <div className="rounded-[28px] border border-dashed border-white/12 bg-slate-950/60 p-8 text-center text-slate-300">
-                  Apply first to unlock your premium certificate preview.
+              {/* Modal */}
+              {isModalOpen ? (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                  <div
+                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    onClick={() => setIsModalOpen(false)}
+                  />
+
+                  <div className="relative z-10 max-w-4xl w-full mx-4">
+                    <div className="transform transition-all duration-300 ease-out">
+                      <div className="bg-[#071125] rounded-2xl shadow-2xl overflow-hidden animate-fade-in-scale">
+                        <div className="p-4 flex justify-end">
+                          <button
+                            onClick={() => setIsModalOpen(false)}
+                            className="text-slate-300 hover:text-white p-2 rounded-md"
+                            aria-label="Close preview"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        <div className="p-6">
+                          {previewCertificate ? (
+                            <CertificatePreview
+                              certificate={previewCertificate as CertificateRequest}
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
+              ) : null}
             </>
           ) : (
             <div className="rounded-[28px] border border-white/8 bg-slate-950/80 p-8 text-slate-300">
