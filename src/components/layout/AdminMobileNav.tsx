@@ -8,6 +8,7 @@ const navItems = [
   { href: '/admin/courses', label: 'Sessions' },
   { href: '/admin/coupons', label: 'Coupons' },
   { href: '/admin/courses', label: 'Enrollments' },
+  { href: '/admin/certificates', label: 'Certificates' },
 ];
 
 export default function AdminMobileNav() {
