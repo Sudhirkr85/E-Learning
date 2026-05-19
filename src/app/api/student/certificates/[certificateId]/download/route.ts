@@ -173,7 +173,7 @@ export async function GET(
     const pdf = await makePdf();
     if (!pdf) return NextResponse.json({ success: false, error: 'Failed to generate PDF certificate' }, { status: 500 });
 
-    return new NextResponse(pdf, {
+    return new NextResponse(Buffer.from(pdf), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
