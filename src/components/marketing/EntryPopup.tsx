@@ -58,6 +58,7 @@ const validateForm = (values: FormValues) => {
 
 export function EntryPopup() {
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -173,6 +174,18 @@ export function EntryPopup() {
   };
 
   useEffect(() => {
+    if (!isHomePage) {
+      activeModeRef.current = 'idle';
+      clearTimer(timerRef);
+      clearTimer(autoCloseRef);
+      clearTimer(closeAnimationRef);
+      timerStartRef.current = null;
+      remainingDelayRef.current = INITIAL_DELAY_MS;
+      setIsVisible(false);
+      setIsMounted(false);
+      return;
+    }
+
     activeModeRef.current = 'initial';
     remainingDelayRef.current = INITIAL_DELAY_MS;
     scheduleTimer();
@@ -201,10 +214,10 @@ export function EntryPopup() {
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('focus', onFocus);
     };
-  }, []);
+  }, [isHomePage]);
 
   useEffect(() => {
-    if (!isMounted || !isVisible) {
+    if (!isHomePage || !isMounted || !isVisible) {
       return;
     }
 
@@ -251,10 +264,10 @@ export function EntryPopup() {
       document.removeEventListener('keydown', onKeyDown);
       previouslyFocused?.focus();
     };
-  }, [isMounted, isVisible]);
+  }, [isHomePage, isMounted, isVisible]);
 
   useEffect(() => {
-    if (!isMounted) {
+    if (!isHomePage || !isMounted) {
       return;
     }
 
@@ -264,7 +277,7 @@ export function EntryPopup() {
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [isMounted]);
+  }, [isHomePage, isMounted]);
 
   if (pathname !== '/') {
     return null;
