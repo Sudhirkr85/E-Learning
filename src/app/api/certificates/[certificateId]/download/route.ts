@@ -43,6 +43,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     }
 
     const fileName = `${certificate.studentName.replace(/\s+/g, '-').toLowerCase()}-${certificate.certificateId}.html`;
+    const isPreview = _request?.nextUrl?.searchParams?.get?.('preview') === '1';
 
     const html = `<!DOCTYPE html>
       <html lang="en">
@@ -51,7 +52,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>${escapeHtml(certificate.certificateId)} - SSSAM Academy</title>
           <style>
-            body { margin: 0; font-family: Inter, Arial, sans-serif; background: #08111f; color: #0b1724; }
+            body { margin: 0; font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg,#f8f4eb 0%,#efe4d1 100%); color: #0b1724; }
             .page { min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
             .card { width: min(1120px, 100%); border-radius: 28px; padding: 0; background: linear-gradient(145deg, rgba(8,17,31,.98), rgba(10,22,45,1)); box-shadow: 0 30px 120px rgba(2,10,25,.55); }
             .inner { background: #fff; margin: 24px; border-radius: 20px; position: relative; padding: 36px; }
@@ -67,15 +68,15 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
             .mainSentence { margin-top:14px; text-align:center; color:#374151; }
             .pills { display:flex; gap:8px; justify-content:center; margin-top:14px; }
             .pill { background:#f3ecd6; color:#6b4d12; padding:8px 12px; border-radius:999px; font-weight:700; }
-            .signature { position:absolute; left:48px; bottom:36px; text-align:left; }
-            .contact { position:absolute; right:48px; bottom:36px; text-align:right; color:#374151; }
-            .badge { display:inline-block; background:linear-gradient(90deg,#d6b15c,#f0d48c); color:#08111f; padding:8px 12px; border-radius:999px; font-weight:800; }
+            .seal { position:absolute; left:6%; top:44%; transform:translateY(-50%); width:280px; opacity:.12; pointer-events:none; }
+            .signature { position:absolute; right:48px; bottom:36px; text-align:right; }
             @media print { body { background:#fff } .card { box-shadow:none } }
           </style>
         </head>
         <body>
           <div class="sheet">
             <div class="inner">
+              <img class="seal" src="/images/signatures/sssam.png" alt="SSSAM premium seal" />
               <div class="certId">${escapeHtml(certificate.certificateId)}</div>
               <div class="brand">SSSAM Academy</div>
               <h1>Certificate of Completion</h1>
@@ -89,8 +90,8 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
               </div>
 
               <div class="signature">
-                <img src="/images/signatures/satish-kumar.svg" alt="signature" style="max-width:280px; display:block;" />
-                <div style="margin-top:6px; font-weight:700;">${escapeHtml(certificate.approvedBy || 'Satish Kumar')}</div>
+                <img src="/images/signatures/sign.png" alt="signature" style="max-width:280px; display:block;" />
+                <div style="margin-top:6px; font-weight:700;">Satish Soni</div>
                 <div style="font-size:13px;">Director</div>
                 <div style="font-size:13px;">SSSAM Academy</div>
               </div>
@@ -102,7 +103,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     return new NextResponse(html, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Disposition': isPreview ? 'inline' : `attachment; filename="${fileName}"`,
       },
     });
   } catch (error) {
