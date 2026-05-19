@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
 
 const INITIAL_DELAY_MS = 2000;
@@ -56,6 +57,7 @@ const validateForm = (values: FormValues) => {
 };
 
 export function EntryPopup() {
+  const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -263,6 +265,10 @@ export function EntryPopup() {
       document.body.style.overflow = originalOverflow;
     };
   }, [isMounted]);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const handleFieldChange = (field: keyof FormValues, nextValue: string) => {
     setValues((current) => ({
