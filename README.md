@@ -6,6 +6,11 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Updated certificate PDF heading stack by removing the "PROFESSIONAL" line and increasing dynamic spacing before detail cards to avoid overlap with long course names.
+- Increased certificate PDF spacing between course title and detail cards, with adaptive course-title sizing to prevent overlap on longer names.
+- Fixed certificate PDF overlap by adding dynamic spacing between course title and info cards for long course names.
+- Improved certificate PDF logo loading with fallback asset paths (JPG/PNG) so the logo renders reliably from existing public image locations.
+- Reworked certificate PDF styling to closely match the on-screen certificate preview design, including updated visual hierarchy, info-card layout, and signature/watermark composition.
 - Switched certificate PDF downloads from Playwright/Chromium to direct `pdf-lib` generation for simpler, more reliable server-side downloads on Vercel.
 - Fixed the authenticated mobile header menu so Dashboard, My Courses, and Certificates stay visible and scrollable on small screens.
 - Fixed intermittent footer/page scroll freeze on non-home routes by preventing `EntryPopup` timers and body scroll-lock from activating outside the home page.
