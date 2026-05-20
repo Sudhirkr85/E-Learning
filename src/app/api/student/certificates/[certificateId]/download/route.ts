@@ -170,17 +170,15 @@ export async function GET(
   { params }: { params: Promise<{ certificateId: string }> }
 ) {
   try {
-    const allowTestNoAuth = process.env.ALLOW_TEST_CERTIFICATE_DOWNLOAD_NO_AUTH === '1';
     const { userId } = await auth();
-    if (!allowTestNoAuth && !userId) {
+    if (!userId) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     const { certificateId } = await params;
     const certificate = await CertificateModel.findByCertificateId(certificateId);
 
-    const isOwner = userId ? certificate?.studentId === userId : false;
-    if (!certificate || (!allowTestNoAuth && !isOwner)) {
+    if (!certificate || certificate.studentId !== userId) {
       return NextResponse.json({ success: false, error: 'Certificate not found' }, { status: 404 });
     }
 
