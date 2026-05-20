@@ -181,8 +181,8 @@ export function Header() {
         </div>
 
         {/* Mobile Menu */}
-          <div className={`md:hidden transition-all duration-300 overflow-hidden ${
-          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        <div className={`md:hidden transition-all duration-300 overflow-hidden ${
+          isMenuOpen ? 'max-h-[calc(100vh-5rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
         }`}>
           <nav className="pt-4 pb-6 space-y-4">
             <Link 
@@ -234,6 +234,13 @@ export function Header() {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         My Courses
+                      </Link>
+                      <Link
+                        href={ROUTES.CERTIFICATES}
+                        className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Certificates
                       </Link>
                   <button
                     onClick={async () => {
