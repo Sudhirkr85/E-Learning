@@ -6,16 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "install:browsers": "playwright install chromium",
-    "postinstall": "playwright install chromium"
+    "lint": "eslint"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.3.3",
     "@next/env": "^16.2.6",
+    "@sparticuz/chromium": "^138.0.2",
     "mongodb": "^7.2.0",
     "next": "^16.2.6",
     "node-fetch": "^3.3.2",
+    "playwright-core": "^1.60.0",
     "razorpay": "^2.9.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -27,7 +27,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
-    "playwright": "^1.60.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

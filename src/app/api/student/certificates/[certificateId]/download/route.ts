@@ -4,6 +4,10 @@ import { CertificateModel } from '@/lib/models/certificate';
 import { formatDateIndia } from '@/utils/helpers';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { chromium } from 'playwright-core';
+import chromiumPkg from '@sparticuz/chromium';
+
+export const runtime = 'nodejs';
 
 const escapeHtml = (value: string) =>
   value
@@ -145,9 +149,11 @@ export async function GET(
 
     const makePdf = async (): Promise<Uint8Array | null> => {
       try {
-        // @ts-ignore
-        const { chromium } = await import('playwright');
-        const browser = await chromium.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true });
+        const browser = await chromium.launch({
+          args: chromiumPkg.args,
+          executablePath: await chromiumPkg.executablePath(),
+          headless: true,
+        });
         try {
           const page = await browser.newPage({ viewport: { width: 1400, height: 1980 }, deviceScaleFactor: 2 });
           await page.setContent(content, { waitUntil: 'networkidle' });
