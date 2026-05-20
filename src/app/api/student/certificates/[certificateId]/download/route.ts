@@ -1,21 +1,165 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { CertificateModel } from '@/lib/models/certificate';
 import { formatDateIndia } from '@/utils/helpers';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { chromium } from 'playwright-core';
-import chromiumPkg from '@sparticuz/chromium';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+const PAGE_WIDTH = 595.28;
+const PAGE_HEIGHT = 841.89;
+
+const COLORS = {
+  background: rgb(0.97, 0.95, 0.91),
+  card: rgb(0.99, 0.98, 0.95),
+  border: rgb(0.23, 0.31, 0.49),
+  accent: rgb(0.67, 0.52, 0.16),
+  text: rgb(0.08, 0.14, 0.28),
+  muted: rgb(0.31, 0.39, 0.54),
+  soft: rgb(0.9, 0.83, 0.69),
+};
+
+type EmbeddedFont = Awaited<ReturnType<PDFDocument['embedFont']>>;
+
+type PdfPage = import('pdf-lib').PDFPage;
+
+const wrapText = (text: string, font: EmbeddedFont, size: number, maxWidth: number) => {
+  const paragraphs = text.split(/\r?\n/);
+  const lines: string[] = [];
+
+  for (const paragraph of paragraphs) {
+    const words = paragraph.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      lines.push('');
+      continue;
+    }
+
+    let currentLine = words.shift() ?? '';
+    for (const word of words) {
+      const candidate = `${currentLine} ${word}`;
+      if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+        currentLine = candidate;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+
+    lines.push(currentLine);
+  }
+
+  return lines;
+};
+
+const drawWrappedText = (
+  page: PdfPage,
+  text: string,
+  options: {
+    x: number;
+    y: number;
+    width: number;
+    font: EmbeddedFont;
+    size: number;
+    color: ReturnType<typeof rgb>;
+    align?: 'left' | 'center' | 'right';
+    lineGap?: number;
+  }
+) => {
+  const { x, y, width, font, size, color, align = 'left', lineGap = size * 0.2 } = options;
+  const lines = wrapText(text, font, size, width);
+  const lineHeight = size + lineGap;
+
+  lines.forEach((line, index) => {
+    const lineWidth = font.widthOfTextAtSize(line, size);
+    const drawX =
+      align === 'center'
+        ? x + (width - lineWidth) / 2
+        : align === 'right'
+          ? x + width - lineWidth
+          : x;
+
+    page.drawText(line, {
+      x: drawX,
+      y: y - size - index * lineHeight,
+      font,
+      size,
+      color,
+    });
+  });
+
+  return lines.length * lineHeight;
+};
+
+const drawCenteredText = (
+  page: PdfPage,
+  text: string,
+  y: number,
+  font: EmbeddedFont,
+  size: number,
+  color: ReturnType<typeof rgb>
+) => {
+  const width = font.widthOfTextAtSize(text, size);
+  page.drawText(text, {
+    x: (PAGE_WIDTH - width) / 2,
+    y,
+    size,
+    font,
+    color,
+  });
+};
+
+const drawBox = (
+  page: PdfPage,
+  options: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    label: string;
+    value: string;
+    labelFont: EmbeddedFont;
+    valueFont: EmbeddedFont;
+  }
+) => {
+  const { x, y, width, height, label, value, labelFont, valueFont } = options;
+
+  page.drawRectangle({
+    x,
+    y,
+    width,
+    height,
+    borderColor: COLORS.soft,
+    borderWidth: 0.8,
+    color: rgb(1, 0.99, 0.97),
+  });
+
+  page.drawText(label.toUpperCase(), {
+    x: x + 10,
+    y: y + height - 16,
+    size: 8,
+    font: labelFont,
+    color: COLORS.accent,
+  });
+
+  const wrappedValue = wrapText(value, valueFont, 10.5, width - 20);
+  page.drawText(wrappedValue.join('\n'), {
+    x: x + 10,
+    y: y + height - 33,
+    size: 10.5,
+    font: valueFont,
+    color: COLORS.text,
+    maxWidth: width - 20,
+    lineHeight: 12.5,
+  });
+};
+
+const safeFormatDate = (value?: string | Date | null) => {
+  if (!value) return 'To be scheduled';
+  return formatDateIndia(value);
+};
 
 export async function GET(
   request: NextRequest,
@@ -23,7 +167,9 @@ export async function GET(
 ) {
   try {
     const { userId } = await auth();
-    if (!userId) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (!userId) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
 
     const { certificateId } = await params;
     const certificate = await CertificateModel.findByCertificateId(certificateId);
@@ -31,161 +177,252 @@ export async function GET(
     if (!certificate || certificate.studentId !== userId) {
       return NextResponse.json({ success: false, error: 'Certificate not found' }, { status: 404 });
     }
+
     if (certificate.status !== 'approved' || !certificate.issueDate) {
       return NextResponse.json({ success: false, error: 'Certificate is pending approval' }, { status: 403 });
     }
+
     if (request.nextUrl?.searchParams?.get('pdf') !== '1') {
       return NextResponse.json({ success: false, error: 'PDF mode is required' }, { status: 400 });
     }
 
-    const logoPath = path.join(process.cwd(), 'public', 'images', 'logo', 'logo.webp');
-    const signPrimary = path.join(process.cwd(), 'public', 'images', 'signatures', 'sign.png');
-    const signFallback = path.join(process.cwd(), 'public', 'images', 'signatures', 'sign.png');
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontMedium = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+
+    page.drawRectangle({
+      x: 0,
+      y: 0,
+      width: PAGE_WIDTH,
+      height: PAGE_HEIGHT,
+      color: COLORS.background,
+    });
+
+    page.drawRectangle({
+      x: 24,
+      y: 24,
+      width: PAGE_WIDTH - 48,
+      height: PAGE_HEIGHT - 48,
+      borderColor: COLORS.border,
+      borderWidth: 1.8,
+      color: COLORS.card,
+    });
+
+    page.drawRectangle({
+      x: 36,
+      y: 36,
+      width: PAGE_WIDTH - 72,
+      height: PAGE_HEIGHT - 72,
+      borderColor: COLORS.soft,
+      borderWidth: 0.8,
+      color: COLORS.card,
+    });
+
     const sealPath = path.join(process.cwd(), 'public', 'images', 'signatures', 'sssam.png');
+    const signaturePath = path.join(process.cwd(), 'public', 'images', 'signatures', 'sign.png');
 
-    const logoData = await readFile(logoPath);
+    let sealImage: Uint8Array | null = null;
+    let signatureImage: Uint8Array | null = null;
 
-    let signData: Buffer | null = null;
-    let signMime = 'image/png';
     try {
-      signData = await readFile(signPrimary);
-      signMime = 'image/png';
-    } catch (err) {
-      try {
-        signData = await readFile(signFallback);
-        signMime = 'image/png';
-      } catch (err2) {
-        console.warn('Signature file missing, proceeding without signature image', err2);
-        signData = null;
-      }
+      sealImage = await readFile(sealPath);
+    } catch {
+      sealImage = null;
     }
 
-    const logoDataUri = `data:image/webp;base64,${logoData.toString('base64')}`;
-    const signDataUri = signData ? `data:${signMime};base64,${signData.toString('base64')}` : '';
-    const sealData = await readFile(sealPath);
-    const sealDataUri = `data:image/png;base64,${sealData.toString('base64')}`;
-
-    const content = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(certificate.certificateId)} - Certificate of Completion</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; width: 100%; height: 100%; font-family: Inter, Arial, sans-serif; }
-    body { background: linear-gradient(180deg,#f8f4eb 0%,#efe4d1 100%); color: #324b76; }
-    .page { width: 100%; min-height: 100%; display: grid; place-items: center; padding: 28px; }
-    .preview-shell { width: min(980px, 100%); border-radius: 16px; border: 1px solid #e4d5b4; background: #f7f2e8; padding: 16px; box-shadow: 0 26px 90px rgba(66,46,11,.14); }
-    .preview-card {
-      width: 100%; aspect-ratio: 1 / 1.414; border-radius: 12px; border: 1px solid rgba(65,91,141,.75);
-      position: relative;
-      background: linear-gradient(180deg,#fffefb 0%,#f8f2e8 100%);
-      padding: 24px; display: flex; flex-direction: column;
+    try {
+      signatureImage = await readFile(signaturePath);
+    } catch {
+      signatureImage = null;
     }
-    .seal { position:absolute; left:6%; top:42%; transform:translateY(-50%); width:280px; opacity:.12; pointer-events:none; }
-    .titleTop { text-align: center; color: #102348; font-size: 22px; font-weight: 800; letter-spacing: .08em; }
-    .subTop { text-align: center; color: #3f557e; font-size: 12px; font-weight: 600; letter-spacing: .1em; margin-top: 4px; }
-    .logo { text-align: center; margin-top: 12px; }
-    .pro { margin-top: 14px; text-align: center; color: #8b6a1a; font-size: 26px; font-weight: 800; letter-spacing: .14em; }
-    .h1 { margin-top: 4px; text-align: center; color: #102348; font-size: 30px; font-weight: 700; letter-spacing: .06em; }
-    .desc { margin-top: 14px; text-align: center; color: #324b76; font-size: 16px; }
-    .name { margin-top: 8px; text-align: center; color: #102348; font-size: 42px; font-weight: 700; line-height: 1.1; }
-    .courseLabel { margin-top: 10px; text-align: center; color: #324b76; font-size: 16px; }
-    .course { margin-top: 8px; text-align: center; color: #102348; font-size: 28px; font-weight: 600; line-height: 1.2; }
-    .grid { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .box { border-radius: 10px; border: 1px solid #e8dcc3; background: #fffdfa; padding: 10px; }
-    .boxLabel { font-size: 10px; font-weight: 600; color: #8b6a1a; text-transform: uppercase; letter-spacing: .14em; }
-    .boxValue { margin-top: 6px; font-size: 14px; font-weight: 600; color: #102348; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
-    .note { margin: 14px auto 0; max-width: 720px; text-align: center; color: #596f96; font-size: 13px; line-height: 1.45; }
-    .footer { margin-top: auto; padding-top: 18px; display: flex; justify-content: flex-end; }
-    .sign { width: 280px; text-align: right; }
-    .sign img { width: 170px; height: auto; object-fit: contain; margin-left: auto; filter: brightness(1.1) contrast(1.25) saturate(1.05); }
-    .signName { margin-top: 8px; font-size: 20px; font-weight: 600; color: #102348; }
-    .signRole { margin-top: 2px; font-size: 13px; color: #4f638a; }
-    @page { size: A4 portrait; margin: 0; }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <div class="preview-shell">
-      <div class="preview-card">
-        <img class="seal" src="${sealDataUri}" alt="SSSAM premium seal" />
-        <div class="titleTop">SSSAM ACADEMY</div>
-        <div class="subTop">SMART SOLUTION SCHOOL OF AI AND MACHINE LEARNING</div>
-        <div class="logo"><img src="${logoDataUri}" alt="SSSAM Academy" width="72" height="72"/></div>
 
-        <div class="pro">PROFESSIONAL</div>
-        <div class="h1">CERTIFICATE OF COMPLETION</div>
+    const seal = sealImage ? await pdfDoc.embedPng(sealImage) : null;
+    const signature = signatureImage ? await pdfDoc.embedPng(signatureImage) : null;
 
-        <div class="desc">This certificate is proudly awarded to</div>
-        <div class="name">${escapeHtml(certificate.studentName)}</div>
-        <div class="courseLabel">for successfully completing the professional training program in</div>
-        <div class="course">${escapeHtml(certificate.courseTitle)}</div>
+    if (seal) {
+      page.drawImage(seal, {
+        x: 44,
+        y: 272,
+        width: 170,
+        height: 170,
+        opacity: 0.12,
+      });
+    }
 
-        <div class="grid">
-          <div class="box"><div class="boxLabel">Training Period</div><div class="boxValue">${certificate.trainingStartDate ? escapeHtml(formatDateIndia(certificate.trainingStartDate)) : 'To be scheduled'} - ${certificate.trainingEndDate ? escapeHtml(formatDateIndia(certificate.trainingEndDate)) : 'To be scheduled'}</div></div>
-          <div class="box"><div class="boxLabel">Mode</div><div class="boxValue">Online Live Training</div></div>
-          <div class="box"><div class="boxLabel">Issued On</div><div class="boxValue">${certificate.issueDate ? escapeHtml(formatDateIndia(certificate.issueDate)) : 'To be scheduled'}</div></div>
-          <div class="box"><div class="boxLabel">Certificate ID</div><div class="boxValue mono">${escapeHtml(certificate.certificateId)}</div></div>
-        </div>
+    page.drawText('SSSAM ACADEMY', {
+      x: 54,
+      y: 782,
+      size: 18,
+      font: fontMedium,
+      color: COLORS.text,
+    });
 
-        <div class="note">We appreciate your dedication, commitment, and successful completion of the program, and wish you continued success in your professional journey.</div>
+    page.drawText('SMART SOLUTION SCHOOL OF AI AND MACHINE LEARNING', {
+      x: 54,
+      y: 765,
+      size: 8.5,
+      font: fontMedium,
+      color: COLORS.muted,
+    });
 
-        <div class="footer">
-            <div class="sign">
-            ${signDataUri ? `<img src="${signDataUri}" alt="Satish Kumar Signature" />` : ''}
-            <div class="signName">Satish Soni</div>
-            <div class="signRole">Director</div>
-            <div class="signRole">SSSAM Academy</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
+    page.drawLine({
+      start: { x: 54, y: 752 },
+      end: { x: PAGE_WIDTH - 54, y: 752 },
+      thickness: 1,
+      color: COLORS.soft,
+    });
 
-    const makePdf = async (): Promise<Uint8Array | null> => {
-      try {
-        const browser = await chromium.launch({
-          args: chromiumPkg.args,
-          executablePath: await chromiumPkg.executablePath(),
-          headless: true,
-        });
-        try {
-          const page = await browser.newPage({ viewport: { width: 1400, height: 1980 }, deviceScaleFactor: 2 });
-          await page.setContent(content, { waitUntil: 'networkidle' });
-          const pdfBuffer = await page.pdf({
-            format: 'A4',
-            landscape: false,
-            printBackground: true,
-            preferCSSPageSize: true,
-            margin: { top: '0', right: '0', bottom: '0', left: '0' },
-          });
-          const pdfBytes = new Uint8Array(pdfBuffer);
-          const isPdf = pdfBytes.length > 5 && pdfBytes[0] === 0x25 && pdfBytes[1] === 0x50 && pdfBytes[2] === 0x44 && pdfBytes[3] === 0x46 && pdfBytes[4] === 0x2d;
-          return isPdf ? pdfBytes : null;
-        } finally {
-          await browser.close();
-        }
-      } catch (err) {
-        console.error('PDF generation failed (Playwright missing or error):', err);
-        return null;
-      }
-    };
+    drawCenteredText(page, 'PROFESSIONAL', 708, fontMedium, 22, COLORS.accent);
 
-    const pdf = await makePdf();
-    if (!pdf) return NextResponse.json({ success: false, error: 'Failed to generate PDF certificate' }, { status: 500 });
+    drawCenteredText(page, 'CERTIFICATE OF COMPLETION', 680, fontMedium, 25, COLORS.text);
 
-    return new NextResponse(Buffer.from(pdf), {
+    drawCenteredText(page, 'This certificate is proudly awarded to', 642, fontRegular, 13, COLORS.muted);
+
+    drawWrappedText(page, certificate.studentName, {
+      x: 70,
+      y: 612,
+      width: PAGE_WIDTH - 140,
+      font: fontMedium,
+      size: 30,
+      color: COLORS.text,
+      align: 'center',
+      lineGap: 3,
+    });
+
+    drawCenteredText(
+      page,
+      'for successfully completing the professional training program in',
+      540,
+      fontRegular,
+      12.5,
+      COLORS.muted
+    );
+
+    drawWrappedText(page, certificate.courseTitle, {
+      x: 70,
+      y: 519,
+      width: PAGE_WIDTH - 140,
+      font: fontMedium,
+      size: 20,
+      color: COLORS.text,
+      align: 'center',
+      lineGap: 2,
+    });
+
+    const gridTop = 448;
+    const boxWidth = 240;
+    const boxHeight = 58;
+    const leftX = 54;
+    const rightX = PAGE_WIDTH - 54 - boxWidth;
+
+    drawBox(page, {
+      x: leftX,
+      y: gridTop,
+      width: boxWidth,
+      height: boxHeight,
+      label: 'Training Period',
+      value: `${safeFormatDate(certificate.trainingStartDate)} - ${safeFormatDate(certificate.trainingEndDate)}`,
+      labelFont: fontMedium,
+      valueFont: fontRegular,
+    });
+
+    drawBox(page, {
+      x: rightX,
+      y: gridTop,
+      width: boxWidth,
+      height: boxHeight,
+      label: 'Mode',
+      value: 'Online Live Training',
+      labelFont: fontMedium,
+      valueFont: fontRegular,
+    });
+
+    drawBox(page, {
+      x: leftX,
+      y: gridTop - 74,
+      width: boxWidth,
+      height: boxHeight,
+      label: 'Issued On',
+      value: safeFormatDate(certificate.issueDate),
+      labelFont: fontMedium,
+      valueFont: fontRegular,
+    });
+
+    drawBox(page, {
+      x: rightX,
+      y: gridTop - 74,
+      width: boxWidth,
+      height: boxHeight,
+      label: 'Certificate ID',
+      value: certificate.certificateId,
+      labelFont: fontMedium,
+      valueFont: fontMedium,
+    });
+
+    drawWrappedText(page, 'We appreciate your dedication, commitment, and successful completion of the program, and wish you continued success in your professional journey.', {
+      x: 72,
+      y: 275,
+      width: PAGE_WIDTH - 144,
+      font: fontItalic,
+      size: 11.5,
+      color: COLORS.muted,
+      align: 'center',
+      lineGap: 2,
+    });
+
+    const signatureTop = 165;
+    if (signature) {
+      page.drawImage(signature, {
+        x: PAGE_WIDTH - 210,
+        y: signatureTop,
+        width: 150,
+        height: 58,
+      });
+    } else {
+      page.drawLine({
+        start: { x: PAGE_WIDTH - 215, y: signatureTop + 22 },
+        end: { x: PAGE_WIDTH - 65, y: signatureTop + 22 },
+        thickness: 0.8,
+        color: COLORS.muted,
+      });
+    }
+
+    page.drawText('Satish Soni', {
+      x: PAGE_WIDTH - 206,
+      y: 150,
+      size: 18,
+      font: fontMedium,
+      color: COLORS.text,
+    });
+
+    page.drawText('Director', {
+      x: PAGE_WIDTH - 206,
+      y: 134,
+      size: 10.5,
+      font: fontRegular,
+      color: COLORS.muted,
+    });
+
+    page.drawText('SSSAM Academy', {
+      x: PAGE_WIDTH - 206,
+      y: 120,
+      size: 10.5,
+      font: fontRegular,
+      color: COLORS.muted,
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    return new NextResponse(Buffer.from(pdfBytes), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="certificate.pdf"',
+        'Content-Disposition': `attachment; filename="${certificate.certificateId}.pdf"`,
         'Cache-Control': 'no-store',
-        'Content-Length': String(pdf.byteLength),
+        'Content-Length': String(pdfBytes.byteLength),
       },
     });
   } catch (error) {

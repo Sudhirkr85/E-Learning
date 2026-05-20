@@ -6,6 +6,7 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Switched certificate PDF downloads from Playwright/Chromium to direct `pdf-lib` generation for simpler, more reliable server-side downloads on Vercel.
 - Fixed the authenticated mobile header menu so Dashboard, My Courses, and Certificates stay visible and scrollable on small screens.
 - Fixed intermittent footer/page scroll freeze on non-home routes by preventing `EntryPopup` timers and body scroll-lock from activating outside the home page.
 - Fixed intermittent certificate preview modal scroll sticking by locking background page scroll, enabling touch-friendly modal scrolling, and keeping the close button always visible.
