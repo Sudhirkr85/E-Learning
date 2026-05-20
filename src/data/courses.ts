@@ -13,7 +13,7 @@ export const courses: Course[] = [
     instructor: 'Sudesh Yadav & Sudhir Kumar',
     instructorImage: '/images/trainers/sudesh-yadav.webp',
     price: 9,
-    originalPrice: 999,
+    originalPrice: 9999,
     rating: 4.9,
     reviews: 2456,
     students: 15420,
