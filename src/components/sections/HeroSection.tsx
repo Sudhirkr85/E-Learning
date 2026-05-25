@@ -6,6 +6,7 @@ import { Course } from '@/types';
 import { Container, Button, Heading, Text, Badge } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import { getNextMonthlyBatchLabel } from '@/lib/batch';
+import { calculateDiscount } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 
 interface HeroProps {
@@ -177,7 +178,7 @@ export function HeroSection({ course }: HeroProps) {
                   </span>
                 </div>
                 <Badge variant="warning" className="!text-sm">
-                  Save {Math.round(((course.originalPrice! - course.price) / course.originalPrice!) * 100)}%
+                  Save {calculateDiscount(course.originalPrice!, course.price).toFixed(2)}%
                 </Badge>
               </div>
             </div>

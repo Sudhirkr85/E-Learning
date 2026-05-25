@@ -21,5 +21,6 @@ export const getInitials = (name: string): string => {
 // Calculate discount percentage
 export const calculateDiscount = (originalPrice: number, discountedPrice: number): number => {
   if (originalPrice === 0) return 0;
-  return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
+  const discount = ((originalPrice - discountedPrice) / originalPrice) * 100;
+  return Math.floor(discount * 100) / 100;
 };

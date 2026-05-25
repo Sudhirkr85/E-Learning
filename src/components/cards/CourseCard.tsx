@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Course } from '@/types';
 import { Badge, Card, Rating, Text } from '@/components/ui';
 import { getNextMonthlyBatchLabel } from '@/lib/batch';
+import { calculateDiscount } from '@/lib/utils';
 
 interface CourseCardProps {
   course: Course;
@@ -13,8 +14,9 @@ interface CourseCardProps {
 export function CourseCard({ course }: CourseCardProps) {
   const isFeatured = course.featured || course.students > 5000;
   const isBestSeller = course.rating >= 4.8;
-  const discountPercentage = course.originalPrice ? 
-    Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100) : 0;
+  const discountPercentage = course.originalPrice
+    ? calculateDiscount(course.originalPrice, course.price)
+    : 0;
 
   return (
     <Link href={`/courses/${course.slug}`}>
@@ -54,7 +56,7 @@ export function CourseCard({ course }: CourseCardProps) {
           {discountPercentage > 0 && (
             <div className="absolute top-3 right-3 bg-gradient-to-br from-red-500 to-red-600 backdrop-blur-sm text-white rounded-lg px-2.5 py-1.5 font-bold shadow-lg z-20 text-center">
               <div className="text-xs font-semibold">Save</div>
-              <div className="text-sm font-bold">{discountPercentage}%</div>
+              <div className="text-sm font-bold">{discountPercentage.toFixed(2)}%</div>
             </div>
           )}
 
