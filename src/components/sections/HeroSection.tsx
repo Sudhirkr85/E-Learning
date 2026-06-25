@@ -132,8 +132,8 @@ export function HeroSection({ course }: HeroProps) {
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/12 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/12 rounded-full blur-3xl"></div>
 
-      <Container className="relative z-10 py-8 md:py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <Container className="relative z-10 pt-4 pb-8 md:pt-6 md:pb-12 lg:pt-8 lg:pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Content */}
           <div className="space-y-4">
             {/* Special Offer Badge */}
@@ -144,7 +144,7 @@ export function HeroSection({ course }: HeroProps) {
 
             {/* Main Headline - SEO Optimized */}
             <div className="space-y-3 max-w-3xl">
-              <Heading level={1} className="text-4xl md:text-5xl lg:text-5xl leading-tight md:leading-snug text-foreground">
+              <Heading level={1} className="text-2xl md:text-3xl lg:text-4xl leading-tight md:leading-snug text-foreground">
                 30-Day AI-Powered Full Stack Development Bootcamp
               </Heading>
 

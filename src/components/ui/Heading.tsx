@@ -18,7 +18,8 @@ const sizes = {
 };
 
 export function Heading({ level = 2, children, className = '' }: HeadingProps) {
-  const sizeClass = sizes[level];
+  const hasCustomSize = /\btext-(?:xs|sm|base|lg|xl|[2-9]xl)\b/.test(className);
+  const sizeClass = hasCustomSize ? '' : sizes[level];
 
   return createElement(
     `h${level}`,
