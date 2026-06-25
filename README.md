@@ -2,6 +2,7 @@
 
 A modern, India-focused Learning Management System (LMS) and course selling platform built with **Next.js 16** (App Router), **TypeScript**, and **Tailwind CSS**. Located in Gurugram, we provide job-oriented IT training for Indian students with placement support.
 
+
 🚀 **Status**: Production-ready | ✅ India-focused content | 📱 Fully responsive | 🔒 Type-safe | 💳 UPI/Razorpay ready
 
 ## 🛠️ Recent Updates
