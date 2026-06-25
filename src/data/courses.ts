@@ -13,7 +13,7 @@ export const courses: Course[] = [
     thumbnail: '/images/courses/ai-powered-fullstack.webp',
     instructor: 'Sudesh Yadav & Sudhir Kumar',
     instructorImage: '/images/trainers/sudesh-yadav.webp',
-    price: 999,
+    price: 9,
     originalPrice: 9999,
     rating: 4.9,
     reviews: 2456,
