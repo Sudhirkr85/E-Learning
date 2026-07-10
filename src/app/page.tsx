@@ -7,6 +7,7 @@ import { FAQSection } from '@/components/sections/FAQSection';
 import { getFeaturedCourse, getPublishedCourses } from '@/lib/courses';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
+import { ORGANIZATION_STATS } from '@/constants';
 
 const siteUrl = 'https://sssamacademy.tech';
 const pageTitle = 'AI Training Institute Gurugram | Full Stack Development & Data Science';
@@ -198,6 +199,44 @@ export default async function Home() {
                     <li>AI-first teaching methods, career coaching, and resume support.</li>
                   </ul>
                 </div>
+              </div>
+
+              <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  {
+                    value: ORGANIZATION_STATS.studentsTrained,
+                    label: ORGANIZATION_STATS.studentsTrainedLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.placementSuccess,
+                    label: ORGANIZATION_STATS.placementSuccessLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.placementSupport,
+                    label: ORGANIZATION_STATS.placementSupportLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.googleRating,
+                    label: ORGANIZATION_STATS.googleRatingLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.packageRange,
+                    label: ORGANIZATION_STATS.packageRangeLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.collegePartners,
+                    label: ORGANIZATION_STATS.collegePartnersLabel,
+                  },
+                  {
+                    value: ORGANIZATION_STATS.hiringNetwork,
+                    label: ORGANIZATION_STATS.hiringNetworkLabel,
+                  },
+                ].map((stat) => (
+                  <div key={stat.label} className="rounded-2xl border border-cyan-500/10 bg-slate-950/70 p-5 shadow-lg shadow-cyan-500/5">
+                    <div className="text-2xl font-bold text-cyan-300 mb-1">{stat.value}</div>
+                    <div className="text-sm text-slate-300">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

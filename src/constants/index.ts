@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   name: 'SSSAM Academy',
   fullName: 'Smart Solutions School of AI & Machine Learning',
   description: 'Professional AI-powered IT training from Gurugram with live classes, real projects, and placement-focused career support.',
-  url: 'https://sssamacademy.com',
+  url: 'https://sssamacademy.tech',
   email: 'info@sssamacademy.com',
   phone: '+91 9217031899',
   address: 'M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14, Gurugram, Haryana 122001',
@@ -12,6 +12,8 @@ export const SITE_CONFIG = {
   instagram: 'https://www.instagram.com/sssamacademy/',
   youtube: 'https://www.youtube.com/@codingwithsudhir',
 };
+
+export { ORGANIZATION_STATS } from './organization-stats';
 
 // Routes
 export const ROUTES = {

@@ -5,6 +5,7 @@ import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button, Badge, Rating, Divider } from '@/components/ui';
 import { CurriculumPreview } from '@/components/sections';
 import { getCourseBySlug } from '@/lib/courses';
+import { getCourseBenefitLabel } from '@/lib/course-highlights';
 import { ROUTES } from '@/constants';
 
 interface CourseDetailsPageProps {
@@ -23,6 +24,9 @@ export async function generateMetadata({ params }: CourseDetailsPageProps) {
   return {
     title: `${course.title} - SSSAM Academy`,
     description: course.description,
+    alternates: {
+      canonical: `https://sssamacademy.tech/courses/${slug}`,
+    },
   };
 }
 
@@ -37,6 +41,48 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
   return (
     <>
       <Header />
+
+      <script type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://sssamacademy.tech/',
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Courses',
+                  item: 'https://sssamacademy.tech/courses',
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: course.title,
+                  item: `https://sssamacademy.tech/courses/${course.slug}`,
+                },
+              ],
+            },
+            {
+              '@type': 'Course',
+              name: course.title,
+              description: course.description,
+              provider: {
+                '@type': 'Organization',
+                name: 'SSSAM Academy',
+                url: 'https://sssamacademy.tech',
+              },
+              url: `https://sssamacademy.tech/courses/${course.slug}`,
+            },
+          ],
+        })}
+      </script>
 
       {/* Hero */}
       <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 py-12 md:py-20 overflow-hidden">
@@ -83,6 +129,9 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 <Button variant="outline" size="lg">
                   Add to Wishlist
                 </Button>
+                <Button variant="ghost" size="lg" href="/#contact">
+                  Book a Demo Class
+                </Button>
               </div>
 
               {/* Course Info */}
@@ -101,15 +150,27 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 </div>
                 <div>
                   <Text size="sm" color="muted" className="text-slate-500">
-                    Students
+                    Benefit
                   </Text>
-                  <Text className="font-semibold text-white">{course.students.toLocaleString()}</Text>
+                  <Text className="font-semibold text-white">{getCourseBenefitLabel(course)}</Text>
                 </div>
                 <div>
                   <Text size="sm" color="muted" className="text-slate-500">
                     Category
                   </Text>
                   <Text className="font-semibold text-white">{course.category}</Text>
+                </div>
+                <div>
+                  <Text size="sm" color="muted" className="text-slate-500">
+                    Fee
+                  </Text>
+                  <Text className="font-semibold text-white">₹{course.price.toLocaleString('en-IN')}</Text>
+                </div>
+                <div>
+                  <Text size="sm" color="muted" className="text-slate-500">
+                    Last Updated
+                  </Text>
+                  <Text className="font-semibold text-white">{new Date(course.updatedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short' })}</Text>
                 </div>
               </div>
             </div>

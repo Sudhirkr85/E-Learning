@@ -3,6 +3,7 @@
 import { Container, Heading, Text } from '@/components/ui';
 import { CourseCard } from '@/components/cards';
 import { Course } from '@/types';
+import { ORGANIZATION_STATS } from '@/constants';
 
 interface CoursesGridProps {
   courses: Course[];
@@ -26,7 +27,7 @@ export function CoursesGrid({
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
             <span className="text-blue-600">🎓</span>
-            Trusted by 15,000+ Indian Students
+            {ORGANIZATION_STATS.studentsTrained} {ORGANIZATION_STATS.studentsTrainedLabel}
           </div>
           <Heading level={2} className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Professional IT Courses Tailored for You

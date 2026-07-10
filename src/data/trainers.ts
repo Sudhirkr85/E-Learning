@@ -7,7 +7,7 @@ export const trainers: Trainer[] = [
     title: 'Full Stack Developer',
     expertise: 'Web Development, JavaScript, React, Node.js',
     image: 'AS',
-    bio: 'With 10+ years of experience in full stack development, Ankit has trained over 15,000 Indian students on modern web technologies.',
+    bio: 'With 10+ years of experience in full stack development, Ankit has trained over 10,000 students on modern web technologies.',
     socials: {
       linkedin: 'https://linkedin.com/in/ankitsharma',
       twitter: 'https://twitter.com/ankitsharma',

@@ -2,6 +2,7 @@
 
 import { Container, Heading, Text } from '@/components/ui';
 import { TestimonialCard } from '@/components/cards';
+import { ORGANIZATION_STATS } from '@/constants';
 
 interface TestimonialData {
   id: string;
@@ -36,7 +37,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsProps) {
             See How Our Graduates Achieved Their Goals
           </Heading>
           <Text className="max-w-3xl mx-auto text-lg leading-8 text-slate-600 font-medium">
-            Join 10,000+ students who have successfully launched their tech careers with SSSAM Academy. Discover real success stories, placements, and salary increments from our alumni across leading IT companies.
+            Explore learner experiences, practical projects, career journeys, and placement stories from the SSSAM Academy community.
           </Text>
         </div>
 
@@ -62,31 +63,25 @@ export function TestimonialsSection({ testimonials }: TestimonialsProps) {
           </Heading>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-              <div className="text-5xl font-bold mb-3 text-cyan-400">4.9/5</div>
+              <div className="text-5xl font-bold mb-3 text-cyan-400">{ORGANIZATION_STATS.googleRating}</div>
               <div className="text-lg font-semibold text-blue-100 mb-1">
-                Highest Rating
+                {ORGANIZATION_STATS.googleRatingLabel}
               </div>
-              <Text size="sm" className="text-blue-200">
-                From 2,500+ student reviews
-              </Text>
+              <Text size="sm" className="text-blue-200">Across the SSSAM Academy profile</Text>
             </div>
             <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-              <div className="text-5xl font-bold mb-3 text-emerald-400">15,000+</div>
+              <div className="text-5xl font-bold mb-3 text-emerald-400">{ORGANIZATION_STATS.placementSuccess}</div>
               <div className="text-lg font-semibold text-blue-100 mb-1">
-                Successful Placements
+                {ORGANIZATION_STATS.placementSuccessLabel}
               </div>
-              <Text size="sm" className="text-blue-200">
-                In Infosys, TCS, Wipro & more
-              </Text>
+              <Text size="sm" className="text-blue-200">Career outcomes across programs</Text>
             </div>
             <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-              <div className="text-5xl font-bold mb-3 text-yellow-400">95%</div>
+              <div className="text-5xl font-bold mb-3 text-yellow-400">{ORGANIZATION_STATS.placementSupport}</div>
               <div className="text-lg font-semibold text-blue-100 mb-1">
-                Success Rate
+                {ORGANIZATION_STATS.placementSupportLabel}
               </div>
-              <Text size="sm" className="text-blue-200">
-                Career advancement achieved
-              </Text>
+              <Text size="sm" className="text-blue-200">Mentor-led support for learners</Text>
             </div>
           </div>
         </div>

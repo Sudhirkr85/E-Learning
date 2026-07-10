@@ -1,0 +1,16 @@
+export const ORGANIZATION_STATS = {
+  studentsTrained: '10,000+',
+  studentsTrainedLabel: 'Students Trained & Graduated',
+  placementSuccess: '95%',
+  placementSuccessLabel: 'Placement Success',
+  placementSupport: '100%',
+  placementSupportLabel: 'Placement Support',
+  googleRating: '4.8 ★',
+  googleRatingLabel: 'Google Rating',
+  packageRange: '3–40 LPA',
+  packageRangeLabel: 'Package Range',
+  collegePartners: '50+',
+  collegePartnersLabel: 'College Partners',
+  hiringNetwork: '500+',
+  hiringNetworkLabel: 'Companies Hiring Network',
+} as const;

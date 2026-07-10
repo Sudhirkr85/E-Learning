@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Container, Text, Divider } from '@/components/ui';
-import { ROUTES, SITE_CONFIG } from '@/constants';
+import { ROUTES, SITE_CONFIG, ORGANIZATION_STATS } from '@/constants';
 
 const exploreLinks = [
   { label: 'Courses', href: ROUTES.COURSES },
@@ -36,6 +36,21 @@ export function Footer() {
             <Text size="sm" className="text-slate-400 max-w-md leading-relaxed">
               Premium AI-first training from Sector 14, Gurugram. Live practical classes, placement-driven projects, and career support for India’s next generation of IT professionals.
             </Text>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 text-sm text-slate-300">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-900/80 px-4 py-3">
+                <div className="text-cyan-300 font-semibold">{ORGANIZATION_STATS.packageRange}</div>
+                <div className="text-slate-500">{ORGANIZATION_STATS.packageRangeLabel}</div>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-900/80 px-4 py-3">
+                <div className="text-cyan-300 font-semibold">{ORGANIZATION_STATS.collegePartners}</div>
+                <div className="text-slate-500">{ORGANIZATION_STATS.collegePartnersLabel}</div>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-900/80 px-4 py-3">
+                <div className="text-cyan-300 font-semibold">{ORGANIZATION_STATS.hiringNetwork}</div>
+                <div className="text-slate-500">{ORGANIZATION_STATS.hiringNetworkLabel}</div>
+              </div>
+            </div>
 
             <div className="mt-6 space-y-3 text-sm">
               <p>{SITE_CONFIG.address}</p>

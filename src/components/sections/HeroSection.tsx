@@ -6,6 +6,7 @@ import { Course } from '@/types';
 import { Container, Button, Heading, Text, Badge } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import { getNextMonthlyBatchLabel } from '@/lib/batch';
+import { getCourseBenefitLabel } from '@/lib/course-highlights';
 import { calculateDiscount } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 
@@ -215,8 +216,8 @@ export function HeroSection({ course }: HeroProps) {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-700/50">
               <div className="text-center">
-                <div className="text-3xl font-bold text-cyan-400 mb-1">{course.students.toLocaleString()}+</div>
-                <Text size="sm" className="text-foreground-tertiary text-xs">Students</Text>
+                <div className="text-2xl md:text-3xl font-bold text-cyan-400 mb-1 leading-tight">{getCourseBenefitLabel(course)}</div>
+                <Text size="sm" className="text-foreground-tertiary text-xs">Benefit</Text>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-400 mb-1">{course.lessons}</div>
@@ -235,8 +236,8 @@ export function HeroSection({ course }: HeroProps) {
             {/* Trust Badges */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-3 border-t border-slate-700/50">
               {[
-                '✓ Certified Trainers (5+ Years XP)',
                 '✓ 95% Placement Success',
+                '✓ 100% Placement Support',
                 '✓ Live Classes + Lifetime Access',
                 '✓ UPI/Cards/EMI Available'
               ].map((item, i) => (

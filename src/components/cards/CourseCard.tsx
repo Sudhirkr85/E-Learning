@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Course } from '@/types';
 import { Badge, Card, Rating, Text } from '@/components/ui';
 import { getNextMonthlyBatchLabel } from '@/lib/batch';
+import { getCourseBenefitLabel } from '@/lib/course-highlights';
 import { calculateDiscount } from '@/lib/utils';
 
 interface CourseCardProps {
@@ -12,7 +13,7 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course }: CourseCardProps) {
-  const isFeatured = course.featured || course.students > 5000;
+  const isFeatured = course.featured;
   const isBestSeller = course.rating >= 4.8;
   const discountPercentage = course.originalPrice
     ? calculateDiscount(course.originalPrice, course.price)
@@ -110,8 +111,8 @@ export function CourseCard({ course }: CourseCardProps) {
               <Text size="sm" className="text-slate-500 text-xs">Duration</Text>
             </div>
             <div className="flex flex-col items-center gap-1.5">
-              <span className="text-emerald-400 font-bold text-base">{(course.students / 1000).toFixed(1)}k+</span>
-              <Text size="sm" className="text-slate-500 text-xs">Students</Text>
+              <span className="text-emerald-400 font-bold text-sm leading-tight text-center">{getCourseBenefitLabel(course)}</span>
+              <Text size="sm" className="text-slate-500 text-xs">Benefit</Text>
             </div>
           </div>
 

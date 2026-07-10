@@ -12,7 +12,7 @@ export interface Course {
   originalPrice?: number;
   rating: number;
   reviews: number;
-  students: number;
+  students?: number;
   duration: string;
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Beginner to Advanced';

@@ -3,6 +3,7 @@
 import { Container, Heading, Text, Card } from '@/components/ui';
 import { TrainerCard } from '@/components/cards';
 import { Trainer } from '@/types';
+import { ORGANIZATION_STATS } from '@/constants';
 
 interface TrainersProps {
   trainers: Trainer[];
@@ -52,7 +53,7 @@ export function TrainersSection({ trainers }: TrainersProps) {
               Expert Trainers
             </Text>
             <Text size="sm" color="muted">
-              Trusted by Indian Students
+              {ORGANIZATION_STATS.studentsTrainedLabel}
             </Text>
           </div>
           <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200/50 backdrop-blur-sm">
@@ -68,13 +69,13 @@ export function TrainersSection({ trainers }: TrainersProps) {
           </div>
           <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200/50 backdrop-blur-sm">
             <div className="text-4xl font-bold text-green-600 mb-2">
-              10,000+
+              {ORGANIZATION_STATS.studentsTrained}
             </div>
             <Text size="lg" className="text-gray-700">
-              Students Trained
+              {ORGANIZATION_STATS.studentsTrainedLabel}
             </Text>
             <Text size="sm" color="muted">
-              Successfully placed
+              Placement support available
             </Text>
           </div>
         </div>

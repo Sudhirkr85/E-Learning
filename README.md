@@ -7,6 +7,7 @@ A modern, India-focused Learning Management System (LMS) and course selling plat
 
 ## 🛠️ Recent Updates
 
+- Centralized the approved SSSAM Academy `.tech` organization stats and removed unsupported public student counters from course cards and course hero surfaces.
 - Updated certificate PDF heading stack by removing the "PROFESSIONAL" line and increasing dynamic spacing before detail cards to avoid overlap with long course names.
 - Increased certificate PDF spacing between course title and detail cards, with adaptive course-title sizing to prevent overlap on longer names.
 - Fixed certificate PDF overlap by adding dynamic spacing between course title and info cards for long course names.
