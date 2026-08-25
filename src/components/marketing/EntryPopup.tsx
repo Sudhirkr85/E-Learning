@@ -58,7 +58,8 @@ const validateForm = (values: FormValues) => {
 
 export function EntryPopup() {
   const pathname = usePathname();
-  const isHomePage = pathname === '/';
+  // Exclude pages where popup should NOT show (admin, dashboard, auth pages)
+  const isExcluded = pathname.startsWith('/admin') || pathname.startsWith('/dashboard') || pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up') || pathname.startsWith('/checkout');
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -174,7 +175,7 @@ export function EntryPopup() {
   };
 
   useEffect(() => {
-    if (!isHomePage) {
+    if (isExcluded) {
       activeModeRef.current = 'idle';
       clearTimer(timerRef);
       clearTimer(autoCloseRef);
@@ -214,10 +215,10 @@ export function EntryPopup() {
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('focus', onFocus);
     };
-  }, [isHomePage]);
+  }, [isExcluded]);
 
   useEffect(() => {
-    if (!isHomePage || !isMounted || !isVisible) {
+    if (isExcluded || !isMounted || !isVisible) {
       return;
     }
 
@@ -264,10 +265,10 @@ export function EntryPopup() {
       document.removeEventListener('keydown', onKeyDown);
       previouslyFocused?.focus();
     };
-  }, [isHomePage, isMounted, isVisible]);
+  }, [isExcluded, isMounted, isVisible]);
 
   useEffect(() => {
-    if (!isHomePage || !isMounted) {
+    if (isExcluded || !isMounted) {
       return;
     }
 
@@ -277,9 +278,9 @@ export function EntryPopup() {
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, [isHomePage, isMounted]);
+  }, [isExcluded, isMounted]);
 
-  if (pathname !== '/') {
+  if (isExcluded) {
     return null;
   }
 
