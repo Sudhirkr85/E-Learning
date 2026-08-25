@@ -11,11 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/api/", "/checkout/", "/_next/"],
       },
     ],
-    sitemap: [
-      `${siteUrl}/sitemap.xml`,
-      `${siteUrl}/sitemap-2.xml`,
-      `${siteUrl}/sitemap-3.xml`,
-    ],
+    sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,
   };
 }
