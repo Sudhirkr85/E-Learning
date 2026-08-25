@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
@@ -12,17 +12,23 @@ interface PageProps {
   params: Promise<{ slug: string; segments: string[] }>;
 }
 
-// Generates all city x topic AND city x modifier x topic paths
+export const dynamicParams = true;
+
+// Pre-render top 200 popular combinations at build time; all others render on-demand (ISR) instantly
 export async function generateStaticParams() {
+  const topCities = seoLocations.slice(0, 10);
+  const topTopics = seoTopics.slice(0, 5);
+  const topModifiers = seoModifiers.slice(0, 3);
+
   const paths: { slug: string; segments: string[] }[] = [];
-  for (const loc of seoLocations) {
+  for (const loc of topCities) {
     // city/topic
-    for (const top of seoTopics) {
+    for (const top of topTopics) {
       paths.push({ slug: loc.city, segments: [top.topic] });
     }
     // city/modifier/topic
-    for (const mod of seoModifiers) {
-      for (const top of seoTopics) {
+    for (const mod of topModifiers) {
+      for (const top of topTopics) {
         paths.push({ slug: loc.city, segments: [mod.modifier, top.topic] });
       }
     }
