@@ -6,11 +6,7 @@ import { seoModifiers } from "@/data/seo-modifiers";
 const siteUrl = "https://sssamacademy.tech";
 const lastModified = new Date();
 
-// Google limits sitemaps to 50,000 URLs max per file.
-// We split our 102,580 URLs into 3 sitemaps (id: 0, 1, 2)
-export async function generateSitemaps() {
-  return [{ id: 0 }, { id: 1 }, { id: 2 }];
-}
+
 
 // ── Static core routes ─────────────────────────────────────────────────────────
 const coreRoutes: MetadataRoute.Sitemap = [
@@ -58,8 +54,10 @@ const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   }))
 );
 
-// ── City x Modifier x Topic pages (178 x 17 x 32 = 96,832 pages) ───────────────
-const modifierRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
+// ── City x Modifier x Topic pages (top high-priority combinations within 40k limit) ──
+const topLocationsForModifiers = seoLocations.slice(0, 65); // Delhi, Noida, Gurgaon, top metros
+
+const modifierRoutes: MetadataRoute.Sitemap = topLocationsForModifiers.flatMap((loc) =>
   seoModifiers.flatMap((mod) =>
     seoTopics.map((top) => ({
       url: `${siteUrl}/courses/${loc.city}/${mod.modifier}/${top.topic}`,
@@ -70,24 +68,12 @@ const modifierRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   )
 );
 
-// Combine all URLs
-const allRoutes: MetadataRoute.Sitemap = [
-  ...coreRoutes,
-  ...keywordRoutes,
-  ...courseRoutes,
-  ...cityTopicRoutes,
-  ...modifierRoutes,
-];
-
-const CHUNK_SIZE = 40000;
-
-export default async function sitemap(props: { id: Promise<{ id: string }> } | { id: number } | { id: string }): Promise<MetadataRoute.Sitemap> {
-  const resolved = await Promise.resolve(props);
-  const rawId = (resolved as any)?.id;
-  const sitemapId = typeof rawId === 'object' && rawId !== null ? Number((await rawId).id) : Number(rawId || 0);
-
-  const start = sitemapId * CHUNK_SIZE;
-  const end = start + CHUNK_SIZE;
-
-  return allRoutes.slice(start, end);
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    ...coreRoutes,
+    ...keywordRoutes,
+    ...courseRoutes,
+    ...cityTopicRoutes,
+    ...modifierRoutes,
+  ];
 }
