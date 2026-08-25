@@ -6,6 +6,12 @@ import { seoModifiers } from "@/data/seo-modifiers";
 const siteUrl = "https://sssamacademy.tech";
 const lastModified = new Date();
 
+// Google limits sitemaps to 50,000 URLs max per file.
+// We split our 102,580 URLs into 3 sitemaps (id: 0, 1, 2)
+export async function generateSitemaps() {
+  return [{ id: 0 }, { id: 1 }, { id: 2 }];
+}
+
 // ── Static core routes ─────────────────────────────────────────────────────────
 const coreRoutes: MetadataRoute.Sitemap = [
   { url: `${siteUrl}/`,                                        lastModified, changeFrequency: "weekly",  priority: 1.0 },
@@ -18,7 +24,6 @@ const coreRoutes: MetadataRoute.Sitemap = [
 
 // ── High-priority Gurgaon & Delhi keyword pages ────────────────────────────────
 const keywordRoutes: MetadataRoute.Sitemap = [
-  // 🔴 Gurgaon — Most searched keywords
   { url: `${siteUrl}/it-training-institute-gurgaon`,        lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/computer-courses-gurgaon`,             lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/web-development-course-gurgaon`,       lastModified, changeFrequency: "monthly", priority: 0.9 },
@@ -26,7 +31,6 @@ const keywordRoutes: MetadataRoute.Sitemap = [
   { url: `${siteUrl}/java-course-gurgaon`,                  lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/data-analyst-course-gurgaon`,          lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/machine-learning-course-gurgaon`,      lastModified, changeFrequency: "monthly", priority: 0.9 },
-  // 🔵 Delhi — Most searched keywords
   { url: `${siteUrl}/it-training-institute-delhi`,          lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/computer-courses-delhi`,               lastModified, changeFrequency: "monthly", priority: 0.9 },
   { url: `${siteUrl}/web-development-course-delhi`,         lastModified, changeFrequency: "monthly", priority: 0.9 },
@@ -44,7 +48,7 @@ const courseRoutes: MetadataRoute.Sitemap = seoTopics.map((topic) => ({
   priority: 0.8,
 }));
 
-// ── City x Topic pages (30 cities x 8 topics = 240 pages) ─────────────────────
+// ── City x Topic pages (178 cities x 32 topics = 5,696 pages) ──────────────────
 const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   seoTopics.map((top) => ({
     url: `${siteUrl}/courses/${loc.city}/${top.topic}`,
@@ -54,7 +58,7 @@ const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   }))
 );
 
-// ── City x Modifier x Topic pages (30 x 6 x 8 = 1,440 pages) ─────────────────
+// ── City x Modifier x Topic pages (178 x 17 x 32 = 96,832 pages) ───────────────
 const modifierRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   seoModifiers.flatMap((mod) =>
     seoTopics.map((top) => ({
@@ -66,12 +70,24 @@ const modifierRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   )
 );
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    ...coreRoutes,
-    ...keywordRoutes,
-    ...courseRoutes,
-    ...cityTopicRoutes,
-    ...modifierRoutes,
-  ];
+// Combine all URLs
+const allRoutes: MetadataRoute.Sitemap = [
+  ...coreRoutes,
+  ...keywordRoutes,
+  ...courseRoutes,
+  ...cityTopicRoutes,
+  ...modifierRoutes,
+];
+
+const CHUNK_SIZE = 40000;
+
+export default async function sitemap(props: { id: Promise<{ id: string }> } | { id: number } | { id: string }): Promise<MetadataRoute.Sitemap> {
+  const resolved = await Promise.resolve(props);
+  const rawId = (resolved as any)?.id;
+  const sitemapId = typeof rawId === 'object' && rawId !== null ? Number((await rawId).id) : Number(rawId || 0);
+
+  const start = sitemapId * CHUNK_SIZE;
+  const end = start + CHUNK_SIZE;
+
+  return allRoutes.slice(start, end);
 }
