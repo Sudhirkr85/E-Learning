@@ -1,4 +1,4 @@
-﻿import { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
 
 const siteUrl = "https://sssamacademy.tech";
 
@@ -11,7 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/api/", "/checkout/", "/_next/"],
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: [
+      `${siteUrl}/sitemap.xml`,
+      `${siteUrl}/sitemap-2.xml`,
+      `${siteUrl}/sitemap-3.xml`,
+    ],
     host: siteUrl,
   };
 }

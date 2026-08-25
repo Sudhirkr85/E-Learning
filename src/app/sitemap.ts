@@ -6,7 +6,8 @@ import { seoModifiers } from "@/data/seo-modifiers";
 const siteUrl = "https://sssamacademy.tech";
 const lastModified = new Date();
 
-
+export const revalidate = 86400; // Cache on Vercel Edge CDN for 24 hours
+export const dynamic = "force-static";
 
 // ── Static core routes ─────────────────────────────────────────────────────────
 const coreRoutes: MetadataRoute.Sitemap = [
@@ -54,10 +55,10 @@ const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   }))
 );
 
-// ── City x Modifier x Topic pages (top high-priority combinations within 40k limit) ──
-const topLocationsForModifiers = seoLocations.slice(0, 65); // Delhi, Noida, Gurgaon, top metros
+// ── City x Modifier x Topic pages (Part 1: locations 0 to 60) ──────────────────
+const part1Locations = seoLocations.slice(0, 60);
 
-const modifierRoutes: MetadataRoute.Sitemap = topLocationsForModifiers.flatMap((loc) =>
+const modifierRoutes: MetadataRoute.Sitemap = part1Locations.flatMap((loc) =>
   seoModifiers.flatMap((mod) =>
     seoTopics.map((top) => ({
       url: `${siteUrl}/courses/${loc.city}/${mod.modifier}/${top.topic}`,
