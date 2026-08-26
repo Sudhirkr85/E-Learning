@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Digital Marketing Course in Delhi | SEO & Google Ads — SSSAM Academy",
   description: "Best digital marketing course in Delhi at SSSAM Academy. Learn SEO, Google Ads, social media, and analytics with live campaigns and placement support. Enroll today!",

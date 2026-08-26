@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Data Science Course in Delhi | Python & ML Training — SSSAM Academy",
   description: "Best data science course in Delhi. Learn Python, machine learning, TensorFlow, and AI with live projects and placement support at SSSAM Academy. Enroll now!",

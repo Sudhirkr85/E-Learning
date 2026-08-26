@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Best IT Training Institute in Gurgaon | SSSAM Academy",
   description: "Looking for the best IT training institute in Gurgaon? SSSAM Academy offers Full Stack, Data Science, Cyber Security and Digital Marketing courses with live projects and placement support. Enroll today!",

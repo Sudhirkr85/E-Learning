@@ -13,6 +13,7 @@ interface PageProps {
 }
 
 export const dynamicParams = true;
+export const revalidate = 604800; // Cache on Vercel Edge CDN for 7 days (0 Serverless function calls after 1st hit)
 
 // Pre-render top 200 popular combinations at build time; all others render on-demand (ISR) instantly
 export async function generateStaticParams() {

@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Full Stack Development Course in Delhi | SSSAM Academy",
   description: "Best full stack development course in Delhi. Learn Java, Python, Node.js, React, and cloud deployment with live mentorship and placement support at SSSAM Academy.",

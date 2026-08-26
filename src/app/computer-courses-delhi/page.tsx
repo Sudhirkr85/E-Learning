@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Computer Courses in Delhi | SSSAM Academy — Top Rated",
   description: "Best computer courses in Delhi at SSSAM Academy. Learn Web Development, Python, Data Science, and Digital Marketing with live projects, certificate, and placement support.",

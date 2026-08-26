@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Web Development Course in Gurgaon | SSSAM Academy",
   description: "Best web development course in Gurgaon. Learn HTML, CSS, JavaScript, Node.js, MongoDB, and AI tools in 30 days with live mentorship and placement support at SSSAM Academy.",

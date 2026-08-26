@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Data Analyst Course in Gurgaon | Power BI & SQL — SSSAM Academy",
   description: "Best data analyst course in Gurgaon at SSSAM Academy. Learn SQL, Excel, Power BI, and business intelligence with live case studies and placement support.",

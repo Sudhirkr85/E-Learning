@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Python Course in Gurgaon | Best Python Training — SSSAM Academy",
   description: "Best Python course in Gurgaon at SSSAM Academy. Learn Python programming, automation, data science, and machine learning with live mentorship, real projects, and a training certificate.",

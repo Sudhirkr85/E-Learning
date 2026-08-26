@@ -4,6 +4,9 @@ import { Header, Footer } from "@/components/layout";
 
 const siteUrl = "https://sssamacademy.tech";
 
+export const revalidate = 604800;
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Java Course in Gurgaon | Best Java Training — SSSAM Academy",
   description: "Best Java course in Gurgaon at SSSAM Academy. Learn Core Java, Spring Boot, REST APIs, and full stack development with live mentorship, projects, and placement support.",

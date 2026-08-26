@@ -6,7 +6,7 @@ import { seoModifiers } from "@/data/seo-modifiers";
 const siteUrl = "https://sssamacademy.tech";
 const lastModified = new Date();
 
-export const revalidate = 86400; // Cache on Vercel Edge CDN for 24 hours
+export const revalidate = 604800; // Cache on Vercel Edge CDN for 7 days
 export const dynamic = "force-static";
 
 // ── Static core routes ─────────────────────────────────────────────────────────
