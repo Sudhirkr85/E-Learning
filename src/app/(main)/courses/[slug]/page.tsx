@@ -164,27 +164,60 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
                 </div>
                 <div>
                   <Text size="sm" color="muted" className="text-slate-500">
-                    Fee
+                    Fee Structure
                   </Text>
-                  <Text className="font-semibold text-white">₹{course.price.toLocaleString('en-IN')}</Text>
+                  <Text className="font-semibold text-emerald-400">Up to 40% Scholarship</Text>
                 </div>
                 <div>
                   <Text size="sm" color="muted" className="text-slate-500">
-                    Last Updated
+                    Batch Mode
                   </Text>
-                  <Text className="font-semibold text-white">{new Date(course.updatedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short' })}</Text>
+                  <Text className="font-semibold text-white">Classroom / Online</Text>
                 </div>
               </div>
             </div>
 
-            {/* Image */}
-            <div className="relative h-64 md:h-96 rounded-lg overflow-hidden border border-slate-700 shadow-lg">
-              <Image
-                src={course.thumbnail}
-                alt={course.title}
-                fill
-                className="object-contain md:object-cover"
-              />
+            {/* Quick Demo & Batch Pass Card (No heavy image) */}
+            <div className="rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-7 shadow-2xl flex flex-col justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-xs font-semibold mb-4">
+                  📍 Sector 14 Gurugram Training Center
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  Attend Free Demo Class
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed mb-6">
+                  Visit our Sector 14 Gurugram AC computer lab or attend online from home. Get a full syllabus walkthrough and free career roadmap with senior industry mentors.
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                    <span className="text-emerald-400">✓</span>
+                    <span>100% Practical & Real-Time Project Coding</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                    <span className="text-emerald-400">✓</span>
+                    <span>1-on-1 Daily Doubt Clearing Sessions</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300">
+                    <span className="text-emerald-400">✓</span>
+                    <span>120+ Hiring Partner Referrals in Gurgaon & NCR</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-slate-800">
+                <EnrollCourseButton
+                  courseTitle={course.title}
+                  label="Book Free Demo Pass Now"
+                  className="w-full"
+                />
+                <EnrollCourseButton
+                  courseTitle={course.title}
+                  variant="whatsapp"
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
         </Container>
