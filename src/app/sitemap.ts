@@ -11,57 +11,36 @@ export const revalidate = 604800; // 7-day Vercel Edge CDN Cache
 
 // ── 1. Static core routes ───────────────────────────────────────────────────────
 const coreRoutes: MetadataRoute.Sitemap = [
-  { url: `${siteUrl}/`,                                        lastModified, changeFrequency: "daily",   priority: 1.0 },
-  { url: `${siteUrl}/courses`,                                 lastModified, changeFrequency: "daily",   priority: 0.9 },
-  { url: `${siteUrl}/full-stack-development-course-gurgaon`,   lastModified, changeFrequency: "weekly",  priority: 0.8 },
-  { url: `${siteUrl}/data-science-training-gurgaon`,          lastModified, changeFrequency: "weekly",  priority: 0.8 },
-  { url: `${siteUrl}/cyber-security-course-gurgaon`,          lastModified, changeFrequency: "weekly",  priority: 0.8 },
-  { url: `${siteUrl}/digital-marketing-course-gurgaon`,       lastModified, changeFrequency: "weekly",  priority: 0.8 },
+  { url: `${siteUrl}/`,                   lastModified, changeFrequency: "daily",   priority: 1.0 },
+  { url: `${siteUrl}/courses`,            lastModified, changeFrequency: "daily",   priority: 0.95 },
+  { url: `${siteUrl}/verify-certificate`, lastModified, changeFrequency: "monthly", priority: 0.6 },
 ];
 
-// ── 2. High-priority keyword landing routes ────────────────────────────────────
-const keywordRoutes: MetadataRoute.Sitemap = [
-  { url: `${siteUrl}/it-training-institute-gurgaon`,        lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/computer-courses-gurgaon`,             lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/web-development-course-gurgaon`,       lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/python-course-gurgaon`,                lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/java-course-gurgaon`,                  lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/data-analyst-course-gurgaon`,          lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/machine-learning-course-gurgaon`,      lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/it-training-institute-delhi`,          lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/computer-courses-delhi`,               lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/web-development-course-delhi`,         lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/python-course-delhi`,                  lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/data-science-course-delhi`,            lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/digital-marketing-course-delhi`,       lastModified, changeFrequency: "weekly",  priority: 0.9 },
-  { url: `${siteUrl}/full-stack-development-course-delhi`,  lastModified, changeFrequency: "weekly",  priority: 0.9 },
-];
-
-// ── 3. Course detail pages ───────────────────────────────────────────────────
+// ── 2. Course detail pages ───────────────────────────────────────────────────
 const uniqueCourseSlugs = Array.from(new Set(seoTopics.map((t) => t.courseSlug)));
 const courseRoutes: MetadataRoute.Sitemap = uniqueCourseSlugs.map((slug) => ({
   url: `${siteUrl}/courses/${slug}`,
   lastModified,
   changeFrequency: "weekly" as const,
-  priority: 0.85,
+  priority: 0.9,
 }));
 
-// ── 4. City x Topic pages (50 locations x 20 topics = 1,000 URLs) ─────────────
+// ── 3. High-Priority Gurugram & Delhi NCR City x Topic pages ─────────────────
 const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
   seoTopics.map((top) => ({
     url: `${siteUrl}/courses/${loc.city}/${top.topic}`,
     lastModified,
     changeFrequency: "weekly" as const,
-    priority: 0.75,
+    priority: 0.85,
   }))
 );
 
-// ── 5. City x Modifier x Topic pages (Targeted up to Google's 50,000 URL limit) ─
+// ── 4. City x Modifier x Topic pages (Targeted up to Google's 50,000 URL limit) ─
 const MAX_SITEMAP_URLS = 50000;
-const reservedSlots = coreRoutes.length + keywordRoutes.length + courseRoutes.length + cityTopicRoutes.length;
+const reservedSlots = coreRoutes.length + courseRoutes.length + cityTopicRoutes.length;
 const maxModifierSlots = MAX_SITEMAP_URLS - reservedSlots;
 
-// Generate all modifier permutations (50 locations x 50 modifiers x 20 topics = 50,000 combinations)
+// Generate all modifier permutations (50 locations x 50 modifiers x 40+ topics)
 const allModifierRoutes: MetadataRoute.Sitemap = [];
 
 for (const loc of seoLocations) {
@@ -72,7 +51,7 @@ for (const loc of seoLocations) {
         url: `${siteUrl}/courses/${loc.city}/${mod.modifier}/${top.topic}`,
         lastModified,
         changeFrequency: "monthly" as const,
-        priority: 0.65,
+        priority: 0.7,
       });
     }
     if (allModifierRoutes.length >= maxModifierSlots) break;
@@ -83,7 +62,6 @@ for (const loc of seoLocations) {
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...coreRoutes,
-    ...keywordRoutes,
     ...courseRoutes,
     ...cityTopicRoutes,
     ...allModifierRoutes,
