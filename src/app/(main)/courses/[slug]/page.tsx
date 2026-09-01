@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Header, Footer } from '@/components/layout';
-import { Container, Heading, Text, Button, Badge, Rating, Divider } from '@/components/ui';
+import { Container, Heading, Text, Button, Badge, Rating, Divider, EnrollCourseButton } from '@/components/ui';
 import { CurriculumPreview } from '@/components/sections';
 import { getCourseBySlug } from '@/lib/courses';
 import { getCourseBenefitLabel } from '@/lib/course-highlights';
@@ -13,6 +13,9 @@ interface CourseDetailsPageProps {
     slug: string;
   }>;
 }
+
+export const revalidate = 86400; // 24-Hour ISR Cache
+
 export async function generateMetadata({ params }: CourseDetailsPageProps) {
   const { slug } = await params;
   const { course } = await getCourseBySlug(slug);
@@ -117,21 +120,21 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
 
               <Rating rating={course.rating} reviews={course.reviews} className="mb-6" />
 
-              <div className="flex gap-3 mb-6">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  href={`${ROUTES.CHECKOUT}?course=${course.slug}`}
-                  disabled={course.status === 'coming-soon'}
-                >
-                  {course.status === 'coming-soon' ? 'Coming Soon' : 'Enroll Now'}
-                </Button>
-                <Button variant="outline" size="lg">
-                  Add to Wishlist
-                </Button>
-                <Button variant="ghost" size="lg" href="/#contact">
-                  Book a Demo Class
-                </Button>
+              <div className="flex flex-wrap gap-3 mb-6">
+                <EnrollCourseButton
+                  courseTitle={course.title}
+                  price={course.price}
+                  label={`Enroll / Request Discount — ₹${course.price.toLocaleString('en-IN')}`}
+                />
+                <EnrollCourseButton
+                  courseTitle={course.title}
+                  variant="whatsapp"
+                />
+                <EnrollCourseButton
+                  courseTitle={course.title}
+                  variant="outline"
+                  label="Book Free Demo Class"
+                />
               </div>
 
               {/* Course Info */}
@@ -295,14 +298,17 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
             <Text size="lg" className="text-slate-300 mb-8">
               {course.ctaSupportText || 'Join thousands of students learning this course'}
             </Text>
-            <Button
-              variant="primary"
-              size="lg"
-              href={`${ROUTES.CHECKOUT}?course=${course.slug}`}
-              disabled={course.status === 'coming-soon'}
-            >
-              {course.status === 'coming-soon' ? 'Coming Soon' : `Enroll for ₹${course.price.toLocaleString()}`}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <EnrollCourseButton
+                courseTitle={course.title}
+                price={course.price}
+                label={`Enroll / Request Discount — ₹${course.price.toLocaleString('en-IN')}`}
+              />
+              <EnrollCourseButton
+                courseTitle={course.title}
+                variant="whatsapp"
+              />
+            </div>
           </div>
         </Container>
       </section>

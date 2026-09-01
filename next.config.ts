@@ -1,12 +1,9 @@
 import type { NextConfig } from "next";
-import { loadEnvConfig } from '@next/env';
-
-// Load environment variables from .env file
-loadEnvConfig(process.cwd());
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    minimumCacheTTL: 2592000, // 30 days image cache TTL
     remotePatterns: [
       {
         protocol: 'https',

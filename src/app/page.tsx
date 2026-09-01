@@ -13,7 +13,7 @@ const siteUrl = 'https://sssamacademy.tech';
 const pageTitle = 'AI Training Institute Gurugram | Full Stack Development & Data Science';
 const pageDescription = 'SSSAM Academy offers AI-first IT training in Gurugram with Full Stack Development, Data Science, Cyber Security and Digital Marketing courses plus placement support.';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400; // 24-Hour ISR Cache
 
 export const metadata: Metadata = {
   title: pageTitle,

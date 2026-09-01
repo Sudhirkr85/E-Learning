@@ -3,10 +3,10 @@ import { Container, Text, Divider } from '@/components/ui';
 import { ROUTES, SITE_CONFIG, ORGANIZATION_STATS } from '@/constants';
 
 const exploreLinks = [
-  { label: 'Courses', href: ROUTES.COURSES },
-  { label: 'Login', href: ROUTES.LOGIN },
-  { label: 'Register', href: ROUTES.REGISTER },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'All Courses', href: ROUTES.COURSES },
+  { label: 'Verify Certificate', href: '/verify-certificate' },
+  { label: 'Sector 14 Center', href: '/#contact' },
+  { label: 'About Institute', href: '/#about' },
 ];
 
 const contactLinks = [

@@ -19,59 +19,59 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-// Only initialize MongoDB if URI is provided
-if (uri) {
+const isValidMongoUri = (str?: string): boolean => {
+  if (!str) return false;
+  const trimmed = str.trim();
+  return trimmed.startsWith('mongodb://') || trimmed.startsWith('mongodb+srv://');
+};
+
+function getClientPromise(): Promise<MongoClient> | null {
+  if (!isValidMongoUri(uri)) {
+    return null;
+  }
+
   if (process.env.NODE_ENV === 'development') {
     if (!global._mongoClientPromise) {
-      console.log('📡 Connecting to MongoDB Atlas...');
-      client = new MongoClient(uri, options);
-      global._mongoClientPromise = client
-        .connect()
-        .then((connectedClient) => {
-          console.log('✓ MongoDB connection initiated (development mode)');
-          return connectedClient;
-        })
-        .catch((err) => {
-          console.error('✗ MongoDB connection failed:', err.message);
+      try {
+        client = new MongoClient(uri!, options);
+        global._mongoClientPromise = client.connect().catch((err) => {
+          console.warn('MongoDB connection failed:', err.message);
+          global._mongoClientPromise = undefined;
           throw err;
         });
+      } catch (err) {
+        return null;
+      }
     }
-    clientPromise = global._mongoClientPromise;
+    return global._mongoClientPromise;
   } else {
-    console.log('📡 Connecting to MongoDB Atlas...');
-    client = new MongoClient(uri, options);
-    clientPromise = client
-      .connect()
-      .then((connectedClient) => {
-        console.log('✓ MongoDB connection initiated (production mode)');
-        return connectedClient;
-      })
-      .catch((err) => {
-        console.error('✗ MongoDB connection failed:', err.message);
-        throw err;
-      });
+    if (!clientPromise) {
+      try {
+        client = new MongoClient(uri!, options);
+        clientPromise = client.connect().catch((err) => {
+          console.warn('MongoDB connection failed:', err.message);
+          clientPromise = null;
+          throw err;
+        });
+      } catch (err) {
+        return null;
+      }
+    }
+    return clientPromise;
   }
-} else {
-  console.error('⚠️  MONGODB_URI environment variable is not set');
 }
 
 export async function getDatabase(): Promise<Db> {
-  if (!clientPromise) {
-    throw new Error('MongoDB is not configured. Please add MONGODB_URI to your environment variables.');
+  const promise = getClientPromise();
+  if (!promise) {
+    throw new Error('MongoDB is not configured with a valid connection string.');
   }
-  
+
   try {
-    const client = await clientPromise;
-    const db = client.db('sssam-academy');
-    console.log('✓ Database connection successful: sssam-academy');
-    return db;
+    const connectedClient = await promise;
+    return connectedClient.db('sssam-academy');
   } catch (error: any) {
-    console.error('✗ Database connection error:', {
-      message: error?.message,
-      code: error?.code,
-      reason: error?.reason?.type,
-    });
-    throw error;
+    throw new Error(`MongoDB connection error: ${error?.message || error}`);
   }
 }
 

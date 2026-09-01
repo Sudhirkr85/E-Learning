@@ -1,8 +1,11 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { Header, Footer } from '@/components/layout';
 import { Container, Heading, Text, Button } from '@/components/ui';
 
 const siteUrl = 'https://sssamacademy.tech';
+
+export const revalidate = 604800;
+export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Full Stack Development Course Gurgaon | SSSAM Academy',

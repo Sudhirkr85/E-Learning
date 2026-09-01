@@ -9,6 +9,8 @@ export const metadata = {
   description: 'SSSAM Academy offers AI-first, placement-oriented IT training in Gurugram. Live practical classes, real projects, and career support for full stack, data science, cyber security and digital marketing learners.',
 };
 
+export const revalidate = 86400; // 24-Hour ISR Cache
+
 export default async function Home() {
   // Fetch all courses dynamically with fallback
   const { courses: allCourses } = await getPublishedCourses();

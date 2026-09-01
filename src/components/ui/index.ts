@@ -9,3 +9,5 @@ export { Card } from './Card';
 export { Rating } from './Rating';
 export { Divider } from './Divider';
 export { default as HeroMesh } from './HeroMesh';
+export { CounselorModal, openCounselorModal } from './CounselorModal';
+export { EnrollCourseButton } from './EnrollCourseButton';

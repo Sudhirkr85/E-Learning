@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { EntryPopup } from "@/components/marketing/EntryPopup";
+import { CounselorModal } from "@/components/ui/CounselorModal";
+import { StickyContactWidget } from "@/components/ui/StickyContactWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,18 +17,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sssamacademy.tech"),
-  title: "AI Training Institute Gurugram | Full Stack & Data Science",
+  title: "AI Training Institute Gurugram | Full Stack, Data Science, Cloud & IT Courses",
   description:
-    "SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.",
+    "SSSAM Academy is the top AI & IT training institute in Sector 14 Gurugram offering Full Stack, Data Science, Cyber Security, Cloud, DevOps, and Digital Marketing courses with 100% placement support.",
 
   icons: {
     icon: "/favicon-v2.ico",
   },
 
   openGraph: {
-    title: "AI Training Institute Gurugram | Full Stack & Data Science",
+    title: "AI Training Institute Gurugram | Full Stack, Data Science, Cloud & IT Courses",
     description:
-      "SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.",
+      "SSSAM Academy is the top AI & IT training institute in Sector 14 Gurugram offering Full Stack, Data Science, Cyber Security, Cloud, DevOps, and Digital Marketing courses with 100% placement support.",
     type: "website",
     url: "https://sssamacademy.tech",
     siteName: "SSSAM Academy",
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI Training Institute Gurugram | Full Stack & Data Science",
     description:
-      "SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security and Digital Marketing courses and placement support.",
+      "SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security, Cloud and Digital Marketing courses with placement support.",
     images: ["https://sssamacademy.tech/images/logo/logo.png"],
   },
 };
@@ -64,7 +65,8 @@ export default function RootLayout({
       >
         <body className="min-h-full flex flex-col">
           {children}
-          <EntryPopup />
+          <CounselorModal />
+          <StickyContactWidget />
         </body>
       </html>
     </ClerkProvider>
