@@ -1,5 +1,5 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import { Header, Footer, DashboardSidebar } from '@/components/layout';
-import { Container, Heading, Text, Card } from '@/components/ui';
 
 export const metadata = {
   title: 'Dashboard - SSSAM Academy',
@@ -12,13 +12,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ClerkProvider>
       <Header />
       <div className="min-h-screen bg-slate-950 text-slate-300 flex flex-col md:flex-row">
         <DashboardSidebar />
         <main className="flex-1 p-6 md:p-10">{children}</main>
       </div>
       <Footer />
-    </>
+    </ClerkProvider>
   );
 }

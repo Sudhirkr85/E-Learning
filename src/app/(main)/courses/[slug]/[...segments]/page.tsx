@@ -266,7 +266,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
               📍 {location.label}, {location.state}
             </span>
             <span className="inline-block bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-xs font-semibold px-3 py-1 rounded-full">
-              Save {discount}% Today
+              Scholarship Up to 40% Available
             </span>
           </div>
 
@@ -289,8 +289,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
           <div className="flex flex-wrap gap-3 justify-center max-w-xl mx-auto">
             <EnrollCourseButton
               courseTitle={`${topicData.label} in ${location.label}`}
-              price={topicData.price}
-              label={`${ctaText} — ₹${topicData.price.toLocaleString("en-IN")}`}
+              label="Request Fee Structure & Scholarship"
             />
             <EnrollCourseButton
               courseTitle={`${topicData.label} in ${location.label}`}
@@ -319,11 +318,10 @@ export default async function SeoLandingPage({ params }: PageProps) {
                   <td className="py-3 px-5 text-white font-medium">{topicData.label}</td>
                 </tr>
                 <tr className="flex flex-col sm:table-row bg-slate-950/40">
-                  <th className="py-3 px-5 font-semibold text-slate-400">Discounted Fee</th>
+                  <th className="py-3 px-5 font-semibold text-slate-400">Fee Structure</th>
                   <td className="py-3 px-5">
-                    <span className="text-lg font-bold text-emerald-400">₹{topicData.price.toLocaleString("en-IN")}</span>
-                    <span className="text-xs text-slate-400 line-through ml-2">₹{topicData.originalPrice.toLocaleString("en-IN")}</span>
-                    <span className="ml-2 text-xs bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded-full font-medium">Save {discount}%</span>
+                    <span className="text-sm font-bold text-emerald-400">Scholarship & EMI Options Available</span>
+                    <span className="ml-2 text-xs bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded-full font-medium">Up to 40% Off</span>
                   </td>
                 </tr>
                 <tr className="flex flex-col sm:table-row">
@@ -480,13 +478,12 @@ export default async function SeoLandingPage({ params }: PageProps) {
             Accelerate Your Tech Career in {location.label}
           </h2>
           <p className="text-slate-300 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-            Limited seats per batch to ensure personalized 1-on-1 mentorship. Enroll today at ₹{topicData.price.toLocaleString("en-IN")} and save {discount}%.
+            Limited seats per batch to ensure personalized 1-on-1 mentorship. Inquire today for up to 40% scholarship discounts & flexible installments.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <EnrollCourseButton
               courseTitle={`${topicData.label} in ${location.label}`}
-              price={topicData.price}
-              label={`Enroll Now — ₹${topicData.price.toLocaleString("en-IN")}`}
+              label="Request Fee Structure & Scholarship"
             />
             <EnrollCourseButton
               courseTitle={`${topicData.label} in ${location.label}`}

@@ -4,7 +4,6 @@ import { openCounselorModal } from './CounselorModal';
 
 interface EnrollCourseButtonProps {
   courseTitle: string;
-  price?: number;
   className?: string;
   variant?: 'primary' | 'whatsapp' | 'outline';
   label?: string;
@@ -12,7 +11,6 @@ interface EnrollCourseButtonProps {
 
 export function EnrollCourseButton({
   courseTitle,
-  price,
   className = '',
   variant = 'primary',
   label,
@@ -23,7 +21,7 @@ export function EnrollCourseButton({
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent(
-      `Hi SSSAM Academy! I am interested in ${courseTitle} at your Sector 14 Gurugram center. Please share the syllabus, fees, and next demo class schedule.`
+      `Hi SSSAM Academy! I am interested in ${courseTitle} at your Sector 14 Gurugram center. Please share the syllabus, discounted fee structure, and next demo class schedule.`
     );
     window.open(`https://wa.me/919217031899?text=${message}`, '_blank');
   };
@@ -34,7 +32,7 @@ export function EnrollCourseButton({
         onClick={handleWhatsApp}
         className={`inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 shadow-lg shadow-emerald-600/20 transition ${className}`}
       >
-        <span>💬 Chat on WhatsApp</span>
+        <span>💬 Get Fees on WhatsApp</span>
       </button>
     );
   }
@@ -55,7 +53,7 @@ export function EnrollCourseButton({
       onClick={handleClick}
       className={`inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3.5 px-6 shadow-lg shadow-cyan-500/20 transition transform hover:scale-105 ${className}`}
     >
-      <span>{label || (price ? `Enroll Now — ₹${price.toLocaleString('en-IN')}` : 'Talk to Counselor')}</span>
+      <span>{label || 'Request Fee Structure & Demo'}</span>
     </button>
   );
 }

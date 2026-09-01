@@ -123,8 +123,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
               <div className="flex flex-wrap gap-3 mb-6">
                 <EnrollCourseButton
                   courseTitle={course.title}
-                  price={course.price}
-                  label={`Enroll / Request Discount — ₹${course.price.toLocaleString('en-IN')}`}
+                  label="Request Fee Structure & Scholarship"
                 />
                 <EnrollCourseButton
                   courseTitle={course.title}
@@ -301,8 +300,7 @@ export default async function CourseDetailsPage({ params }: CourseDetailsPagePro
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <EnrollCourseButton
                 courseTitle={course.title}
-                price={course.price}
-                label={`Enroll / Request Discount — ₹${course.price.toLocaleString('en-IN')}`}
+                label="Request Fee Structure & Scholarship"
               />
               <EnrollCourseButton
                 courseTitle={course.title}

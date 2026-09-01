@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Header, Footer } from '@/components/layout';
 import { HeroSection } from '@/components/sections/HeroSection';
-import { CoursesGrid } from '@/components/sections/CoursesGrid';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FAQSection } from '@/components/sections/FAQSection';
-import { getFeaturedCourse, getPublishedCourses } from '@/lib/courses';
+import { ContactSection } from '@/components/sections/ContactSection';
+import { EnrollCourseButton } from '@/components/ui/EnrollCourseButton';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
-import { ORGANIZATION_STATS } from '@/constants';
+import { seoTopics } from '@/data/seo-topics';
 
 const siteUrl = 'https://sssamacademy.tech';
-const pageTitle = 'AI Training Institute Gurugram | Full Stack Development & Data Science';
-const pageDescription = 'SSSAM Academy offers AI-first IT training in Gurugram with Full Stack Development, Data Science, Cyber Security and Digital Marketing courses plus placement support.';
+const pageTitle = 'AI & IT Training Institute in Gurugram (Sector 14) | Full Stack, Data Science, Python & Digital Marketing';
+const pageDescription = 'SSSAM Academy is Gurugram’s top AI & IT training institute in Sector 14 offering classroom & online courses in Full Stack, Data Science, Power BI, Python, Cyber Security & Digital Marketing with 100% placement support.';
 
 export const revalidate = 86400; // 24-Hour ISR Cache
 
@@ -46,10 +47,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  // Fetch featured course and all published courses from MongoDB with fallback
-  const { course: featuredCourse } = await getFeaturedCourse();
-  const { courses: allCourses } = await getPublishedCourses();
-
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -59,8 +56,10 @@ export default async function Home() {
         url: siteUrl,
         logo: `${siteUrl}/images/logo/logo.png`,
         sameAs: [
-          'https://www.facebook.com/sssamacademy',
-          'https://www.linkedin.com/company/sssam-academy',
+          'https://sssamacademy.com',
+          'https://www.linkedin.com/company/sssamacademy',
+          'https://www.instagram.com/sssamacademy/',
+          'https://www.youtube.com/@codingwithsudhir',
         ],
         contactPoint: [
           {
@@ -93,55 +92,8 @@ export default async function Home() {
           postalCode: '122001',
           addressCountry: 'IN',
         },
-        areaServed: ['Gurugram', 'Gurgaon', 'Delhi NCR'],
-        openingHours: ['Mo-Fr 10:00-19:00', 'Sa 10:00-16:00'],
-      },
-      {
-        '@type': 'LocalBusiness',
-        name: 'SSSAM Academy',
-        image: `${siteUrl}/images/logo/logo.png`,
-        telephone: '+91 92170 31899',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14',
-          addressLocality: 'Gurugram',
-          addressRegion: 'Haryana',
-          postalCode: '122001',
-          addressCountry: 'IN',
-        },
-        sameAs: [
-          'https://www.facebook.com/sssamacademy',
-          'https://www.linkedin.com/company/sssam-academy',
-        ],
-      },
-      {
-        '@type': 'ItemList',
-        itemListElement: [
-          {
-            '@type': 'Course',
-            name: 'Full Stack Development course',
-            description: 'Full Stack Development course in Gurugram with AI-enabled workflows, live projects, and placement coaching.',
-            provider: { '@type': 'Organization', name: 'SSSAM Academy', sameAs: siteUrl },
-          },
-          {
-            '@type': 'Course',
-            name: 'Data Science training',
-            description: 'Data Science training in Gurgaon covering Python, ML, analytics, and industry case studies.',
-            provider: { '@type': 'Organization', name: 'SSSAM Academy', sameAs: siteUrl },
-          },
-          {
-            '@type': 'Course',
-            name: 'Cyber Security course',
-            description: 'Cyber Security course in Gurugram with ethical hacking labs, threat detection, and placement support.',
-            provider: { '@type': 'Organization', name: 'SSSAM Academy', sameAs: siteUrl },
-          },
-          {
-            '@type': 'Course',
-            name: 'Digital Marketing institute',
-            description: 'Digital Marketing institute program for Delhi NCR learners with SEO, ads, analytics, and campaign projects.',
-            provider: { '@type': 'Organization', name: 'SSSAM Academy', sameAs: siteUrl },
-          },
-        ],
+        areaServed: ['Gurugram', 'Gurgaon', 'Delhi NCR', 'Noida'],
+        openingHours: ['Mo-Fr 09:00-20:00', 'Sa-Su 09:00-18:00'],
       },
       {
         '@type': 'FAQPage',
@@ -157,167 +109,209 @@ export default async function Home() {
     ],
   };
 
+  // Top 6 Featured Career Tracks
+  const featuredTracks = [
+    {
+      topic: 'full-stack-development',
+      title: 'Full Stack Web Development (MERN & Next.js)',
+      icon: '💻',
+      desc: 'HTML, CSS, Tailwind, JavaScript, React, Node.js, Express, MongoDB & Next.js with live real-world projects.',
+      duration: '6 Months',
+      tag: '🔥 Most Popular',
+    },
+    {
+      topic: 'data-science',
+      title: 'Data Science with Python & Machine Learning',
+      icon: '📊',
+      desc: 'NumPy, Pandas, Matplotlib, Scikit-Learn, Deep Learning, and predictive modeling for high-paying analytics roles.',
+      duration: '3 Months',
+      tag: '⭐ Top Ranked',
+    },
+    {
+      topic: 'data-analytics',
+      title: 'Data Analytics, Power BI & SQL Masterclass',
+      icon: '📈',
+      desc: 'Advanced Excel, SQL queries, Power BI data modeling, DAX, and executive KPI dashboard creation.',
+      duration: '2.5 Months',
+      tag: '💼 High Placement',
+    },
+    {
+      topic: 'cyber-security',
+      title: 'Cyber Security & Ethical Hacking (CEH)',
+      icon: '🔐',
+      desc: 'Kali Linux, network vulnerability assessment, web app pentesting (OWASP), and cyber security certification prep.',
+      duration: '3 Months',
+      tag: '🛡️ Defense Track',
+    },
+    {
+      topic: 'digital-marketing',
+      title: 'Performance Digital Marketing & SEO Mastery',
+      icon: '📱',
+      desc: 'Technical SEO, Google Ads (PPC), Meta Ads Manager, GA4 analytics, and lead conversion funnels.',
+      duration: '2.5 Months',
+      tag: '🚀 High ROI',
+    },
+    {
+      topic: 'python-training',
+      title: 'Python Programming & DSA Masterclass',
+      icon: '🐍',
+      desc: 'Python OOPs, data structures, algorithms, automation scripting, and technical interview problem solving.',
+      duration: '2 Months',
+      tag: '🌱 Beginner Friendly',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_35%),linear-gradient(180deg,_#020617,_#0b112a)] text-white">
+    <div className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
       <Header />
-      
+
       <main>
         {/* Hero Section */}
-        {featuredCourse && <HeroSection course={featuredCourse} />}
+        <HeroSection />
 
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-
-        {/* About Section */}
-        <section id="about" className="py-20 md:py-28 bg-slate-950">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="rounded-[2rem] border border-cyan-500/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-              <div className="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-200 px-4 py-2 rounded-full text-sm font-semibold mb-6 border border-cyan-500/20">
-                Gurugram AI Training Institute
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                AI-first IT training for Full Stack, Data Science, Cyber Security and Digital Marketing careers
-              </h2>
-              <p className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-4xl">
-                SSSAM Academy is the trusted AI training institute in Gurugram and Gurgaon offering modern IT courses with live projects, placement support, and Delhi NCR career coaching. Our programs are built for students, freshers and professionals who want job-ready skills in Full Stack Development, Data Science and Cyber Security.
-              </p>
-              <div className="grid gap-6 md:grid-cols-2 pt-10">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-white">What we teach</h3>
-                  <ul className="space-y-3 text-slate-300 list-disc list-inside">
-                    <li>AI-focused Full Stack Development course with React, Node.js, MongoDB and modern deployment.</li>
-                    <li>Data Science training with Python, ML, analytics and business intelligence.</li>
-                    <li>Cyber Security course with ethical hacking, network defense, and incident response.</li>
-                  </ul>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-white">Why choose SSSAM</h3>
-                  <ul className="space-y-3 text-slate-300 list-disc list-inside">
-                    <li>Live project-based learning from a local Gurugram institute.</li>
-                    <li>Placement support for Delhi NCR and Gurgaon employers.</li>
-                    <li>AI-first teaching methods, career coaching, and resume support.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  {
-                    value: ORGANIZATION_STATS.studentsTrained,
-                    label: ORGANIZATION_STATS.studentsTrainedLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.placementSuccess,
-                    label: ORGANIZATION_STATS.placementSuccessLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.placementSupport,
-                    label: ORGANIZATION_STATS.placementSupportLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.googleRating,
-                    label: ORGANIZATION_STATS.googleRatingLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.packageRange,
-                    label: ORGANIZATION_STATS.packageRangeLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.collegePartners,
-                    label: ORGANIZATION_STATS.collegePartnersLabel,
-                  },
-                  {
-                    value: ORGANIZATION_STATS.hiringNetwork,
-                    label: ORGANIZATION_STATS.hiringNetworkLabel,
-                  },
-                ].map((stat) => (
-                  <div key={stat.label} className="rounded-2xl border border-cyan-500/10 bg-slate-950/70 p-5 shadow-lg shadow-cyan-500/5">
-                    <div className="text-2xl font-bold text-cyan-300 mb-1">{stat.value}</div>
-                    <div className="text-sm text-slate-300">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Courses Grid */}
-        <CoursesGrid 
-          courses={allCourses}
-          title="AI & IT Courses in Gurugram"
-          description="Explore Full Stack Development, Data Science, Cyber Security and Digital Marketing training with live projects and placement-ready learning."
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        
-        {/* Testimonials Section */}
-        <TestimonialsSection testimonials={testimonials} />
-        
-        {/* FAQ Section */}
-        <FAQSection faqs={faqs} />
-        
-        {/* Contact Section */}
-        <section id="contact" className="py-20 md:py-28 bg-slate-950">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-slate-900/80 border border-cyan-500/20 rounded-[2rem] p-8 md:p-12 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-              <div className="grid gap-10 lg:grid-cols-[1.8fr_1fr] items-center">
-                <div>
-                  <div className="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-cyan-500/20">
-                    Gurugram Center • Sector 14
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                    Ready to Elevate Your Career with AI-First IT Training?
-                  </h2>
-                  <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl leading-relaxed">
-                    Learn with live project-based training, placement support, and AI-integrated curriculum from a trusted IT training institute in Gurugram.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <a
-                      href="/courses"
-                      className="inline-flex items-center gap-2 justify-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold py-4 px-8 rounded-xl shadow-xl hover:from-cyan-400 hover:to-blue-500 transition-all"
-                    >
-                      Explore Gurugram AI Courses
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </a>
-                    <a
-                      href="https://maps.google.com/?q=M24+Ground+Floor+Near+SBI+Bank+Old+DLF+Colony+Sector+14+Gurugram+122001"
-                      className="inline-flex items-center gap-2 justify-center border border-cyan-500/30 text-cyan-200 bg-slate-900/90 font-semibold py-4 px-8 rounded-xl hover:bg-slate-800 transition-all"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Visit Gurugram Training Institute
-                    </a>
-                  </div>
-                </div>
 
-                <div className="rounded-3xl border border-slate-800/80 bg-slate-950/90 p-8 shadow-[0_35px_120px_-40px_rgba(15,23,42,0.9)]">
-                  <p className="text-sm uppercase tracking-[0.2em] text-cyan-300 font-semibold mb-4">
-                    Contact Details
-                  </p>
-                  <div className="space-y-4 text-slate-300">
-                    <div>
-                      <p className="text-sm text-slate-500">Phone</p>
-                      <a href="tel:+919217031899" className="block text-white font-semibold">+91 92170 31899</a>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-500">Email</p>
-                      <a href="mailto:info@sssamacademy.com" className="block text-white font-semibold">info@sssamacademy.com</a>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-500">Address</p>
-                      <p className="text-white font-semibold">
-                        M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14, Gurugram, Haryana 122001
-                      </p>
-                    </div>
-                  </div>
+        {/* ── 1. Sector 14 Gurugram Offline Training Advantages ─────────────── */}
+        <section className="py-16 md:py-20 bg-slate-900/40 border-b border-slate-800/80">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <span className="inline-block bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+                📍 Sector 14 Gurugram Training Center
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                Why Students Choose SSSAM Academy in Gurugram
+              </h2>
+              <p className="text-slate-300 text-sm sm:text-base mt-2">
+                100% practical, mentor-led classroom training designed to bridge the gap between college and high-paying tech jobs.
+              </p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6 hover:border-cyan-500/40 transition">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center text-2xl mb-4">
+                  🏫
                 </div>
+                <h3 className="text-lg font-bold text-white mb-2">AC Computer Labs</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Dedicated high-speed systems, high-speed Wi-Fi, and real corporate development lab environments.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6 hover:border-cyan-500/40 transition">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-2xl mb-4">
+                  📅
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Flexible Batches</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Regular Weekday (Morning & Evening) batches + dedicated Weekend batches for working professionals.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6 hover:border-cyan-500/40 transition">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center text-2xl mb-4">
+                  👥
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">1-on-1 Mentorship</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Small batch sizes (15-20 students) ensuring personalized code reviews and daily doubt clearing.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6 hover:border-cyan-500/40 transition">
+                <div className="w-12 h-12 rounded-xl bg-yellow-500/15 text-yellow-400 flex items-center justify-center text-2xl mb-4">
+                  💼
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">100% Placement Cell</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Resume optimization, LinkedIn branding, technical mock interviews & direct referrals to 120+ hiring partners.
+                </p>
               </div>
             </div>
           </div>
         </section>
+
+        {/* ── 2. Top In-Demand Career Programs ────────────────────────────── */}
+        <section className="py-16 md:py-24 bg-slate-950 border-b border-slate-800/80">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                  Featured IT Programs
+                </span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight mt-1">
+                  Most In-Demand Career Tracks
+                </h2>
+                <p className="text-slate-400 text-sm sm:text-base mt-2">
+                  Choose a domain to book your free demo class at our Sector 14 Gurugram center.
+                </p>
+              </div>
+              <Link
+                href="/courses"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition"
+              >
+                <span>View All 80+ Courses →</span>
+              </Link>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredTracks.map((track) => (
+                <div
+                  key={track.topic}
+                  className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 hover:border-cyan-500/40 transition flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="text-3xl">{track.icon}</span>
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                        {track.tag}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-2 leading-snug">
+                      {track.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                      {track.desc}
+                    </p>
+                  </div>
+
+                  <div className="space-y-3 pt-4 border-t border-slate-800/80">
+                    <div className="flex items-center justify-between text-xs text-slate-400">
+                      <span>⏱ Duration: <strong>{track.duration}</strong></span>
+                      <span>📍 Sector 14 Offline / Online</span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <EnrollCourseButton
+                        courseTitle={track.title}
+                        label="Book Free Demo"
+                        className="flex-1 !py-2.5 !text-xs !font-bold"
+                      />
+                      <EnrollCourseButton
+                        courseTitle={track.title}
+                        variant="whatsapp"
+                        className="!py-2.5 !px-3 !text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── 3. Student Reviews & Testimonials ────────────────────────────── */}
+        <TestimonialsSection testimonials={testimonials} />
+
+        {/* ── 4. Frequently Asked Questions ────────────────────────────────── */}
+        <FAQSection faqs={faqs} />
+
+        {/* ── 5. Center Location & Contact Form ────────────────────────────── */}
+        <ContactSection />
       </main>
-      
+
       <Footer />
     </div>
   );
