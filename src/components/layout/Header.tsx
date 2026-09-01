@@ -66,11 +66,16 @@ export function Header() {
             <Link href={ROUTES.COURSES} className="text-slate-300 hover:text-cyan-400 transition-colors">
               All Courses
             </Link>
+            <a
+              href="https://sssamacademy.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-300 hover:text-cyan-200 transition-colors font-semibold"
+            >
+              Main Portal (sssamacademy.com) ↗
+            </a>
             <Link href="/verify-certificate" className="text-slate-300 hover:text-cyan-400 transition-colors">
               Verify Certificate
-            </Link>
-            <Link href="/#about" className="text-slate-300 hover:text-cyan-400 transition-colors">
-              About Institute
             </Link>
             <Link href="/#contact" className="text-slate-300 hover:text-cyan-400 transition-colors">
               Center Location
@@ -131,6 +136,15 @@ export function Header() {
             >
               All Courses
             </Link>
+            <a
+              href="https://sssamacademy.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-cyan-300 hover:text-cyan-200 py-1.5 font-semibold"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Main Portal (sssamacademy.com) ↗
+            </a>
             <Link
               href="/verify-certificate"
               className="block text-slate-300 hover:text-cyan-400 py-1.5 font-medium"
