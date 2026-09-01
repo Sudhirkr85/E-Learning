@@ -4,6 +4,7 @@ import { ROUTES, SITE_CONFIG, ORGANIZATION_STATS } from '@/constants';
 
 const exploreLinks = [
   { label: 'All Courses', href: ROUTES.COURSES },
+  { label: 'Official Portal (sssamacademy.com)', href: 'https://sssamacademy.com', external: true },
   { label: 'Verify Certificate', href: '/verify-certificate' },
   { label: 'Sector 14 Center', href: '/#contact' },
   { label: 'About Institute', href: '/#about' },
@@ -72,9 +73,20 @@ export function Footer() {
             <ul className="space-y-3 text-slate-400">
               {exploreLinks.map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="transition-colors hover:text-white">
-                    {item.label}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-cyan-300 font-medium"
+                    >
+                      {item.label} ↗
+                    </a>
+                  ) : (
+                    <Link href={item.href} className="transition-colors hover:text-white">
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

@@ -158,6 +158,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
           "@type": "EducationalOrganization",
           name: "SSSAM Academy",
           url: siteUrl,
+          sameAs: ["https://sssamacademy.com", "https://www.linkedin.com/company/sssamacademy/"],
           address: {
             "@type": "PostalAddress",
             streetAddress: "M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14",
@@ -555,6 +556,24 @@ export default async function SeoLandingPage({ params }: PageProps) {
               </div>
             </div>
           )}
+
+          {/* 4. Official Central Education Network Backlink */}
+          <div className="rounded-2xl border border-cyan-500/20 bg-slate-900/60 p-5 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-cyan-400">Official Educational Network</p>
+              <p className="text-sm text-slate-300 mt-0.5">
+                SSSAM Academy (Sector 14 Gurugram Center) is an authorized career training hub of the <strong>SSSAM Academy Network</strong>.
+              </p>
+            </div>
+            <a
+              href="https://sssamacademy.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="whitespace-nowrap px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 hover:text-cyan-200 text-xs font-semibold transition"
+            >
+              Visit sssamacademy.com ↗
+            </a>
+          </div>
         </div>
       </section>
 

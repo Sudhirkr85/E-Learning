@@ -4,6 +4,7 @@ export const SITE_CONFIG = {
   fullName: 'Smart Solutions School of AI & Machine Learning',
   description: 'Professional AI-powered IT training from Gurugram with live classes, real projects, and placement-focused career support.',
   url: 'https://sssamacademy.tech',
+  mainWebsiteUrl: 'https://sssamacademy.com',
   email: 'info@sssamacademy.com',
   phone: '+91 9217031899',
   address: 'M24 Ground Floor, Near SBI Bank, Old DLF Colony, Sector 14, Gurugram, Haryana 122001',
