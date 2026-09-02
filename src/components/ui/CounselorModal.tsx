@@ -1,7 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { seoTopics } from '@/data/seo-topics';
+
+const DEFAULT_COURSES = [
+  { topic: 'full-stack-web-development', label: 'Full Stack Web Development', icon: '💻' },
+  { topic: 'data-science', label: 'Data Science with Python', icon: '📊' },
+  { topic: 'data-analytics', label: 'Data Analytics & Power BI', icon: '📈' },
+  { topic: 'cyber-security', label: 'Cyber Security & Ethical Hacking', icon: '🔐' },
+  { topic: 'digital-marketing', label: 'Digital Marketing & SEO Mastery', icon: '📱' },
+  { topic: 'python-training', label: 'Python Programming & DSA', icon: '🐍' },
+];
 
 interface CounselorModalProps {
   initialCourse?: string;
@@ -10,11 +18,23 @@ interface CounselorModalProps {
 export function CounselorModal({ initialCourse = '' }: CounselorModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(initialCourse);
+  const [coursesList, setCoursesList] = useState(DEFAULT_COURSES);
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [preferredMode, setPreferredMode] = useState('Classroom Training (Sector 14 Gurugram)');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/suggestions')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.suggestions && Array.isArray(data.suggestions)) {
+          setCoursesList(data.suggestions);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleOpen = (e: any) => {
@@ -164,7 +184,7 @@ export function CounselorModal({ initialCourse = '' }: CounselorModalProps) {
                   className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white focus:border-cyan-500 focus:outline-none"
                 >
                   <option value="">-- Select Course --</option>
-                  {seoTopics.map((t) => (
+                  {coursesList.map((t) => (
                     <option key={t.topic} value={t.label}>
                       {t.icon} {t.label}
                     </option>

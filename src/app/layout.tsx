@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
     images: [
       {
-        url: "https://sssamacademy.tech/images/logo/logo.png",
+        url: "https://sssamacademy.tech/images/logo/logo.webp",
         width: 1200,
         height: 630,
         alt: "SSSAM Academy AI Training Institute Gurugram",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "AI Training Institute Gurugram | Full Stack & Data Science",
     description:
       "SSSAM Academy offers AI-first IT training in Gurugram with Full Stack, Data Science, Cyber Security, Cloud and Digital Marketing courses with placement support.",
-    images: ["https://sssamacademy.tech/images/logo/logo.png"],
+    images: ["https://sssamacademy.tech/images/logo/logo.webp"],
   },
 };
 

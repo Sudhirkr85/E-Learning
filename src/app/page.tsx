@@ -8,7 +8,6 @@ import { ContactSection } from '@/components/sections/ContactSection';
 import { EnrollCourseButton } from '@/components/ui/EnrollCourseButton';
 import { faqs } from '@/data/faq';
 import { testimonials } from '@/data/testimonials';
-import { seoTopics } from '@/data/seo-topics';
 
 const siteUrl = 'https://sssamacademy.tech';
 const pageTitle = 'AI & IT Training Institute in Gurugram (Sector 14) | Full Stack, Data Science, Python & Digital Marketing';
@@ -31,7 +30,7 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     images: [
       {
-        url: 'https://sssamacademy.tech/images/logo/logo.png',
+        url: 'https://sssamacademy.tech/images/logo/logo.webp',
         width: 1200,
         height: 630,
         alt: 'SSSAM Academy AI Training Institute Gurugram',
@@ -42,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: pageTitle,
     description: pageDescription,
-    images: ['https://sssamacademy.tech/images/logo/logo.png'],
+    images: ['https://sssamacademy.tech/images/logo/logo.webp'],
   },
 };
 
@@ -54,7 +53,7 @@ export default async function Home() {
         '@type': 'Organization',
         name: 'SSSAM Academy',
         url: siteUrl,
-        logo: `${siteUrl}/images/logo/logo.png`,
+        logo: `${siteUrl}/images/logo/logo.webp`,
         sameAs: [
           'https://sssamacademy.com',
           'https://www.linkedin.com/company/sssamacademy',
@@ -174,8 +173,8 @@ export default async function Home() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        {/* ── 1. Sector 14 Gurugram Offline Training Advantages ─────────────── */}
-        <section className="py-16 md:py-20 bg-slate-900/40 border-b border-slate-800/80">
+        {/* ── 1. Sector 14 Gurugram Offline Training Advantages / About ─── */}
+        <section id="about" className="py-16 md:py-20 bg-slate-900/40 border-b border-slate-800/80">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-12">
               <span className="inline-block bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">

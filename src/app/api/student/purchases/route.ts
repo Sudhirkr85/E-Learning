@@ -1,33 +1,33 @@
+import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { PurchaseModel } from '@/lib/models/purchase';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const studentId = searchParams.get('studentId');
+    const { userId } = await auth();
 
-    if (!studentId) {
+    if (!userId) {
       return NextResponse.json(
-        { error: 'Student ID is required' },
-        { status: 400 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       );
     }
 
     // Check if MongoDB is configured
     try {
-      const purchases = await PurchaseModel.findByStudentId(studentId);
+      const purchases = await PurchaseModel.findByStudentId(userId);
       const completedPurchases = purchases.filter((purchase) => purchase.status === 'completed');
       
       return NextResponse.json({
         purchases: completedPurchases,
-        studentId,
+        studentId: userId,
       });
     } catch (dbError) {
       // If MongoDB is not configured, return empty array
       if (dbError instanceof Error && dbError.message.includes('MongoDB is not configured')) {
         return NextResponse.json({
           purchases: [],
-          studentId,
+          studentId: userId,
           error: 'Database not configured',
         });
       }

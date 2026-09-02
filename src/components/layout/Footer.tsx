@@ -5,9 +5,10 @@ import { ROUTES, SITE_CONFIG, ORGANIZATION_STATS } from '@/constants';
 const exploreLinks = [
   { label: 'All Courses', href: ROUTES.COURSES },
   { label: 'Official Portal (sssamacademy.com)', href: 'https://sssamacademy.com', external: true },
-  { label: 'Verify Certificate', href: '/verify-certificate' },
   { label: 'Sector 14 Center', href: '/#contact' },
   { label: 'About Institute', href: '/#about' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms & Conditions', href: '/terms' },
 ];
 
 const contactLinks = [
@@ -133,9 +134,11 @@ export function Footer() {
             &copy; {currentYear} {SITE_CONFIG.name}. All rights reserved.
           </Text>
           <div className="flex flex-wrap items-center gap-3">
-            <span>AI-first IT training institute in Gurugram</span>
+            <Link href="/privacy-policy" className="hover:text-cyan-300 transition">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-cyan-300 transition">Terms & Conditions</Link>
             <span className="hidden md:inline">•</span>
-            <span>Live training, AI-integrated curriculum</span>
+            <span>Sector 14 Gurugram</span>
           </div>
         </div>
       </Container>

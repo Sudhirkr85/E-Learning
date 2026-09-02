@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ClassSessionModel } from '@/lib/models/class-session';
 import { getCourseById } from '@/data/courses';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 const normalizeExternalUrl = (value: unknown) => {
   if (typeof value !== 'string') {
@@ -25,6 +26,11 @@ const normalizeExternalUrl = (value: unknown) => {
 
 export async function GET(req: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const courseId = req.nextUrl.searchParams.get('courseId');
 
     if (!courseId) {
@@ -48,6 +54,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { courseId: bodyCourseId, googleMeetLink, sessionTitle, sessionDate, sessionTime, active } = body;
     const normalizedGoogleMeetLink = normalizeExternalUrl(googleMeetLink);
@@ -94,6 +105,11 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { sessionId, ...updateData } = body;
 
@@ -143,6 +159,11 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const sessionId = req.nextUrl.searchParams.get('sessionId');
 
     if (!sessionId) {

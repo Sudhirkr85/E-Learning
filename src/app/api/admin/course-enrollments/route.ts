@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCourseById } from '@/data/courses';
+import { verifyAdminSession } from '@/lib/admin-auth';
 
 export async function GET(req: NextRequest) {
   try {
+    const isAuthenticated = await verifyAdminSession();
+
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const courseId = req.nextUrl.searchParams.get('courseId');
 
     if (!courseId) {

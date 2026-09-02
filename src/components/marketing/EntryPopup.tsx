@@ -3,11 +3,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
-import { seoTopics } from '@/data/seo-topics';
 
 const INITIAL_DELAY_MS = 3000; // 3 seconds delay after page load
 const REPEAT_DELAY_MS = 5 * 60 * 1000; // 5 minutes repeat cooldown
 const CLOSE_ANIMATION_MS = 220;
+
+const DEFAULT_COURSES = [
+  'Full Stack Web Development (MERN & Next.js)',
+  'Data Science with Python & Machine Learning',
+  'Data Analytics, Power BI & SQL Masterclass',
+  'Cyber Security & Ethical Hacking (CEH)',
+  'Performance Digital Marketing & SEO Mastery',
+  'Python Programming & DSA Masterclass',
+  'Not Sure / Need Career Counseling',
+];
 
 type FormValues = {
   name: string;
@@ -63,6 +72,7 @@ export function EntryPopup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isCourseFocused, setIsCourseFocused] = useState(false);
+  const [courseSuggestions, setCourseSuggestions] = useState<string[]>(DEFAULT_COURSES);
   const [values, setValues] = useState<FormValues>({
     name: '',
     mobile: '',
@@ -79,10 +89,20 @@ export function EntryPopup() {
   const remainingDelayRef = useRef(INITIAL_DELAY_MS);
   const activeModeRef = useRef<'initial' | 'cooldown' | 'idle'>('initial');
 
-  const courseSuggestions = useMemo(
-    () => seoTopics.map((t) => t.label).concat(['Not Sure / Need Career Counseling']),
-    [],
-  );
+  useEffect(() => {
+    fetch('/api/suggestions')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.suggestions && Array.isArray(data.suggestions)) {
+          setCourseSuggestions(
+            data.suggestions
+              .map((s: { label: string }) => s.label)
+              .concat(['Not Sure / Need Career Counseling'])
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filteredCourseSuggestions = useMemo(() => {
     const query = values.course.trim().toLowerCase();

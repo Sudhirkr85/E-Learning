@@ -74,9 +74,6 @@ export function Header() {
             >
               Main Portal (sssamacademy.com) ↗
             </a>
-            <Link href="/verify-certificate" className="text-slate-300 hover:text-cyan-400 transition-colors">
-              Verify Certificate
-            </Link>
             <Link href="/#contact" className="text-slate-300 hover:text-cyan-400 transition-colors">
               Center Location
             </Link>
@@ -145,13 +142,6 @@ export function Header() {
             >
               Main Portal (sssamacademy.com) ↗
             </a>
-            <Link
-              href="/verify-certificate"
-              className="block text-slate-300 hover:text-cyan-400 py-1.5 font-medium"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Verify Certificate
-            </Link>
             <Link
               href="/#contact"
               className="block text-slate-300 hover:text-cyan-400 py-1.5 font-medium"

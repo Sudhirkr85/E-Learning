@@ -13,7 +13,8 @@ export default async function middleware(req: NextRequest) {
     pathname.startsWith('/api/inquiry') ||
     pathname.startsWith('/courses') ||
     pathname === '/' ||
-    pathname === '/verify-certificate'
+    pathname === '/privacy-policy' ||
+    pathname === '/terms'
   ) {
     return NextResponse.next();
   }

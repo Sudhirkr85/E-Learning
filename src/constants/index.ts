@@ -32,7 +32,6 @@ export const ROUTES = {
   PAYMENT_FAILED: '/payment-failed',
   PROFILE: '/dashboard/profile',
   SETTINGS: '/dashboard/settings',
-  VERIFY_CERTIFICATE: '/verify-certificate',
   ADMIN_CERTIFICATES: '/admin/certificates',
 };
 
