@@ -4,6 +4,10 @@ import { Header, Footer, DashboardSidebar } from '@/components/layout';
 export const metadata = {
   title: 'Dashboard - SSSAM Academy',
   description: 'View your learning progress and enrolled courses',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function DashboardLayout({

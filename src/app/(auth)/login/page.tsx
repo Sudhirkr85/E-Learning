@@ -6,6 +6,10 @@ import { SignIn } from '@clerk/nextjs';
 export const metadata = {
   title: 'Login - SSSAM Academy',
   description: 'Sign in to your SSSAM Academy account',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const TRUST_POINTS = [

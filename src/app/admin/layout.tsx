@@ -1,8 +1,16 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
 import LogoutButton from '@/components/LogoutButton';
 import { HeroMesh } from '@/components/ui';
 import AdminMobileNav from '@/components/layout/AdminMobileNav';
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminLayout({
   children,
