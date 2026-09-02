@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Course, Coupon } from '@/types';
 import { HeroMesh } from '@/components/ui';
 import { courses as staticCourses } from '@/data/courses';
@@ -120,7 +121,7 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 {recentCourses.map((course) => (
                   <div key={course.id} className="flex items-center gap-4 p-3 rounded hover:bg-[rgba(255,255,255,0.02)] transition">
-                    <img src={course.thumbnail || '/images/courses/fullstack-6month.webp'} alt={course.title} className="w-20 h-12 object-cover rounded-md" />
+                    <Image src={course.thumbnail || '/images/courses/fullstack-6month.webp'} alt={course.title} width={80} height={48} className="w-20 h-12 object-cover rounded-md" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <div>
