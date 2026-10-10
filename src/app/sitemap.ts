@@ -25,10 +25,9 @@ const courseRoutes: MetadataRoute.Sitemap = uniqueCourseSlugs.map((slug) => ({
   priority: 0.9,
 }));
 
-// ── 3. High-Priority Curated Gurugram & Delhi NCR Hub x Core Topic pages ──────
-const coreTopics = seoTopics.slice(0, 6);
+// ── 3. High-Priority Gurugram, Noida & Delhi NCR Hub x Topic pages (6,000+ URLs) ──
 const cityTopicRoutes: MetadataRoute.Sitemap = seoLocations.flatMap((loc) =>
-  coreTopics.map((top) => ({
+  seoTopics.map((top) => ({
     url: `${siteUrl}/courses/${loc.city}/${top.topic}`,
     lastModified,
     changeFrequency: "weekly" as const,
